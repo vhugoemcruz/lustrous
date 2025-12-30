@@ -3,8 +3,10 @@
  * @module perspective-engine
  * @description Motor de cálculo de geometria de perspectiva
  * 
- * Implementação simples: linhas radiais emanando dos pontos de fuga
- * com distribuição uniforme angular
+ * Implementação de grid 3D com malha (mesh):
+ * - Linhas distribuídas por distância projetada no espaço 3D
+ * - Cria efeito de profundidade com compressão perspectiva
+ * - Linhas de VPs diferentes se cruzam formando planos
  */
 
 export interface VanishingPoint {
@@ -141,25 +143,26 @@ export function calculatePerspectiveLines(state: PerspectiveState): Line[] {
         width: 1.5,
     });
 
-    // Linhas radiais dos VPs
-    if (config.type >= 1) {
-        lines.push(...createRadialLines(transformedVPs[0], lineCount, canvasWidth, canvasHeight, LINE_COLORS.vp1));
-    }
-    if (config.type >= 2) {
-        lines.push(...createRadialLines(transformedVPs[1], lineCount, canvasWidth, canvasHeight, LINE_COLORS.vp2));
-    }
-    if (config.type === 3) {
-        lines.push(...createRadialLines(transformedVPs[2], lineCount, canvasWidth, canvasHeight, LINE_COLORS.vp3));
+    // Cores para cada VP
+    const vpColors = [LINE_COLORS.vp1, LINE_COLORS.vp2, LINE_COLORS.vp3];
+
+    // Criar linhas radiais omnidirecionais para cada VP ativo
+    // Todos os VPs usam a MESMA lógica - padrão starburst 360°
+    for (let i = 0; i < config.type; i++) {
+        const vp = transformedVPs[i];
+        const color = vpColors[i];
+        lines.push(...createRadialLinesFromVP(vp, lineCount, canvasWidth, canvasHeight, color));
     }
 
     return lines;
 }
 
 /**
- * Cria linhas radiais simples emanando do ponto de fuga
- * Cada linha vai do VP até a borda do canvas (estendida)
+ * Cria linhas radiais omnidirecionais (360°) a partir de um ponto de fuga.
+ * Cada VP emite linhas em todas as direções como um padrão "starburst".
+ * A quantidade de linhas é dividida em ângulos equidistantes ao redor do VP.
  */
-function createRadialLines(
+function createRadialLinesFromVP(
     vp: { x: number; y: number },
     count: number,
     canvasWidth: number,
@@ -167,23 +170,31 @@ function createRadialLines(
     color: string
 ): Line[] {
     const lines: Line[] = [];
-    const maxDist = Math.max(canvasWidth, canvasHeight) * 3;
+    const maxDist = Math.hypot(canvasWidth, canvasHeight) * 1.5;
 
-    // Distribuir linhas uniformemente em 360 graus
+    // Distribuir linhas em 360° com espaçamento angular igual
+    // Usamos count/2 porque cada linha passa pelo VP e vai em ambas direções
+    const angleStep = Math.PI / count;
+
     for (let i = 0; i < count; i++) {
-        const angle = (i / count) * Math.PI * 2;
+        const angle = i * angleStep;
 
-        // Calcular ponto final
-        const endX = vp.x + Math.cos(angle) * maxDist;
-        const endY = vp.y + Math.sin(angle) * maxDist;
+        // Calcular pontos nas duas extremidades da linha passando pelo VP
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
 
-        // Clipar a linha ao canvas
-        const clipped = clipLine(vp.x, vp.y, endX, endY, 0, 0, canvasWidth, canvasHeight);
+        const x1 = vp.x + cos * maxDist;
+        const y1 = vp.y + sin * maxDist;
+        const x2 = vp.x - cos * maxDist;
+        const y2 = vp.y - sin * maxDist;
+
+        // Clipar ao canvas
+        const clipped = clipLine(x1, y1, x2, y2, 0, 0, canvasWidth, canvasHeight);
 
         if (clipped) {
             lines.push({
-                x1: vp.x,
-                y1: vp.y,
+                x1: clipped.x1,
+                y1: clipped.y1,
                 x2: clipped.x2,
                 y2: clipped.y2,
                 color,
