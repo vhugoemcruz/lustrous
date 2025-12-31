@@ -50,9 +50,16 @@ export interface PerspectiveState {
 
 // Número de linhas por VP por densidade (dobrado por nível)
 const LINE_COUNT = {
-    low: 24,      // Corresponde a LOOSE na referência
-    medium: 48,   // Corresponde a NORMAL na referência
-    high: 96,     // Corresponde a TIGHT na referência
+    low: 48,      // Corresponde a LOOSE na referência
+    medium: 96,   // Corresponde a NORMAL na referência
+    high: 192,     // Corresponde a TIGHT na referência
+};
+
+// Número de linhas para VP3 (terceiro ponto) - valores diferentes dos outros VPs
+const VP3_LINE_COUNT = {
+    low: 96,
+    medium: 192,
+    high: 384,
 };
 
 const LINE_COLORS = {
@@ -74,7 +81,7 @@ export function createInitialState(
         vanishingPoints: [
             { id: "vp1", x: 0, y: 0, distanceFromCenter: -canvasWidth * 0.35 },
             { id: "vp2", x: 0, y: 0, distanceFromCenter: canvasWidth * 0.35 },
-            { id: "vp3", x: 0, y: 0, distanceFromCenter: -canvasHeight * 2.5 },
+            { id: "vp3", x: 0, y: 0, distanceFromCenter: -canvasHeight * 3 },
         ],
         config: {
             type: 2,
@@ -159,7 +166,8 @@ export function calculatePerspectiveLines(state: PerspectiveState): Line[] {
     // VP3 usa função específica com compressão horizontal
     if (config.type === 3) {
         const vp3 = transformedVPs[2];
-        lines.push(...createRadialLinesForVP3(vp3, lineCount, canvasWidth, canvasHeight, LINE_COLORS.vp3));
+        const vp3LineCount = VP3_LINE_COUNT[config.density];
+        lines.push(...createRadialLinesForVP3(vp3, vp3LineCount, canvasWidth, canvasHeight, LINE_COLORS.vp3));
     }
 
     return lines;
@@ -178,7 +186,8 @@ function createRadialLinesFromVP(
     color: string
 ): Line[] {
     const lines: Line[] = [];
-    const maxDist = Math.hypot(canvasWidth, canvasHeight) * 1.5;
+    // Distribuição das linhas em 360°
+    const maxDist = Math.hypot(canvasWidth, canvasHeight) * 5;
 
     // Distribuir linhas em 360° usando meia volta por linha (cada linha atravessa o VP)
     // Usamos tangente para compressão perspectiva, mas escalada para cobrir 180°
@@ -240,7 +249,16 @@ function createRadialLinesForVP3(
     color: string
 ): Line[] {
     const lines: Line[] = [];
-    const maxDist = Math.hypot(canvasWidth, canvasHeight) * 1.5;
+
+    // Calcular a distância do VP3 ao centro do canvas
+    const centerX = canvasWidth / 2;
+    const centerY = canvasHeight / 2;
+    const distToCenter = Math.hypot(vp.x - centerX, vp.y - centerY);
+
+    // maxDist precisa ser maior que a distância do VP ao canvas + margem
+    // para garantir que as linhas sempre atravessem o canvas visível
+    const baseDist = Math.hypot(canvasWidth, canvasHeight) * 5;
+    const maxDist = Math.max(baseDist, distToCenter * 2 + baseDist);
 
     // Distribuir linhas em 360° (cada linha passa pelo VP3, cobrindo 180° em cada direção)
     for (let i = 0; i < count; i++) {
