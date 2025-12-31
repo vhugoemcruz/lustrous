@@ -48,11 +48,11 @@ export interface PerspectiveState {
     canvasHeight: number;
 }
 
-// Número de linhas por VP por densidade
+// Número de linhas por VP por densidade (dobrado por nível)
 const LINE_COUNT = {
-    low: 24,
-    medium: 48,
-    high: 96,
+    low: 24,      // Corresponde a LOOSE na referência
+    medium: 48,   // Corresponde a NORMAL na referência
+    high: 96,     // Corresponde a TIGHT na referência
 };
 
 const LINE_COLORS = {
@@ -147,20 +147,27 @@ export function calculatePerspectiveLines(state: PerspectiveState): Line[] {
     const vpColors = [LINE_COLORS.vp1, LINE_COLORS.vp2, LINE_COLORS.vp3];
 
     // Criar linhas radiais omnidirecionais para cada VP ativo
-    // Todos os VPs usam a MESMA lógica - padrão starburst 360°
-    for (let i = 0; i < config.type; i++) {
+    // VP1 e VP2 usam compressão vertical (denso no horizonte)
+    // VP3 usa compressão horizontal (denso no centro vertical)
+    for (let i = 0; i < Math.min(config.type, 2); i++) {
         const vp = transformedVPs[i];
         const color = vpColors[i];
         lines.push(...createRadialLinesFromVP(vp, lineCount, canvasWidth, canvasHeight, color));
+    }
+
+    // VP3 usa função específica com compressão horizontal
+    if (config.type === 3) {
+        const vp3 = transformedVPs[2];
+        lines.push(...createRadialLinesForVP3(vp3, lineCount, canvasWidth, canvasHeight, LINE_COLORS.vp3));
     }
 
     return lines;
 }
 
 /**
- * Cria linhas radiais omnidirecionais (360°) a partir de um ponto de fuga.
- * Cada VP emite linhas em todas as direções como um padrão "starburst".
- * A quantidade de linhas é dividida em ângulos equidistantes ao redor do VP.
+ * Cria linhas radiais omnidirecionais (360°) com compressão perspectiva.
+ * As linhas cobrem todo o espaço ao redor do VP, com maior densidade
+ * perto dos eixos horizontal e vertical (efeito de profundidade).
  */
 function createRadialLinesFromVP(
     vp: { x: number; y: number },
@@ -172,12 +179,24 @@ function createRadialLinesFromVP(
     const lines: Line[] = [];
     const maxDist = Math.hypot(canvasWidth, canvasHeight) * 1.5;
 
-    // Distribuir linhas em 360° com espaçamento angular igual
-    // Usamos count/2 porque cada linha passa pelo VP e vai em ambas direções
-    const angleStep = Math.PI / count;
+    // Distribuir linhas em 360° usando meia volta por linha (cada linha atravessa o VP)
+    // Usamos tangente para compressão perspectiva, mas escalada para cobrir 180°
+    // (a outra metade é coberta pela extensão da linha através do VP)
 
     for (let i = 0; i < count; i++) {
-        const angle = i * angleStep;
+        // t vai de -1 a +1 ao longo do count
+        // Isso distribui uniformemente no espaço "virtual" que será comprimido
+        const t = ((i + 0.5) / count) * 2 - 1; // -1 a +1
+
+        // Usar atan para compressão perspectiva
+        // atan(t * largeFactor) estica o mapeamento para cobrir quase π radianos
+        // Fator ~10 dá boa compressão com cobertura ampla
+        // atan(10) ≈ 1.47 rad, então range ≈ 2.94 rad ≈ 168°
+        // Multiplicamos por PI/3 para escalar de ~2.94 rad para ~π (180°)
+        const compressedAngle = Math.atan(t * 10) * (Math.PI / 2.94);
+
+        // Centralizar em 90° (vertical) para que compressão fique no horizonte
+        const angle = compressedAngle + Math.PI / 2;
 
         // Calcular pontos nas duas extremidades da linha passando pelo VP
         const cos = Math.cos(angle);
@@ -189,6 +208,62 @@ function createRadialLinesFromVP(
         const y2 = vp.y - sin * maxDist;
 
         // Clipar ao canvas
+        const clipped = clipLine(x1, y1, x2, y2, 0, 0, canvasWidth, canvasHeight);
+
+        if (clipped) {
+            lines.push({
+                x1: clipped.x1,
+                y1: clipped.y1,
+                x2: clipped.x2,
+                y2: clipped.y2,
+                color,
+                opacity: 0.5,
+                width: 1,
+            });
+        }
+    }
+
+    return lines;
+}
+
+/**
+ * Cria linhas radiais para VP3 com compressão horizontal.
+ * Diferente de VP1/VP2 que comprimem verticalmente (denso no horizonte),
+ * VP3 comprime horizontalmente (denso no eixo vertical central).
+ */
+function createRadialLinesForVP3(
+    vp: { x: number; y: number },
+    count: number,
+    canvasWidth: number,
+    canvasHeight: number,
+    color: string
+): Line[] {
+    const lines: Line[] = [];
+    const maxDist = Math.hypot(canvasWidth, canvasHeight) * 1.5;
+
+    // Para VP3, a compressão deve ser centrada em 0° (horizontal)
+    // ao invés de 90° (vertical) como VP1/VP2
+    // Isso faz as linhas serem densas perto da horizontal e esparsas nos extremos verticais
+
+    for (let i = 0; i < count; i++) {
+        // t vai de -1 a +1
+        const t = ((i + 0.5) / count) * 2 - 1;
+
+        // Mesma compressão atan, mas centralizada em 0° (horizontal)
+        // Isso gera linhas densas perto de 0° (horizontal) e esparsas em ±90°
+        const compressedAngle = Math.atan(t * 10) * (Math.PI / 2.94);
+
+        // Não adicionar PI/2 - manter centrado em 0° (horizontal)
+        const angle = compressedAngle;
+
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+
+        const x1 = vp.x + cos * maxDist;
+        const y1 = vp.y + sin * maxDist;
+        const x2 = vp.x - cos * maxDist;
+        const y2 = vp.y - sin * maxDist;
+
         const clipped = clipLine(x1, y1, x2, y2, 0, 0, canvasWidth, canvasHeight);
 
         if (clipped) {
