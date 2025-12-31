@@ -227,9 +227,10 @@ function createRadialLinesFromVP(
 }
 
 /**
- * Cria linhas radiais para VP3 com compressão horizontal.
- * Diferente de VP1/VP2 que comprimem verticalmente (denso no horizonte),
- * VP3 comprime horizontalmente (denso no eixo vertical central).
+ * Cria linhas radiais para VP3 com distribuição angular uniforme.
+ * VP3 representa o ponto de fuga vertical (olhando para cima ou para baixo).
+ * As linhas irradiam de VP3 em direção ao canvas, distribuídas uniformemente
+ * em um arco de ~180° centrado na direção oposta ao horizonte.
  */
 function createRadialLinesForVP3(
     vp: { x: number; y: number },
@@ -241,28 +242,36 @@ function createRadialLinesForVP3(
     const lines: Line[] = [];
     const maxDist = Math.hypot(canvasWidth, canvasHeight) * 1.5;
 
-    // Para VP3, a compressão deve ser centrada em 0° (horizontal)
-    // ao invés de 90° (vertical) como VP1/VP2
-    // Isso faz as linhas serem densas perto da horizontal e esparsas nos extremos verticais
+    // Centro do canvas para referência
+    const centerX = canvasWidth / 2;
+    const centerY = canvasHeight / 2;
+
+    // Determinar se VP3 está acima ou abaixo do centro
+    const isAbove = vp.y < centerY;
+
+    // Ângulo base: apontar para baixo se VP3 está acima, para cima se está abaixo
+    // PI/2 = 90° (aponta para baixo), -PI/2 = -90° (aponta para cima)
+    const baseAngle = isAbove ? Math.PI / 2 : -Math.PI / 2;
+
+    // Abertura angular: cobrir aproximadamente 170° (deixar 5° de margem de cada lado)
+    const angularSpread = Math.PI * 0.95; // ~171°
 
     for (let i = 0; i < count; i++) {
-        // t vai de -1 a +1
+        // t vai de -1 a +1 uniformemente
         const t = ((i + 0.5) / count) * 2 - 1;
 
-        // Mesma compressão atan, mas centralizada em 0° (horizontal)
-        // Isso gera linhas densas perto de 0° (horizontal) e esparsas em ±90°
-        const compressedAngle = Math.atan(t * 10) * (Math.PI / 2.94);
-
-        // Não adicionar PI/2 - manter centrado em 0° (horizontal)
-        const angle = compressedAngle;
+        // Distribuição linear uniforme no arco angular
+        // Isso faz as linhas se distribuírem igualmente ao redor do VP3
+        const angle = baseAngle + t * (angularSpread / 2);
 
         const cos = Math.cos(angle);
         const sin = Math.sin(angle);
 
-        const x1 = vp.x + cos * maxDist;
-        const y1 = vp.y + sin * maxDist;
-        const x2 = vp.x - cos * maxDist;
-        const y2 = vp.y - sin * maxDist;
+        // Linha vai de VP3 até uma distância grande na direção do ângulo
+        const x1 = vp.x;
+        const y1 = vp.y;
+        const x2 = vp.x + cos * maxDist;
+        const y2 = vp.y + sin * maxDist;
 
         const clipped = clipLine(x1, y1, x2, y2, 0, 0, canvasWidth, canvasHeight);
 
