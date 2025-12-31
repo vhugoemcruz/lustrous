@@ -227,10 +227,9 @@ function createRadialLinesFromVP(
 }
 
 /**
- * Cria linhas radiais para VP3 com distribuição angular uniforme.
- * VP3 representa o ponto de fuga vertical (olhando para cima ou para baixo).
- * As linhas irradiam de VP3 em direção ao canvas, distribuídas uniformemente
- * em um arco de ~180° centrado na direção oposta ao horizonte.
+ * Cria linhas radiais omnidirecionais (360°) para VP3.
+ * As linhas atravessam o ponto VP3, distribuídas uniformemente em 180°
+ * (cada linha cobre 180° passando pelo VP3).
  */
 function createRadialLinesForVP3(
     vp: { x: number; y: number },
@@ -242,36 +241,20 @@ function createRadialLinesForVP3(
     const lines: Line[] = [];
     const maxDist = Math.hypot(canvasWidth, canvasHeight) * 1.5;
 
-    // Centro do canvas para referência
-    const centerX = canvasWidth / 2;
-    const centerY = canvasHeight / 2;
-
-    // Determinar se VP3 está acima ou abaixo do centro
-    const isAbove = vp.y < centerY;
-
-    // Ângulo base: apontar para baixo se VP3 está acima, para cima se está abaixo
-    // PI/2 = 90° (aponta para baixo), -PI/2 = -90° (aponta para cima)
-    const baseAngle = isAbove ? Math.PI / 2 : -Math.PI / 2;
-
-    // Abertura angular: cobrir aproximadamente 170° (deixar 5° de margem de cada lado)
-    const angularSpread = Math.PI * 0.95; // ~171°
-
+    // Distribuir linhas em 360° (cada linha passa pelo VP3, cobrindo 180° em cada direção)
     for (let i = 0; i < count; i++) {
-        // t vai de -1 a +1 uniformemente
-        const t = ((i + 0.5) / count) * 2 - 1;
-
-        // Distribuição linear uniforme no arco angular
-        // Isso faz as linhas se distribuírem igualmente ao redor do VP3
-        const angle = baseAngle + t * (angularSpread / 2);
+        // Ângulo uniformemente distribuído de 0 a PI (180°)
+        // A outra metade é coberta pela extensão da linha através do VP
+        const angle = (i / count) * Math.PI;
 
         const cos = Math.cos(angle);
         const sin = Math.sin(angle);
 
-        // Linha vai de VP3 até uma distância grande na direção do ângulo
-        const x1 = vp.x;
-        const y1 = vp.y;
-        const x2 = vp.x + cos * maxDist;
-        const y2 = vp.y + sin * maxDist;
+        // Linha atravessa o VP3 em ambas as direções
+        const x1 = vp.x + cos * maxDist;
+        const y1 = vp.y + sin * maxDist;
+        const x2 = vp.x - cos * maxDist;
+        const y2 = vp.y - sin * maxDist;
 
         const clipped = clipLine(x1, y1, x2, y2, 0, 0, canvasWidth, canvasHeight);
 
