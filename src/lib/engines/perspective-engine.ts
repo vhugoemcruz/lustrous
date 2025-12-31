@@ -70,10 +70,11 @@ export function createInitialState(
     const centerY = canvasHeight / 2;
 
     return {
+        // Initial vanishing points positions
         vanishingPoints: [
             { id: "vp1", x: 0, y: 0, distanceFromCenter: -canvasWidth * 0.35 },
             { id: "vp2", x: 0, y: 0, distanceFromCenter: canvasWidth * 0.35 },
-            { id: "vp3", x: 0, y: 0, distanceFromCenter: -canvasHeight * 0.8 },
+            { id: "vp3", x: 0, y: 0, distanceFromCenter: -canvasHeight * 2.5 },
         ],
         config: {
             type: 2,
