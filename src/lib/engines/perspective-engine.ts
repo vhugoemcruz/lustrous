@@ -63,10 +63,10 @@ const VP3_LINE_COUNT = {
 };
 
 const LINE_COLORS = {
-    vp1: "#22b8cf",
-    vp2: "#be4bdb",
-    vp3: "#fd7e14",
-    horizon: "#fab005",
+    vp1: "#90CEE0",
+    vp2: "#EDC687",
+    vp3: "#E8CAED",
+    horizon: "#ff0000ff",
 };
 
 export function createInitialState(
@@ -353,15 +353,25 @@ export function renderGrid(
 
     ctx.globalAlpha = 1;
 
-    // Pontos de fuga (círculos simples)
+    // Pontos de fuga com halo sutil + centro branco (técnica da referência)
     const transformedVPs = getTransformedVanishingPoints(state);
     const colors = [LINE_COLORS.vp1, LINE_COLORS.vp2, LINE_COLORS.vp3];
 
     for (let i = 0; i < config.type; i++) {
         const vp = transformedVPs[i];
+
+        // 1. Halo sutil (20px, baixa opacidade) - suaviza convergência
         ctx.beginPath();
-        ctx.arc(vp.x, vp.y, 5, 0, Math.PI * 2);
+        ctx.arc(vp.x, vp.y, 20, 0, Math.PI * 2);
         ctx.fillStyle = colors[i];
+        ctx.globalAlpha = 0.15;
+        ctx.fill();
+
+        // 2. Centro branco pequeno (2.5px) - ponto de fuga limpo
+        ctx.beginPath();
+        ctx.arc(vp.x, vp.y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffffff";
+        ctx.globalAlpha = 1;
         ctx.fill();
     }
 }
