@@ -119,13 +119,17 @@ export function getTransformedVanishingPoints(
         transformed.push({ x, y, id: vp.id });
     }
 
-    // VP3 acima ou abaixo
+    // VP3 acima ou abaixo (agora omnidirecional)
     const vp3 = vanishingPoints[2];
-    const vp3Distance = Math.abs(vp3.distanceFromCenter) * camera.zoom;
-    const vp3Y = config.thirdPointOrientation === "top"
-        ? centerY - vp3Distance
-        : centerY + vp3Distance;
-    transformed.push({ x: centerX, y: vp3Y, id: vp3.id });
+    const vp3Dist = vp3.distanceFromCenter * camera.zoom;
+    const vp3OffsetX = vp3.x * camera.zoom;
+
+    // VP3 é transformado em relação ao centro do horizonte, 
+    // rotacionado junto com o ângulo do horizonte para manter consistência
+    const transformedVP3X = centerX + vp3OffsetX * Math.cos(angleRad) - vp3Dist * Math.sin(angleRad);
+    const transformedVP3Y = centerY + vp3OffsetX * Math.sin(angleRad) + vp3Dist * Math.cos(angleRad);
+
+    transformed.push({ x: transformedVP3X, y: transformedVP3Y, id: vp3.id });
 
     return transformed;
 }
@@ -147,7 +151,7 @@ export function calculatePerspectiveLines(state: PerspectiveState): Line[] {
         x2: centerX + lineLength * Math.cos(angleRad),
         y2: centerY + lineLength * Math.sin(angleRad),
         color: LINE_COLORS.horizon,
-        opacity: 0.9,
+        opacity: 3,
         width: 1.5,
     });
 
@@ -160,14 +164,13 @@ export function calculatePerspectiveLines(state: PerspectiveState): Line[] {
     for (let i = 0; i < Math.min(config.type, 2); i++) {
         const vp = transformedVPs[i];
         const color = vpColors[i];
-        lines.push(...createRadialLinesFromVP(vp, lineCount, canvasWidth, canvasHeight, color));
+        lines.push(...createRadialLinesFromVP(vp, config.density, canvasWidth, canvasHeight, color, angleRad));
     }
 
-    // VP3 usa função específica com compressão horizontal
+    // VP3 usa função específica com distribuição uniforme
     if (config.type === 3) {
         const vp3 = transformedVPs[2];
-        const vp3LineCount = VP3_LINE_COUNT[config.density];
-        lines.push(...createRadialLinesForVP3(vp3, vp3LineCount, canvasWidth, canvasHeight, LINE_COLORS.vp3));
+        lines.push(...createRadialLinesForVP3(vp3, config.density, canvasWidth, canvasHeight, LINE_COLORS.vp3, angleRad));
     }
 
     return lines;
@@ -180,37 +183,24 @@ export function calculatePerspectiveLines(state: PerspectiveState): Line[] {
  */
 function createRadialLinesFromVP(
     vp: { x: number; y: number },
-    count: number,
+    density: "low" | "medium" | "high",
     canvasWidth: number,
     canvasHeight: number,
-    color: string
+    color: string,
+    angleOffset: number
 ): Line[] {
     const lines: Line[] = [];
     // Distribuição das linhas em 360°
     const maxDist = Math.hypot(canvasWidth, canvasHeight) * 5;
 
     // Distribuir linhas em 360° usando meia volta por linha (cada linha atravessa o VP)
-    // Usamos tangente para compressão perspectiva, mas escalada para cobrir 180°
-    // (a outra metade é coberta pela extensão da linha através do VP)
+    const angles = getGeometricAngles(density);
 
-    for (let i = 0; i < count; i++) {
-        // t vai de -1 a +1 ao longo do count
-        // Isso distribui uniformemente no espaço "virtual" que será comprimido
-        const t = ((i + 0.5) / count) * 2 - 1; // -1 a +1
-
-        // Usar atan para compressão perspectiva
-        // atan(t * largeFactor) estica o mapeamento para cobrir quase π radianos
-        // Fator ~10 dá boa compressão com cobertura ampla
-        // atan(10) ≈ 1.47 rad, então range ≈ 2.94 rad ≈ 168°
-        // Multiplicamos por PI/3 para escalar de ~2.94 rad para ~π (180°)
-        const compressedAngle = Math.atan(t * 10) * (Math.PI / 2.94);
-
-        // Centralizar em 90° (vertical) para que compressão fique no horizonte
-        const angle = compressedAngle + Math.PI / 2;
-
-        // Calcular pontos nas duas extremidades da linha passando pelo VP
-        const cos = Math.cos(angle);
-        const sin = Math.sin(angle);
+    for (const angle of angles) {
+        // Rotacionar os ângulos base de acordo com a inclinação do horizonte
+        const finalAngle = angle + angleOffset;
+        const cos = Math.cos(finalAngle);
+        const sin = Math.sin(finalAngle);
 
         const x1 = vp.x + cos * maxDist;
         const y1 = vp.y + sin * maxDist;
@@ -227,7 +217,7 @@ function createRadialLinesFromVP(
                 x2: clipped.x2,
                 y2: clipped.y2,
                 color,
-                opacity: 0.5,
+                opacity: 0.75,
                 width: 1,
             });
         }
@@ -243,12 +233,14 @@ function createRadialLinesFromVP(
  */
 function createRadialLinesForVP3(
     vp: { x: number; y: number },
-    count: number,
+    density: "low" | "medium" | "high",
     canvasWidth: number,
     canvasHeight: number,
-    color: string
+    color: string,
+    angleOffset: number
 ): Line[] {
     const lines: Line[] = [];
+    const count = VP3_LINE_COUNT[density];
 
     // Calcular a distância do VP3 ao centro do canvas
     const centerX = canvasWidth / 2;
@@ -256,15 +248,15 @@ function createRadialLinesForVP3(
     const distToCenter = Math.hypot(vp.x - centerX, vp.y - centerY);
 
     // maxDist precisa ser maior que a distância do VP ao canvas + margem
-    // para garantir que as linhas sempre atravessem o canvas visível
     const baseDist = Math.hypot(canvasWidth, canvasHeight) * 5;
     const maxDist = Math.max(baseDist, distToCenter * 2 + baseDist);
 
-    // Distribuir linhas em 360° (cada linha passa pelo VP3, cobrindo 180° em cada direção)
+    // Distribuir linhas uniformemente em 180° (cada linha passa pelo VP3)
+    // Rotacionamos junto com o horizonte (angleOffset) + 90° (perpendicular)
+    const step = Math.PI / count;
+
     for (let i = 0; i < count; i++) {
-        // Ângulo uniformemente distribuído de 0 a PI (180°)
-        // A outra metade é coberta pela extensão da linha através do VP
-        const angle = (i / count) * Math.PI;
+        const angle = (i * step) + angleOffset + Math.PI / 2;
 
         const cos = Math.cos(angle);
         const sin = Math.sin(angle);
@@ -284,13 +276,43 @@ function createRadialLinesForVP3(
                 x2: clipped.x2,
                 y2: clipped.y2,
                 color,
-                opacity: 0.5,
+                opacity: 2,
                 width: 1,
             });
         }
     }
 
     return lines;
+}
+
+/**
+ * Gera ângulos com incremento geométrico para evitar manchas nos VPs.
+ * Baseado na lógica do site de referência.
+ */
+function getGeometricAngles(density: "low" | "medium" | "high"): number[] {
+    // factorMap: quanto maior, mais rápido as linhas se afastam do eixo principal
+    const factorMap = { low: 0.18, medium: 0.11, high: 0.05 };
+    // baseAngleMap: o primeiro salto angular saindo do eixo
+    const baseAngleMap = { low: 0.012, medium: 0.006, high: 0.003 };
+
+    const spreadFactor = factorMap[density];
+    const baseAngle = baseAngleMap[density];
+
+    const angles: number[] = [0];
+    let currentAngle = 0;
+    let increment = baseAngle;
+
+    // Gera ângulos até Math.PI / 2 (90 graus) em ambas as direções
+    // Isso cobre 180 graus de inclinações, que estendidas cobrem 360
+    while (currentAngle < Math.PI / 2) {
+        currentAngle += increment;
+        if (currentAngle < Math.PI / 2) {
+            angles.push(currentAngle);
+            angles.push(-currentAngle);
+        }
+        increment *= (1 + spreadFactor);
+    }
+    return angles;
 }
 
 function clipLine(
@@ -453,13 +475,26 @@ export function updateVanishingPointDistance(
             ),
         };
     } else if (vpId === "vp3") {
+        const dx = mouseX - centerX;
         const dy = mouseY - centerY;
+
+        // Projetar a posição do mouse nos eixos local (rotacionados)
+        // O eixo "Y local" do VP3 é perpendicular ao horizonte (sen/cos invertidos)
+        // O eixo "X local" do VP3 é paralelo ao horizonte
+
+        const localX = dx * Math.cos(angleRad) + dy * Math.sin(angleRad);
+        const localY = -dx * Math.sin(angleRad) + dy * Math.cos(angleRad);
+
         return {
             ...state,
             vanishingPoints: state.vanishingPoints.map(vp =>
-                vp.id === vpId ? { ...vp, distanceFromCenter: dy / state.camera.zoom } : vp
+                vp.id === vpId ? {
+                    ...vp,
+                    x: localX / state.camera.zoom,
+                    distanceFromCenter: localY / state.camera.zoom
+                } : vp
             ),
-            config: { ...state.config, thirdPointOrientation: dy < 0 ? "top" : "bottom" },
+            config: { ...state.config, thirdPointOrientation: localY < 0 ? "top" : "bottom" },
         };
     }
     return state;
