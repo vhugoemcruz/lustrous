@@ -6,8 +6,28 @@
 
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { usePerspectiveGrid } from "@/lib/hooks/usePerspectiveGrid";
+
+// Ícone de informação SVG
+function InfoIcon() {
+    return (
+        <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+        </svg>
+    );
+}
 
 // Ícone de câmera SVG
 function CameraIcon() {
@@ -31,6 +51,7 @@ function CameraIcon() {
 export function PerspectiveCanvas() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const [showHelp, setShowHelp] = useState(false);
 
     const {
         state,
@@ -88,8 +109,8 @@ export function PerspectiveCanvas() {
                                 key={type}
                                 onClick={() => updateConfig({ type })}
                                 className={`w-9 h-9 rounded-lg text-sm font-semibold transition-all ${state?.config.type === type
-                                        ? "bg-aqua text-deep-obsidian shadow-lg"
-                                        : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
+                                    ? "bg-aqua text-deep-obsidian shadow-lg"
+                                    : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
                                     }`}
                             >
                                 {type}
@@ -108,8 +129,8 @@ export function PerspectiveCanvas() {
                             <button
                                 onClick={() => updateConfig({ thirdPointOrientation: "top" })}
                                 className={`px-3 h-9 rounded-lg text-xs font-semibold transition-all ${state?.config.thirdPointOrientation === "top"
-                                        ? "bg-magenta text-white shadow-lg"
-                                        : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
+                                    ? "bg-magenta text-white shadow-lg"
+                                    : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
                                     }`}
                             >
                                 ↑ Above
@@ -117,8 +138,8 @@ export function PerspectiveCanvas() {
                             <button
                                 onClick={() => updateConfig({ thirdPointOrientation: "bottom" })}
                                 className={`px-3 h-9 rounded-lg text-xs font-semibold transition-all ${state?.config.thirdPointOrientation === "bottom"
-                                        ? "bg-magenta text-white shadow-lg"
-                                        : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
+                                    ? "bg-magenta text-white shadow-lg"
+                                    : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
                                     }`}
                             >
                                 ↓ Below
@@ -138,8 +159,8 @@ export function PerspectiveCanvas() {
                                 key={density}
                                 onClick={() => updateConfig({ density })}
                                 className={`px-3 h-9 rounded-lg text-xs font-semibold capitalize transition-all ${state?.config.density === density
-                                        ? "bg-amethyst text-white shadow-lg"
-                                        : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
+                                    ? "bg-amethyst text-white shadow-lg"
+                                    : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
                                     }`}
                             >
                                 {density}
@@ -180,7 +201,18 @@ export function PerspectiveCanvas() {
                 <div className="flex-1" />
 
                 {/* Ações */}
-                <div className="flex gap-2">
+                <div className="flex gap-2 relative">
+                    <button
+                        onClick={() => setShowHelp(!showHelp)}
+                        className={`w-9 h-9 flex items-center justify-center rounded-lg transition-all ${showHelp
+                            ? "bg-amethyst text-white shadow-lg"
+                            : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
+                            }`}
+                        title="Ajuda"
+                    >
+                        <InfoIcon />
+                    </button>
+
                     <button
                         onClick={reset}
                         className="px-4 h-9 rounded-lg text-xs font-semibold bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary transition-all"
@@ -219,15 +251,63 @@ export function PerspectiveCanvas() {
                 )}
             </div>
 
-            {/* Status bar */}
-            <div className="flex items-center justify-between px-4 py-2 glass border-t border-glass-border text-xs">
-                <span className="text-text-muted">
-                    Drag vanishing points • Scroll to zoom • Click and drag to pan
-                </span>
-                <span className="text-text-secondary tabular-nums">
-                    {state?.canvasWidth} × {state?.canvasHeight}
-                </span>
-            </div>
+            {/* Balão de Ajuda Centralizado com Backdrop */}
+            {showHelp && (
+                <div
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-deep-obsidian/40 backdrop-blur-[2px] animate-in fade-in duration-300"
+                    onClick={() => setShowHelp(false)}
+                >
+                    <div
+                        className="w-[400px] p-8 glass border border-glass-border rounded-2xl shadow-2xl z-[101] animate-in zoom-in-95 duration-200"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="space-y-6">
+                            <div className="flex items-center justify-between border-b border-glass-border pb-4">
+                                <h3 className="text-aqua font-bold text-xl uppercase tracking-widest">Guia de Uso</h3>
+                                <button
+                                    onClick={() => setShowHelp(false)}
+                                    className="text-text-muted hover:text-white transition-colors"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <h4 className="text-gold font-bold text-sm mb-2 uppercase tracking-wider">Controles do Mouse</h4>
+                                    <ul className="text-sm text-text-secondary space-y-2">
+                                        <li>• <span className="text-aqua">Clique e arraste</span> os <span className="text-aqua font-semibold">pontos</span> para mudar a perspectiva</li>
+                                        <li>• Use o <span className="text-gold">scroll</span> para dar <span className="text-gold font-semibold">zoom</span></li>
+                                        <li>• <span className="text-magenta">Clique e arraste</span> no vazio para <span className="text-magenta font-semibold">navegar</span> dentro da malha</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 className="text-gold font-bold text-sm mb-2 uppercase tracking-wider">Interface</h4>
+                                    <div className="grid grid-cols-1 gap-3 text-sm">
+                                        <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5">
+                                            <strong className="text-text-primary block mb-1">Points</strong>
+                                            <p className="text-text-secondary text-xs">Alterna entre 1, 2 ou 3 pontos de fuga (visão frontal, angular ou aérea/formiga).</p>
+                                        </div>
+                                        <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5">
+                                            <strong className="text-text-primary block mb-1">VP3</strong>
+                                            <p className="text-text-secondary text-xs">Define se o terceiro ponto está acima ou abaixo do horizonte.</p>
+                                        </div>
+                                        <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5">
+                                            <strong className="text-text-primary block mb-1">Density & Tilt</strong>
+                                            <p className="text-text-secondary text-xs">Ajuste o detalhamento do grid e a rotação da câmera (tilt).</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="pt-4 border-t border-glass-border">
+                                    <p className="text-xs text-text-muted italic select-none">Dica: Use o Export para salvar em 1080p.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
