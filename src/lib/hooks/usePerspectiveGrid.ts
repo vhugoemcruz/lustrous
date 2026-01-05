@@ -40,7 +40,26 @@ export function usePerspectiveGrid(
 
             const newConfig = { ...prev.config, ...updates };
 
-            return { ...prev, config: newConfig };
+            // Sincronizar posição do ponto vertical se a orientação mudar via botão
+            let newVPs = prev.vanishingPoints;
+            if (updates.thirdPointOrientation && updates.thirdPointOrientation !== prev.config.thirdPointOrientation) {
+                newVPs = prev.vanishingPoints.map(vp => {
+                    if (vp.id === "vp3") {
+                        // Inverter sinal da distância para mover o ponto para o lado oposto
+                        const currentDist = vp.distanceFromCenter;
+                        const isTop = updates.thirdPointOrientation === "top";
+                        const newDist = isTop ? -Math.abs(currentDist) : Math.abs(currentDist);
+                        return { ...vp, distanceFromCenter: newDist };
+                    }
+                    return vp;
+                });
+            }
+
+            return {
+                ...prev,
+                config: newConfig,
+                vanishingPoints: newVPs
+            };
         });
     }, []);
 

@@ -123,7 +123,7 @@ export function PerspectiveCanvas() {
                 {state?.config.type === 3 && (
                     <div className="flex items-center gap-2">
                         <span className="text-xs text-text-muted uppercase tracking-wider">
-                            VP3:
+                            Third Point:
                         </span>
                         <div className="flex gap-1">
                             <button
@@ -254,11 +254,11 @@ export function PerspectiveCanvas() {
             {/* Balão de Ajuda Centralizado com Backdrop */}
             {showHelp && (
                 <div
-                    className="fixed inset-0 z-[100] flex items-center justify-center bg-deep-obsidian/40 backdrop-blur-[2px] animate-in fade-in duration-300"
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-deep-obsidian/30 animate-backdrop-fade"
                     onClick={() => setShowHelp(false)}
                 >
                     <div
-                        className="w-[400px] p-8 glass border border-glass-border rounded-2xl shadow-2xl z-[101] animate-in zoom-in-95 duration-200"
+                        className="w-[400px] p-8 glass border border-glass-border rounded-2xl shadow-2xl z-[101] animate-balloon-enter"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="space-y-6">
@@ -287,15 +287,19 @@ export function PerspectiveCanvas() {
                                     <div className="grid grid-cols-1 gap-3 text-sm">
                                         <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5">
                                             <strong className="text-text-primary block mb-1">Points</strong>
-                                            <p className="text-text-secondary text-xs">Switch between 1, 2, or 3 vanishing points (front, simple, or complex perspective).</p>
+                                            <p className="text-text-secondary text-xs">Sets the number of active vanishing points to converge the grid system.</p>
                                         </div>
                                         <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5">
-                                            <strong className="text-text-primary block mb-1">VP3</strong>
-                                            <p className="text-text-secondary text-xs">Set whether the 3rd point is above or below the horizon.</p>
+                                            <strong className="text-text-primary block mb-1">Third Point</strong>
+                                            <p className="text-text-secondary text-xs">Flips the vertical convergence point between top and bottom orientation.</p>
                                         </div>
                                         <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5">
-                                            <strong className="text-text-primary block mb-1">Density & Tilt</strong>
-                                            <p className="text-text-secondary text-xs">Adjust grid detail and camera rotation (tilt).</p>
+                                            <strong className="text-text-primary block mb-1">Density</strong>
+                                            <p className="text-text-secondary text-xs">Controls the frequency and spacing of lines within the primary grid structure.</p>
+                                        </div>
+                                        <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5">
+                                            <strong className="text-text-primary block mb-1">Tilt</strong>
+                                            <p className="text-text-secondary text-xs">Angles the horizon line to rotate the entire perspective projection.</p>
                                         </div>
                                     </div>
                                 </div>
