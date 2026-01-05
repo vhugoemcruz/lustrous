@@ -203,17 +203,6 @@ export function PerspectiveCanvas() {
                 {/* Ações */}
                 <div className="flex gap-2 relative">
                     <button
-                        onClick={() => setShowHelp(!showHelp)}
-                        className={`w-9 h-9 flex items-center justify-center rounded-lg transition-all ${showHelp
-                            ? "bg-amethyst text-white shadow-lg"
-                            : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
-                            }`}
-                        title="Ajuda"
-                    >
-                        <InfoIcon />
-                    </button>
-
-                    <button
                         onClick={reset}
                         className="px-4 h-9 rounded-lg text-xs font-semibold bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary transition-all"
                     >
@@ -226,6 +215,17 @@ export function PerspectiveCanvas() {
                     >
                         <CameraIcon />
                         <span>Export</span>
+                    </button>
+
+                    <button
+                        onClick={() => setShowHelp(!showHelp)}
+                        className={`w-9 h-9 flex items-center justify-center rounded-lg transition-all ${showHelp
+                            ? "bg-amethyst text-white shadow-lg"
+                            : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
+                            }`}
+                        title="Help"
+                    >
+                        <InfoIcon />
                     </button>
                 </div>
             </div>
@@ -263,7 +263,7 @@ export function PerspectiveCanvas() {
                     >
                         <div className="space-y-6">
                             <div className="flex items-center justify-between border-b border-glass-border pb-4">
-                                <h3 className="text-aqua font-bold text-xl uppercase tracking-widest">Guia de Uso</h3>
+                                <h3 className="text-aqua font-bold text-xl uppercase tracking-widest">User Guide</h3>
                                 <button
                                     onClick={() => setShowHelp(false)}
                                     className="text-text-muted hover:text-white transition-colors"
@@ -274,11 +274,11 @@ export function PerspectiveCanvas() {
 
                             <div className="space-y-4">
                                 <div>
-                                    <h4 className="text-gold font-bold text-sm mb-2 uppercase tracking-wider">Controles do Mouse</h4>
+                                    <h4 className="text-gold font-bold text-sm mb-2 uppercase tracking-wider">Mouse Controls</h4>
                                     <ul className="text-sm text-text-secondary space-y-2">
-                                        <li>• <span className="text-aqua">Clique e arraste</span> os <span className="text-aqua font-semibold">pontos</span> para mudar a perspectiva</li>
-                                        <li>• Use o <span className="text-gold">scroll</span> para dar <span className="text-gold font-semibold">zoom</span></li>
-                                        <li>• <span className="text-magenta">Clique e arraste</span> no vazio para <span className="text-magenta font-semibold">navegar</span> dentro da malha</li>
+                                        <li>• <span className="text-aqua font-semibold">Click and drag</span> points to change perspective</li>
+                                        <li>• Use <span className="text-gold font-semibold">scroll</span> to zoom</li>
+                                        <li>• <span className="text-magenta font-semibold">Click and drag</span> the empty space to navigate the grid</li>
                                     </ul>
                                 </div>
 
@@ -287,21 +287,21 @@ export function PerspectiveCanvas() {
                                     <div className="grid grid-cols-1 gap-3 text-sm">
                                         <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5">
                                             <strong className="text-text-primary block mb-1">Points</strong>
-                                            <p className="text-text-secondary text-xs">Alterna entre 1, 2 ou 3 pontos de fuga (visão frontal, angular ou aérea/formiga).</p>
+                                            <p className="text-text-secondary text-xs">Switch between 1, 2, or 3 vanishing points (front, simple, or complex perspective).</p>
                                         </div>
                                         <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5">
                                             <strong className="text-text-primary block mb-1">VP3</strong>
-                                            <p className="text-text-secondary text-xs">Define se o terceiro ponto está acima ou abaixo do horizonte.</p>
+                                            <p className="text-text-secondary text-xs">Set whether the 3rd point is above or below the horizon.</p>
                                         </div>
                                         <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5">
                                             <strong className="text-text-primary block mb-1">Density & Tilt</strong>
-                                            <p className="text-text-secondary text-xs">Ajuste o detalhamento do grid e a rotação da câmera (tilt).</p>
+                                            <p className="text-text-secondary text-xs">Adjust grid detail and camera rotation (tilt).</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="pt-4 border-t border-glass-border">
-                                    <p className="text-xs text-text-muted italic select-none">Dica: Use o Export para salvar em 1080p.</p>
+                                    <p className="text-xs text-text-muted italic select-none">Tip: Use export button to save your grid as an 1080p image.</p>
                                 </div>
                             </div>
                         </div>
