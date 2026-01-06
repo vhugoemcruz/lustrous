@@ -55,6 +55,29 @@ export function usePerspectiveGrid(
                 });
             }
 
+            // Centralizar VP1 automaticamente ao mudar para 1 ponto de fuga
+            if (updates.type === 1) {
+                newVPs = newVPs.map(vp => {
+                    if (vp.id === "vp1") {
+                        return { ...vp, distanceFromCenter: 0 };
+                    }
+                    return vp;
+                });
+            }
+
+            // Restaurar offsets balanceados ao sair do modo de 1 ponto para 2 ou 3 pontos
+            if ((updates.type === 2 || updates.type === 3) && prev.config.type === 1) {
+                newVPs = newVPs.map(vp => {
+                    if (vp.id === "vp1") {
+                        return { ...vp, distanceFromCenter: -prev.canvasWidth * 0.35 };
+                    }
+                    if (vp.id === "vp2") {
+                        return { ...vp, distanceFromCenter: prev.canvasWidth * 0.35 };
+                    }
+                    return vp;
+                });
+            }
+
             return {
                 ...prev,
                 config: newConfig,
