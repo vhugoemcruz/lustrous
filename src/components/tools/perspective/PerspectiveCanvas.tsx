@@ -10,11 +10,12 @@ import { useRef, useEffect, useState } from "react";
 import { usePerspectiveGrid } from "@/lib/hooks/usePerspectiveGrid";
 
 // Ícone de informação SVG
-function InfoIcon() {
+// Ícone de informação SVG
+function InfoIcon({ size = 16 }: { size?: number }) {
     return (
         <svg
-            width="16"
-            height="16"
+            width={size}
+            height={size}
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -29,8 +30,8 @@ function InfoIcon() {
     );
 }
 
-// Ícone de câmera SVG
-function CameraIcon() {
+// Ícone de exportação (câmera) SVG
+function ExportIcon() {
     return (
         <svg
             width="16"
@@ -209,38 +210,28 @@ export function PerspectiveCanvas() {
                 {/* Spacer */}
                 <div className="flex-1" />
 
-                {/* Ações */}
-                <div className="flex gap-2 relative">
+                {/* Reset & Export */}
+                <div className="flex items-center gap-2 pl-4 border-l border-white/10">
                     <button
                         onClick={reset}
-                        className="px-4 h-9 rounded-lg text-xs font-semibold bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary transition-all"
+                        className="h-9 px-4 flex items-center gap-2 bg-slate-grey text-text-secondary rounded-lg hover:bg-medium-grey hover:text-text-primary transition-all text-sm font-medium"
+                        title="Resetar Grid"
                     >
                         Reset
                     </button>
                     <button
                         onClick={exportImage}
-                        className="flex items-center gap-2 px-4 h-9 rounded-lg text-xs font-semibold bg-aqua text-deep-obsidian hover:opacity-90 transition-all shadow-lg"
-                        title="Export Full HD (1920×1080)"
+                        className="h-9 px-4 flex items-center gap-2 bg-aqua text-deep-obsidian rounded-lg hover:bg-opacity-90 transition-all text-sm font-bold shadow-lg shadow-aqua/20"
+                        title="Exportar Imagem"
                     >
-                        <CameraIcon />
-                        <span>Export</span>
-                    </button>
-
-                    <button
-                        onClick={() => setShowHelp(!showHelp)}
-                        className={`w-9 h-9 flex items-center justify-center rounded-lg transition-all ${showHelp
-                            ? "bg-amethyst text-white shadow-lg"
-                            : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
-                            }`}
-                        title="Help"
-                    >
-                        <InfoIcon />
+                        <ExportIcon />
+                        Export
                     </button>
                 </div>
             </div>
 
             {/* Canvas Container */}
-            <div ref={containerRef} className="flex-1 relative overflow-hidden group">
+            <div ref={containerRef} className="flex-1 relative overflow-hidden">
                 <canvas
                     ref={canvasRef}
                     onMouseMove={handleMouseMove}
@@ -249,8 +240,20 @@ export function PerspectiveCanvas() {
                     onMouseLeave={handleMouseUp}
                     onWheel={handleWheel}
                     style={{ cursor: getCursor() }}
-                    className="absolute inset-0"
+                    className="absolute inset-0 z-10"
                 />
+
+                {/* Minimalist Help Button - Persistent Aqua Visibility */}
+                <button
+                    onClick={() => setShowHelp(!showHelp)}
+                    className={`absolute top-4 right-4 z-[60] w-11 h-11 flex items-center justify-center rounded-full text-aqua transition-all pointer-events-auto shadow-none ${showHelp
+                        ? "rotate-12 scale-110"
+                        : "hover:scale-110"
+                        }`}
+                    title="User Guide"
+                >
+                    <InfoIcon size={24} />
+                </button>
 
                 {/* Instructions overlay */}
                 {!state && (
