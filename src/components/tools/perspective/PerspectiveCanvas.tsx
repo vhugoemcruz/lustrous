@@ -122,7 +122,7 @@ export function PerspectiveCanvas() {
         setTimeout(() => {
             setShowHelp(false);
             setIsExiting(false);
-        }, 800); // Sincronizado com os 800ms do CSS
+        }, 350); // Sincronizado com os 350ms do CSS
     };
 
     const {

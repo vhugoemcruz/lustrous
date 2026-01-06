@@ -181,24 +181,24 @@ body {
 @keyframes balloon-enter {
   from {
     opacity: 0;
-    transform: scale(0.9) translateY(20px);
+    transform: scale(0.95);
   }
 
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: scale(1);
   }
 }
 
 @keyframes balloon-exit {
   from {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: scale(1);
   }
 
   to {
     opacity: 0;
-    transform: scale(0.95) translateY(10px);
+    transform: scale(0.98);
   }
 }
 
@@ -227,17 +227,17 @@ body {
 }
 
 .animate-balloon-enter {
-  animation: balloon-enter 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: balloon-enter 350ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .animate-balloon-exit {
-  animation: balloon-exit 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: balloon-exit 350ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .animate-backdrop-fade {
-  animation: backdrop-fade 500ms ease-out forwards;
+  animation: backdrop-fade 350ms ease-out forwards;
 }
 
 .animate-backdrop-unfade {
-  animation: backdrop-unfade 800ms ease-out forwards;
+  animation: backdrop-unfade 350ms ease-out forwards;
 }
