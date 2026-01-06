@@ -10,7 +10,7 @@ import { useRef, useEffect, useState } from "react";
 import { usePerspectiveGrid } from "@/lib/hooks/usePerspectiveGrid";
 
 // Ícone de informação SVG
-function InfoIcon({ size = 16 }: { size?: number }) {
+function InfoIcon({ size = 16, className = "" }: { size?: number; className?: string }) {
     return (
         <svg
             width={size}
@@ -21,6 +21,7 @@ function InfoIcon({ size = 16 }: { size?: number }) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            className={className}
         >
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="16" x2="12" y2="12" />
@@ -49,34 +50,34 @@ function ExportIcon() {
 }
 
 // Ícones para Fullscreen e UI
-function MaximizeIcon({ size = 16 }: { size?: number }) {
+function MaximizeIcon({ size = 16, className = "" }: { size?: number; className?: string }) {
     return (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
             <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
         </svg>
     );
 }
 
-function MinimizeIcon({ size = 16 }: { size?: number }) {
+function MinimizeIcon({ size = 16, className = "" }: { size?: number; className?: string }) {
     return (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
             <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
         </svg>
     );
 }
 
-function EyeIcon({ size = 16 }: { size?: number }) {
+function EyeIcon({ size = 16, className = "" }: { size?: number; className?: string }) {
     return (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
             <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
             <circle cx="12" cy="12" r="3" />
         </svg>
     );
 }
 
-function EyeOffIcon({ size = 16 }: { size?: number }) {
+function EyeOffIcon({ size = 16, className = "" }: { size?: number; className?: string }) {
     return (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
             <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
             <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
             <path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
@@ -408,6 +409,20 @@ export function PerspectiveCanvas() {
                                                 <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5 transition-colors hover:bg-medium-grey/30">
                                                     <strong className="text-text-primary block mb-1 text-xs">Tilt</strong>
                                                     <p className="text-text-secondary text-[10px] leading-relaxed">Angles the horizon line rotation.</p>
+                                                </div>
+                                                <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5 transition-colors hover:bg-medium-grey/30">
+                                                    <strong className="text-text-primary flex items-center gap-1.5 mb-1 text-xs">
+                                                        <MaximizeIcon size={12} className="text-aqua" />
+                                                        Fullscreen
+                                                    </strong>
+                                                    <p className="text-text-secondary text-[10px] leading-relaxed">Expands the grid to fill the browser window.</p>
+                                                </div>
+                                                <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5 transition-colors hover:bg-medium-grey/30">
+                                                    <strong className="text-text-primary flex items-center gap-1.5 mb-1 text-xs">
+                                                        <EyeIcon size={12} className="text-aqua" />
+                                                        Hide UI
+                                                    </strong>
+                                                    <p className="text-text-secondary text-[10px] leading-relaxed">Hides all controls for a clean view (Fullscreen only).</p>
                                                 </div>
                                             </div>
                                         </div>
