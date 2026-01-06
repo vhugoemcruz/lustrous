@@ -52,6 +52,15 @@ export function PerspectiveCanvas() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [showHelp, setShowHelp] = useState(false);
+    const [isExiting, setIsExiting] = useState(false);
+
+    const handleCloseHelp = () => {
+        setIsExiting(true);
+        setTimeout(() => {
+            setShowHelp(false);
+            setIsExiting(false);
+        }, 800); // Sincronizado com os 800ms do CSS
+    };
 
     const {
         state,
@@ -254,18 +263,20 @@ export function PerspectiveCanvas() {
             {/* Balão de Ajuda Centralizado com Backdrop */}
             {showHelp && (
                 <div
-                    className="fixed inset-0 z-[100] flex items-center justify-center bg-deep-obsidian/30 animate-backdrop-fade"
-                    onClick={() => setShowHelp(false)}
+                    className={`fixed inset-0 z-[100] flex items-center justify-center bg-deep-obsidian/30 ${isExiting ? "animate-backdrop-unfade" : "animate-backdrop-fade"
+                        }`}
+                    onClick={handleCloseHelp}
                 >
                     <div
-                        className="w-[400px] p-8 glass border border-glass-border rounded-2xl shadow-2xl z-[101] animate-balloon-enter"
+                        className={`w-[400px] p-8 glass border border-glass-border rounded-2xl shadow-2xl z-[101] ${isExiting ? "animate-balloon-exit" : "animate-balloon-enter"
+                            }`}
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="space-y-6">
                             <div className="flex items-center justify-between border-b border-glass-border pb-4">
                                 <h3 className="text-aqua font-bold text-xl uppercase tracking-widest">User Guide</h3>
                                 <button
-                                    onClick={() => setShowHelp(false)}
+                                    onClick={handleCloseHelp}
                                     className="text-text-muted hover:text-white transition-colors"
                                 >
                                     ✕

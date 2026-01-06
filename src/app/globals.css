@@ -190,6 +190,18 @@ body {
   }
 }
 
+@keyframes balloon-exit {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+}
+
 @keyframes backdrop-fade {
   from {
     opacity: 0;
@@ -202,10 +214,30 @@ body {
   }
 }
 
+@keyframes backdrop-unfade {
+  from {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+
+  to {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+}
+
 .animate-balloon-enter {
   animation: balloon-enter 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+.animate-balloon-exit {
+  animation: balloon-exit 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 .animate-backdrop-fade {
   animation: backdrop-fade 500ms ease-out forwards;
+}
+
+.animate-backdrop-unfade {
+  animation: backdrop-unfade 800ms ease-out forwards;
 }
