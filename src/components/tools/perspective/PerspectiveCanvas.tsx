@@ -240,7 +240,7 @@ export function PerspectiveCanvas() {
             </div>
 
             {/* Canvas Container */}
-            <div ref={containerRef} className="flex-1 relative overflow-hidden">
+            <div ref={containerRef} className="flex-1 relative overflow-hidden group">
                 <canvas
                     ref={canvasRef}
                     onMouseMove={handleMouseMove}
@@ -258,71 +258,73 @@ export function PerspectiveCanvas() {
                         <div className="text-text-muted text-sm">Loading...</div>
                     </div>
                 )}
-            </div>
 
-            {/* Balão de Ajuda Centralizado com Backdrop */}
-            {showHelp && (
-                <div
-                    className={`fixed inset-0 z-[100] flex items-center justify-center bg-deep-obsidian/30 ${isExiting ? "animate-backdrop-unfade" : "animate-backdrop-fade"
-                        }`}
-                    onClick={handleCloseHelp}
-                >
+                {/* Balão de Ajuda Centralizado com Backdrop (Relativo ao Canvas) */}
+                {showHelp && (
                     <div
-                        className={`w-[400px] p-8 glass border border-glass-border rounded-2xl shadow-2xl z-[101] ${isExiting ? "animate-balloon-exit" : "animate-balloon-enter"
+                        className={`absolute inset-0 z-[100] flex items-center justify-center bg-deep-obsidian/30 ${isExiting ? "animate-backdrop-unfade" : "animate-backdrop-fade"
                             }`}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={handleCloseHelp}
                     >
-                        <div className="space-y-6">
-                            <div className="flex items-center justify-between border-b border-glass-border pb-4">
-                                <h3 className="text-aqua font-bold text-xl uppercase tracking-widest">User Guide</h3>
-                                <button
-                                    onClick={handleCloseHelp}
-                                    className="text-text-muted hover:text-white transition-colors"
-                                >
-                                    ✕
-                                </button>
-                            </div>
-
-                            <div className="space-y-4">
-                                <div>
-                                    <h4 className="text-gold font-bold text-sm mb-2 uppercase tracking-wider">Mouse Controls</h4>
-                                    <ul className="text-sm text-text-secondary space-y-2">
-                                        <li>• <span className="text-aqua font-semibold">Click and drag</span> points to change perspective</li>
-                                        <li>• Use <span className="text-gold font-semibold">scroll</span> to zoom</li>
-                                        <li>• <span className="text-magenta font-semibold">Click and drag</span> the empty space to navigate the grid</li>
-                                    </ul>
+                        <div
+                            className={`w-full max-w-[680px] p-8 glass border border-glass-border rounded-2xl shadow-2xl z-[101] ${isExiting ? "animate-balloon-exit" : "animate-balloon-enter"
+                                }`}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between border-b border-glass-border pb-4">
+                                    <h3 className="text-aqua font-bold text-xl uppercase tracking-widest">User Guide</h3>
+                                    <button
+                                        onClick={handleCloseHelp}
+                                        className="text-text-muted hover:text-white transition-colors"
+                                    >
+                                        ✕
+                                    </button>
                                 </div>
 
-                                <div>
-                                    <h4 className="text-gold font-bold text-sm mb-2 uppercase tracking-wider">Interface</h4>
-                                    <div className="grid grid-cols-1 gap-3 text-sm">
-                                        <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5">
-                                            <strong className="text-text-primary block mb-1">Points</strong>
-                                            <p className="text-text-secondary text-xs">Sets the number of active vanishing points to converge the grid system.</p>
-                                        </div>
-                                        <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5">
-                                            <strong className="text-text-primary block mb-1">Third Point</strong>
-                                            <p className="text-text-secondary text-xs">Flips the vertical convergence point between top and bottom orientation.</p>
-                                        </div>
-                                        <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5">
-                                            <strong className="text-text-primary block mb-1">Density</strong>
-                                            <p className="text-text-secondary text-xs">Controls the frequency and spacing of lines within the primary grid structure.</p>
-                                        </div>
-                                        <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5">
-                                            <strong className="text-text-primary block mb-1">Tilt</strong>
-                                            <p className="text-text-secondary text-xs">Angles the horizon line to rotate the entire perspective projection.</p>
+                                <div className="flex gap-8">
+                                    {/* Left Column: Controls & Actions */}
+                                    <div className="flex-1 space-y-6">
+                                        <div>
+                                            <h4 className="text-gold font-bold text-sm mb-3 uppercase tracking-wider">Controls & Actions</h4>
+                                            <ul className="text-sm text-text-secondary space-y-3">
+                                                <li>• <span className="text-aqua font-semibold">Click and drag</span> points to change perspective</li>
+                                                <li>• Use <span className="text-gold font-semibold">scroll</span> to zoom any area</li>
+                                                <li>• <span className="text-magenta font-semibold">Click and drag</span> empty space to navigate</li>
+                                                <li>• Click <span className="text-text-primary font-semibold">Reset</span> to restore default grid state</li>
+                                                <li>• Click <span className="text-aqua font-semibold">Export</span> to save high-res 1080p image</li>
+                                            </ul>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className="pt-4 border-t border-glass-border">
-                                    <p className="text-xs text-text-muted italic select-none">Tip: Use export button to save your grid as an 1080p image.</p>
+                                    {/* Right Column: Interface */}
+                                    <div className="flex-[1.8]">
+                                        <h4 className="text-gold font-bold text-sm mb-3 uppercase tracking-wider">Interface</h4>
+                                        <div className="grid grid-cols-2 gap-3 text-sm">
+                                            <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5 transition-colors hover:bg-medium-grey/30">
+                                                <strong className="text-text-primary block mb-1 text-xs">Points</strong>
+                                                <p className="text-text-secondary text-[10px] leading-relaxed">Active vanishing points in the grid.</p>
+                                            </div>
+                                            <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5 transition-colors hover:bg-medium-grey/30">
+                                                <strong className="text-text-primary block mb-1 text-xs">Third Point</strong>
+                                                <p className="text-text-secondary text-[10px] leading-relaxed">Flips vertical convergence orientation.</p>
+                                            </div>
+                                            <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5 transition-colors hover:bg-medium-grey/30">
+                                                <strong className="text-text-primary block mb-1 text-xs">Density</strong>
+                                                <p className="text-text-secondary text-[10px] leading-relaxed">Frequency of primary grid lines.</p>
+                                            </div>
+                                            <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5 transition-colors hover:bg-medium-grey/30">
+                                                <strong className="text-text-primary block mb-1 text-xs">Tilt</strong>
+                                                <p className="text-text-secondary text-[10px] leading-relaxed">Angles the horizon line rotation.</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 }
