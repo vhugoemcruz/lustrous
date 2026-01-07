@@ -16,6 +16,13 @@ export interface VanishingPoint {
     distanceFromCenter: number;
 }
 
+export interface Handle {
+    x: number;
+    y: number;
+    id: string; // vp1, vp2, vp3
+    restX: number; // Posição X de descanso relativa ao centro do horizonte
+}
+
 export interface GridConfig {
     type: 1 | 2 | 3;
     thirdPointOrientation: "top" | "bottom";
@@ -42,6 +49,7 @@ export interface Line {
 
 export interface PerspectiveState {
     vanishingPoints: VanishingPoint[];
+    handles: Handle[];
     config: GridConfig;
     camera: CameraState;
     canvasWidth: number;
@@ -82,6 +90,11 @@ export function createInitialState(
             { id: "vp1", x: 0, y: 0, distanceFromCenter: -canvasWidth * 0.35 },
             { id: "vp2", x: 0, y: 0, distanceFromCenter: canvasWidth * 0.35 },
             { id: "vp3", x: 0, y: 0, distanceFromCenter: -canvasHeight * 3 },
+        ],
+        handles: [
+            { id: "vp1", x: 0, y: 0, restX: -150 },
+            { id: "vp2", x: 0, y: 0, restX: 150 },
+            { id: "vp3", x: 0, y: 0, restX: 0 },
         ],
         config: {
             type: 2,
@@ -354,7 +367,8 @@ function clipLine(
 export function renderGrid(
     ctx: CanvasRenderingContext2D,
     lines: Line[],
-    state: PerspectiveState
+    state: PerspectiveState,
+    showUI: boolean = true
 ): void {
     const { canvasWidth, canvasHeight, config } = state;
 
@@ -375,27 +389,86 @@ export function renderGrid(
 
     ctx.globalAlpha = 1;
 
-    // Pontos de fuga com halo sutil + centro branco (técnica da referência)
-    const transformedVPs = getTransformedVanishingPoints(state);
-    const colors = [LINE_COLORS.vp1, LINE_COLORS.vp2, LINE_COLORS.vp3];
+    // 4. Renderizar UI (Handles e Pontos de Fuga Reais)
+    if (showUI) {
+        // Pontos de fuga com halo sutil + centro branco (técnica da referência)
+        const transformedVPs = getTransformedVanishingPoints(state);
+        const vpColors = [LINE_COLORS.vp1, LINE_COLORS.vp2, LINE_COLORS.vp3];
 
-    for (let i = 0; i < config.type; i++) {
-        const vp = transformedVPs[i];
+        for (let i = 0; i < state.config.type; i++) {
+            const vp = transformedVPs[i];
 
-        // 1. Halo sutil (20px, baixa opacidade) - suaviza convergência
+            // Centro branco pequeno (2.5px) - ponto de fuga limpo
+            ctx.beginPath();
+            ctx.arc(vp.x, vp.y, 2.5, 0, Math.PI * 2);
+            ctx.fillStyle = "#ffffff";
+            ctx.globalAlpha = 1;
+            ctx.fill();
+
+            // Halo sutil (opcional, para ajudar a ver se estiver muito longe)
+            ctx.beginPath();
+            ctx.arc(vp.x, vp.y, 8, 0, Math.PI * 2);
+            ctx.strokeStyle = vpColors[i];
+            ctx.lineWidth = 1;
+            ctx.globalAlpha = 0.3;
+            ctx.stroke();
+        }
+
+        renderHandles(ctx, state);
+    }
+}
+
+/**
+ * Renderiza os handles interativos (bolinhas) para controle dos VPs.
+ */
+function renderHandles(
+    ctx: CanvasRenderingContext2D,
+    state: PerspectiveState
+): void {
+    const { handles, camera, canvasWidth, config } = state;
+    const centerX = canvasWidth / 2 + camera.panX;
+    const centerY = camera.horizonY + camera.panY;
+    const angleRad = (camera.horizonAngle * Math.PI) / 180;
+
+    const colors = {
+        vp1: LINE_COLORS.vp1,
+        vp2: LINE_COLORS.vp2,
+        vp3: LINE_COLORS.vp3,
+    };
+
+    handles.forEach((handle) => {
+        // Pular VP3 se não estiver no modo 3 pontos, ou VP2 se estiver no modo 1 ponto
+        if (handle.id === "vp3" && config.type !== 3) return;
+        if (handle.id === "vp2" && config.type === 1) return;
+
+        // ÂNCORA ABSOLUTA NA TELA: As bolinhas ficam em posição fixa no canvas, como botões de um dashboard.
+        // Ignoram completamente horizonY, panX, panY, zoom e horizonAngle.
+        // Posicionamos na parte inferior central para fácil acesso.
+        const screenCenterX = state.canvasWidth / 2;
+        const restX = (handle.id === "vp1" && config.type === 1) ? 0 : handle.restX;
+        const x = screenCenterX + restX + handle.x;
+        const y = (state.canvasHeight / 2) + handle.y;
+
+        // 1. Aura semi-transparente
         ctx.beginPath();
-        ctx.arc(vp.x, vp.y, 20, 0, Math.PI * 2);
-        ctx.fillStyle = colors[i];
-        ctx.globalAlpha = 0.15;
+        ctx.arc(x, y, 15, 0, Math.PI * 2);
+        ctx.fillStyle = colors[handle.id as keyof typeof colors];
+        ctx.globalAlpha = 0.4;
         ctx.fill();
 
-        // 2. Centro branco pequeno (2.5px) - ponto de fuga limpo
+        // 2. Borda sutil
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = "#ffffff";
+        ctx.globalAlpha = 0.8;
+        ctx.stroke();
+
+        // 3. Ponto branco central
         ctx.beginPath();
-        ctx.arc(vp.x, vp.y, 2.5, 0, Math.PI * 2);
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
         ctx.fillStyle = "#ffffff";
         ctx.globalAlpha = 1;
         ctx.fill();
-    }
+    });
 }
 
 export function exportCanvasAsImage(
@@ -441,14 +514,25 @@ export function findVanishingPointAtPosition(
     state: PerspectiveState,
     x: number,
     y: number,
-    threshold: number = 20
+    showUI: boolean = true,
+    threshold: number = 25 // Limite maior para handles
 ): string | null {
-    const transformedVPs = getTransformedVanishingPoints(state);
+    if (!showUI) return null;
+    const { handles, camera, canvasWidth, config } = state;
+    const centerX = canvasWidth / 2 + camera.panX;
+    const centerY = camera.horizonY + camera.panY;
+    const angleRad = (camera.horizonAngle * Math.PI) / 180;
 
-    for (let i = 0; i < state.config.type; i++) {
-        const vp = transformedVPs[i];
-        const dist = Math.sqrt((x - vp.x) ** 2 + (y - vp.y) ** 2);
-        if (dist < threshold) return vp.id;
+    for (const handle of handles) {
+        if (handle.id === "vp3" && config.type !== 3) continue;
+        if (handle.id === "vp2" && config.type === 1) continue;
+
+        const restX = (handle.id === "vp1" && config.type === 1) ? 0 : handle.restX;
+        const hx = (state.canvasWidth / 2) + restX + handle.x;
+        const hy = (state.canvasHeight / 2) + handle.y;
+
+        const dist = Math.hypot(x - hx, y - hy);
+        if (dist < threshold) return handle.id;
     }
     return null;
 }
@@ -457,45 +541,69 @@ export function updateVanishingPointDistance(
     state: PerspectiveState,
     vpId: string,
     mouseX: number,
-    mouseY: number
+    mouseY: number,
+    initialDragState: { handleX: number; handleY: number; vpDist: number; vpx?: number } | null = null
 ): PerspectiveState {
-    const centerX = state.canvasWidth / 2 + state.camera.panX;
-    const centerY = state.camera.horizonY + state.camera.panY;
-    const angleRad = (state.camera.horizonAngle * Math.PI) / 180;
+    const screenCenterX = state.canvasWidth / 2;
+    const screenBaseY = state.canvasHeight / 2;
+
+    // Distância do mouse em relação à âncora fixa na tela
+    // Ignoramos completamente a rotação do horizonte para o controle das bolinhas (UI fixa)
+    const localX = mouseX - screenCenterX;
+    const localY = mouseY - screenBaseY;
+
+    let newState = { ...state };
 
     if (vpId === "vp1" || vpId === "vp2") {
-        const dx = mouseX - centerX;
-        const dy = mouseY - centerY;
-        const projection = dx * Math.cos(angleRad) + dy * Math.sin(angleRad);
+        const targetHandle = state.handles.find(h => h.id === vpId);
+        if (!targetHandle || !initialDragState) return state;
 
-        return {
-            ...state,
-            vanishingPoints: state.vanishingPoints.map(vp =>
-                vp.id === vpId ? { ...vp, distanceFromCenter: projection / state.camera.zoom } : vp
-            ),
-        };
+        const restX = (vpId === "vp1" && state.config.type === 1) ? 0 : targetHandle.restX;
+        // OFFSET VISUAL na tela (movimento absoluto horizontal)
+        const dragDeltaX = localX - restX;
+
+        newState.handles = state.handles.map(h =>
+            h.id === vpId ? { ...h, x: dragDeltaX } : h
+        );
+
+        // ATUALIZAR VP (MUNDO):
+        // Como o controle agora é uma UI absoluta, movemos o VP baseando-se no delta
+        // Mas respeitamos a sensibilidade amplificada para alcances maiores.
+        const sensitivity = 1;
+        const finalVpDist = initialDragState.vpDist + (dragDeltaX * sensitivity) / state.camera.zoom;
+
+        newState.vanishingPoints = state.vanishingPoints.map(vp =>
+            vp.id === vpId ? { ...vp, distanceFromCenter: finalVpDist } : vp
+        );
+
     } else if (vpId === "vp3") {
-        const dx = mouseX - centerX;
-        const dy = mouseY - centerY;
+        const targetHandle = state.handles.find(h => h.id === vpId);
+        if (!targetHandle || !initialDragState) return state;
 
-        // Projetar a posição do mouse nos eixos local (rotacionados)
-        // O eixo "Y local" do VP3 é perpendicular ao horizonte (sen/cos invertidos)
-        // O eixo "X local" do VP3 é paralelo ao horizonte
+        const dragDeltaX = localX - targetHandle.restX;
+        const dragDeltaY = localY;
 
-        const localX = dx * Math.cos(angleRad) + dy * Math.sin(angleRad);
-        const localY = -dx * Math.sin(angleRad) + dy * Math.cos(angleRad);
+        newState.handles = state.handles.map(h =>
+            h.id === vpId ? { ...h, x: dragDeltaX, y: dragDeltaY } : h
+        );
 
-        return {
-            ...state,
-            vanishingPoints: state.vanishingPoints.map(vp =>
-                vp.id === vpId ? {
-                    ...vp,
-                    x: localX / state.camera.zoom,
-                    distanceFromCenter: localY / state.camera.zoom
-                } : vp
-            ),
-            config: { ...state.config, thirdPointOrientation: localY < 0 ? "top" : "bottom" },
+        const sensitivity = 1;
+        const newVpX = (initialDragState.vpx || 0) + (dragDeltaX * sensitivity) / state.camera.zoom;
+        const newVpDist = initialDragState.vpDist + (dragDeltaY * sensitivity) / state.camera.zoom;
+
+        newState.vanishingPoints = state.vanishingPoints.map(vp =>
+            vp.id === vpId ? {
+                ...vp,
+                x: newVpX,
+                distanceFromCenter: newVpDist
+            } : vp
+        );
+
+        newState.config = {
+            ...state.config,
+            thirdPointOrientation: newVpDist < 0 ? "top" : "bottom"
         };
     }
-    return state;
+
+    return newState;
 }

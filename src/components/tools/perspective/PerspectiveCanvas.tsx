@@ -138,7 +138,7 @@ export function PerspectiveCanvas() {
         handleWheel,
         reset,
         exportImage,
-    } = usePerspectiveGrid(canvasRef);
+    } = usePerspectiveGrid(canvasRef, hideUI);
 
     // Inicializar canvas com tamanho do container
     useEffect(() => {
@@ -168,7 +168,7 @@ export function PerspectiveCanvas() {
 
     return (
         <div className="flex flex-col h-full bg-anthracite overflow-hidden">
-            {/* Canvas Container - Now includes Toolbar for Fullscreen Context */}
+            {/* Canvas Container - Includes Toolbar for Fullscreen Context */}
             <div ref={containerRef} className="flex-1 relative overflow-hidden bg-anthracite flex flex-col">
                 {/* Toolbar - Moved inside for Fullscreen visibility */}
                 <div className={`flex flex-wrap items-center gap-4 p-4 transition-all duration-300 z-50 ${isFullscreen
@@ -395,20 +395,20 @@ export function PerspectiveCanvas() {
                                             <h4 className="text-gold font-bold text-sm mb-3 uppercase tracking-wider">Interface</h4>
                                             <div className="grid grid-cols-2 gap-3 text-sm">
                                                 <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5 transition-colors hover:bg-medium-grey/30">
-                                                    <strong className="text-text-primary block mb-1 text-xs">Points</strong>
-                                                    <p className="text-text-secondary text-[10px] leading-relaxed">Active vanishing points in the grid.</p>
+                                                    <strong className="text-text-primary block mb-1 text-xs">Vanishing Points</strong>
+                                                    <p className="text-text-secondary text-[10px] leading-relaxed">Click and drag on the vanishing points to move them directly.</p>
                                                 </div>
                                                 <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5 transition-colors hover:bg-medium-grey/30">
-                                                    <strong className="text-text-primary block mb-1 text-xs">Third Point</strong>
-                                                    <p className="text-text-secondary text-[10px] leading-relaxed">Flips vertical convergence orientation.</p>
+                                                    <strong className="text-text-primary block mb-1 text-xs">Points</strong>
+                                                    <p className="text-text-secondary text-[10px] leading-relaxed">Changes the number of vanishing points.</p>
                                                 </div>
                                                 <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5 transition-colors hover:bg-medium-grey/30">
                                                     <strong className="text-text-primary block mb-1 text-xs">Density</strong>
-                                                    <p className="text-text-secondary text-[10px] leading-relaxed">Frequency of primary grid lines.</p>
+                                                    <p className="text-text-secondary text-[10px] leading-relaxed">Frequency of grid lines.</p>
                                                 </div>
                                                 <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5 transition-colors hover:bg-medium-grey/30">
                                                     <strong className="text-text-primary block mb-1 text-xs">Tilt</strong>
-                                                    <p className="text-text-secondary text-[10px] leading-relaxed">Angles the horizon line rotation.</p>
+                                                    <p className="text-text-secondary text-[10px] leading-relaxed">Changes the angle of inclination of the horizon line.</p>
                                                 </div>
                                                 <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5 transition-colors hover:bg-medium-grey/30">
                                                     <strong className="text-text-primary flex items-center gap-1.5 mb-1 text-xs">
@@ -423,6 +423,12 @@ export function PerspectiveCanvas() {
                                                         Hide UI
                                                     </strong>
                                                     <p className="text-text-secondary text-[10px] leading-relaxed">Hides all controls for a clean view (Fullscreen only).</p>
+                                                </div>
+                                                <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5 transition-colors hover:bg-medium-grey/30 col-span-2">
+                                                    <strong className="flex items-center gap-1.5 mb-1 tracking-tighter">
+                                                    Colored Circles
+                                                    </strong>
+                                                    <p className="text-text-secondary text-[10px] leading-relaxed">The colored circles on the screen are the controls for the vanishing points of their respective colors. Click and drag them to move the vanishing points.</p>
                                                 </div>
                                             </div>
                                         </div>
