@@ -1,12 +1,12 @@
 // @ts-check
 /**
  * @module perspective-engine
- * @description Motor de cálculo de geometria de perspectiva
+ * @description Perspective geometry calculation engine
  * 
- * Implementação de grid 3D com malha (mesh):
- * - Linhas distribuídas por distância projetada no espaço 3D
- * - Cria efeito de profundidade com compressão perspectiva
- * - Linhas de VPs diferentes se cruzam formando planos
+ * 3D grid implementation with mesh:
+ * - Lines distributed by projected distance in 3D space
+ * - Creates depth effect with perspective compression
+ * - Lines from different VPs intersect forming planes
  */
 
 export interface VanishingPoint {
@@ -20,7 +20,7 @@ export interface Handle {
     x: number;
     y: number;
     id: string; // vp1, vp2, vp3
-    restX: number; // Posição X de descanso relativa ao centro do horizonte
+    restX: number; // Resting X position relative to horizon center
 }
 
 export interface GridConfig {
@@ -56,14 +56,8 @@ export interface PerspectiveState {
     canvasHeight: number;
 }
 
-// Número de linhas por VP por densidade (dobrado por nível)
-const LINE_COUNT = {
-    low: 48,      // Corresponde a LOOSE na referência
-    medium: 96,   // Corresponde a NORMAL na referência
-    high: 192,     // Corresponde a TIGHT na referência
-};
 
-// Número de linhas para VP3 (terceiro ponto) - valores diferentes dos outros VPs
+// Number of lines for VP3 (third point) - different values from other VPs
 const VP3_LINE_COUNT = {
     low: 96,
     medium: 192,
@@ -77,13 +71,16 @@ const LINE_COLORS = {
     horizon: "#ff0000ff",
 };
 
+/**
+ * Creates the initial state of the perspective system.
+ * @param canvasWidth Canvas width in pixels.
+ * @param canvasHeight Canvas height in pixels.
+ * @returns The initial state configured with default values.
+ */
 export function createInitialState(
     canvasWidth: number,
     canvasHeight: number
 ): PerspectiveState {
-    const centerX = canvasWidth / 2;
-    const centerY = canvasHeight / 2;
-
     return {
         // Initial vanishing points positions
         vanishingPoints: [
@@ -102,7 +99,7 @@ export function createInitialState(
             density: "medium",
         },
         camera: {
-            horizonY: centerY,
+            horizonY: canvasHeight / 2,
             horizonAngle: 0,
             panX: 0,
             panY: 0,
@@ -113,10 +110,15 @@ export function createInitialState(
     };
 }
 
+/**
+ * Calculates the vanishing point coordinates (x, y) transformed by the camera (pan, zoom, rotation).
+ * @param state The current perspective state.
+ * @returns Array of objects containing transformed coordinates and ID for each VP.
+ */
 export function getTransformedVanishingPoints(
     state: PerspectiveState
 ): { x: number; y: number; id: string }[] {
-    const { vanishingPoints, camera, canvasWidth, config } = state;
+    const { vanishingPoints, camera, canvasWidth } = state;
     const centerX = canvasWidth / 2 + camera.panX;
     const centerY = camera.horizonY + camera.panY;
     const angleRad = (camera.horizonAngle * Math.PI) / 180;
@@ -132,13 +134,13 @@ export function getTransformedVanishingPoints(
         transformed.push({ x, y, id: vp.id });
     }
 
-    // VP3 acima ou abaixo (agora omnidirecional)
+    // VP3 above or below (now omnidirectional)
     const vp3 = vanishingPoints[2];
     const vp3Dist = vp3.distanceFromCenter * camera.zoom;
     const vp3OffsetX = vp3.x * camera.zoom;
 
-    // VP3 é transformado em relação ao centro do horizonte, 
-    // rotacionado junto com o ângulo do horizonte para manter consistência
+    // VP3 is transformed relative to the horizon center,
+    // rotated along with the horizon angle to maintain consistency
     const transformedVP3X = centerX + vp3OffsetX * Math.cos(angleRad) - vp3Dist * Math.sin(angleRad);
     const transformedVP3Y = centerY + vp3OffsetX * Math.sin(angleRad) + vp3Dist * Math.cos(angleRad);
 
@@ -147,16 +149,20 @@ export function getTransformedVanishingPoints(
     return transformed;
 }
 
+/**
+ * Calculates all perspective grid lines based on the current state.
+ * @param state The current perspective state.
+ * @returns Array of lines ready to be rendered.
+ */
 export function calculatePerspectiveLines(state: PerspectiveState): Line[] {
     const lines: Line[] = [];
     const { config, camera, canvasWidth, canvasHeight } = state;
-    const lineCount = LINE_COUNT[config.density];
     const transformedVPs = getTransformedVanishingPoints(state);
     const centerX = canvasWidth / 2 + camera.panX;
     const centerY = camera.horizonY + camera.panY;
     const angleRad = (camera.horizonAngle * Math.PI) / 180;
 
-    // Linha do horizonte
+    // Horizon line
     const lineLength = Math.max(canvasWidth, canvasHeight) * 3;
     lines.push({
         x1: centerX - lineLength * Math.cos(angleRad),
@@ -168,19 +174,19 @@ export function calculatePerspectiveLines(state: PerspectiveState): Line[] {
         width: 1.5,
     });
 
-    // Cores para cada VP
+    // Colors for each VP
     const vpColors = [LINE_COLORS.vp1, LINE_COLORS.vp2, LINE_COLORS.vp3];
 
-    // Criar linhas radiais omnidirecionais para cada VP ativo
-    // VP1 e VP2 usam compressão vertical (denso no horizonte)
-    // VP3 usa compressão horizontal (denso no centro vertical)
+    // Create omnidirectional radial lines for each active VP
+    // VP1 and VP2 use vertical compression (dense at horizon)
+    // VP3 uses horizontal compression (dense at vertical center)
     for (let i = 0; i < Math.min(config.type, 2); i++) {
         const vp = transformedVPs[i];
         const color = vpColors[i];
         lines.push(...createRadialLinesFromVP(vp, config.density, canvasWidth, canvasHeight, color, angleRad));
     }
 
-    // VP3 usa função específica com distribuição uniforme
+    // VP3 uses specific function with uniform distribution
     if (config.type === 3) {
         const vp3 = transformedVPs[2];
         lines.push(...createRadialLinesForVP3(vp3, config.density, canvasWidth, canvasHeight, LINE_COLORS.vp3, angleRad));
@@ -190,9 +196,9 @@ export function calculatePerspectiveLines(state: PerspectiveState): Line[] {
 }
 
 /**
- * Cria linhas radiais omnidirecionais (360°) com compressão perspectiva.
- * As linhas cobrem todo o espaço ao redor do VP, com maior densidade
- * perto dos eixos horizontal e vertical (efeito de profundidade).
+ * Creates omnidirectional radial lines (360°) with perspective compression.
+ * The lines cover the entire space around the VP, with higher density
+ * near the horizontal and vertical axes (depth effect).
  */
 function createRadialLinesFromVP(
     vp: { x: number; y: number },
@@ -203,14 +209,14 @@ function createRadialLinesFromVP(
     angleOffset: number
 ): Line[] {
     const lines: Line[] = [];
-    // Distribuição das linhas em 360°
+    // Distribution of lines in 360°
     const maxDist = Math.hypot(canvasWidth, canvasHeight) * 5;
 
-    // Distribuir linhas em 360° usando meia volta por linha (cada linha atravessa o VP)
+    // Distribute lines in 360° using half turns per line (each line passes through the VP)
     const angles = getGeometricAngles(density);
 
     for (const angle of angles) {
-        // Rotacionar os ângulos base de acordo com a inclinação do horizonte
+        // Rotate base angles according to horizon tilt
         const finalAngle = angle + angleOffset;
         const cos = Math.cos(finalAngle);
         const sin = Math.sin(finalAngle);
@@ -220,7 +226,7 @@ function createRadialLinesFromVP(
         const x2 = vp.x - cos * maxDist;
         const y2 = vp.y - sin * maxDist;
 
-        // Clipar ao canvas
+        // Clip to canvas
         const clipped = clipLine(x1, y1, x2, y2, 0, 0, canvasWidth, canvasHeight);
 
         if (clipped) {
@@ -240,9 +246,9 @@ function createRadialLinesFromVP(
 }
 
 /**
- * Cria linhas radiais omnidirecionais (360°) para VP3.
- * As linhas atravessam o ponto VP3, distribuídas uniformemente em 180°
- * (cada linha cobre 180° passando pelo VP3).
+ * Creates omnidirectional radial lines (360°) for VP3.
+ * The lines pass through point VP3, uniformly distributed over 180°
+ * (each line covers 180° passing through VP3).
  */
 function createRadialLinesForVP3(
     vp: { x: number; y: number },
@@ -255,17 +261,17 @@ function createRadialLinesForVP3(
     const lines: Line[] = [];
     const count = VP3_LINE_COUNT[density];
 
-    // Calcular a distância do VP3 ao centro do canvas
+    // Calculate distance from VP3 to canvas center
     const centerX = canvasWidth / 2;
     const centerY = canvasHeight / 2;
     const distToCenter = Math.hypot(vp.x - centerX, vp.y - centerY);
 
-    // maxDist precisa ser maior que a distância do VP ao canvas + margem
+    // maxDist needs to be greater than distance from VP to canvas + margin
     const baseDist = Math.hypot(canvasWidth, canvasHeight) * 5;
     const maxDist = Math.max(baseDist, distToCenter * 2 + baseDist);
 
-    // Distribuir linhas uniformemente em 180° (cada linha passa pelo VP3)
-    // Rotacionamos junto com o horizonte (angleOffset) + 90° (perpendicular)
+    // Distribute lines uniformly in 180° (each line passes through VP3)
+    // We rotate along with the horizon (angleOffset) + 90° (perpendicular)
     const step = Math.PI / count;
 
     for (let i = 0; i < count; i++) {
@@ -274,7 +280,7 @@ function createRadialLinesForVP3(
         const cos = Math.cos(angle);
         const sin = Math.sin(angle);
 
-        // Linha atravessa o VP3 em ambas as direções
+        // Line passes through VP3 in both directions
         const x1 = vp.x + cos * maxDist;
         const y1 = vp.y + sin * maxDist;
         const x2 = vp.x - cos * maxDist;
@@ -299,13 +305,13 @@ function createRadialLinesForVP3(
 }
 
 /**
- * Gera ângulos com incremento geométrico para evitar manchas nos VPs.
- * Baseado na lógica do site de referência.
+ * Generates angles with geometric increment to avoid overlap at VPs.
+ * Based on the reference site logic.
  */
 function getGeometricAngles(density: "low" | "medium" | "high"): number[] {
-    // factorMap: quanto maior, mais rápido as linhas se afastam do eixo principal
+    // factorMap: the larger the value, the faster the lines move away from the main axis
     const factorMap = { low: 0.18, medium: 0.11, high: 0.05 };
-    // baseAngleMap: o primeiro salto angular saindo do eixo
+    // baseAngleMap: the first angular jump coming off the axis
     const baseAngleMap = { low: 0.012, medium: 0.006, high: 0.003 };
 
     const spreadFactor = factorMap[density];
@@ -315,8 +321,8 @@ function getGeometricAngles(density: "low" | "medium" | "high"): number[] {
     let currentAngle = 0;
     let increment = baseAngle;
 
-    // Gera ângulos até Math.PI / 2 (90 graus) em ambas as direções
-    // Isso cobre 180 graus de inclinações, que estendidas cobrem 360
+    // Generate angles up to Math.PI / 2 (90 degrees) in both directions
+    // This covers 180 degrees of tilts, which extended cover 360
     while (currentAngle < Math.PI / 2) {
         currentAngle += increment;
         if (currentAngle < Math.PI / 2) {
@@ -332,7 +338,7 @@ function clipLine(
     x1: number, y1: number, x2: number, y2: number,
     minX: number, minY: number, maxX: number, maxY: number
 ): { x1: number; y1: number; x2: number; y2: number } | null {
-    // Cohen-Sutherland simplificado
+    // Simplified Cohen-Sutherland
     const INSIDE = 0, LEFT = 1, RIGHT = 2, BOTTOM = 4, TOP = 8;
 
     const code = (x: number, y: number) => {
@@ -364,19 +370,26 @@ function clipLine(
     return null;
 }
 
+/**
+ * Renders the perspective grid and user interface (VPs and handles) on the canvas.
+ * @param ctx 2D canvas context.
+ * @param lines Array of previously calculated lines.
+ * @param state Current perspective state.
+ * @param showUI Whether to render UI elements (VPs and handles). Defaults to true.
+ */
 export function renderGrid(
     ctx: CanvasRenderingContext2D,
     lines: Line[],
     state: PerspectiveState,
     showUI: boolean = true
 ): void {
-    const { canvasWidth, canvasHeight, config } = state;
+    const { canvasWidth, canvasHeight } = state;
 
-    // Fundo branco
+    // White background
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    // Desenhar linhas
+    // Draw lines
     lines.forEach((line) => {
         ctx.beginPath();
         ctx.moveTo(line.x1, line.y1);
@@ -389,23 +402,23 @@ export function renderGrid(
 
     ctx.globalAlpha = 1;
 
-    // 4. Renderizar UI (Handles e Pontos de Fuga Reais)
+    // 4. Render UI (Handles and Real Vanishing Points)
     if (showUI) {
-        // Pontos de fuga com halo sutil + centro branco (técnica da referência)
+        // Vanishing points with subtle halo + white center
         const transformedVPs = getTransformedVanishingPoints(state);
         const vpColors = [LINE_COLORS.vp1, LINE_COLORS.vp2, LINE_COLORS.vp3];
 
         for (let i = 0; i < state.config.type; i++) {
             const vp = transformedVPs[i];
 
-            // Centro branco pequeno (2.5px) - ponto de fuga limpo
+            // Small white center (2.5px) - clean vanishing point
             ctx.beginPath();
             ctx.arc(vp.x, vp.y, 2.5, 0, Math.PI * 2);
             ctx.fillStyle = "#ffffff";
             ctx.globalAlpha = 1;
             ctx.fill();
 
-            // Halo sutil (opcional, para ajudar a ver se estiver muito longe)
+            // Subtle halo (optional, to help visibility if too far)
             ctx.beginPath();
             ctx.arc(vp.x, vp.y, 8, 0, Math.PI * 2);
             ctx.strokeStyle = vpColors[i];
@@ -419,16 +432,13 @@ export function renderGrid(
 }
 
 /**
- * Renderiza os handles interativos (bolinhas) para controle dos VPs.
+ * Renders interactive handles (circles) for VP control.
  */
 function renderHandles(
     ctx: CanvasRenderingContext2D,
     state: PerspectiveState
 ): void {
-    const { handles, camera, canvasWidth, config } = state;
-    const centerX = canvasWidth / 2 + camera.panX;
-    const centerY = camera.horizonY + camera.panY;
-    const angleRad = (camera.horizonAngle * Math.PI) / 180;
+    const { handles, config } = state;
 
     const colors = {
         vp1: LINE_COLORS.vp1,
@@ -437,32 +447,32 @@ function renderHandles(
     };
 
     handles.forEach((handle) => {
-        // Pular VP3 se não estiver no modo 3 pontos, ou VP2 se estiver no modo 1 ponto
+        // Skip VP3 if not in 3-point mode, or VP2 if in 1-point mode
         if (handle.id === "vp3" && config.type !== 3) return;
         if (handle.id === "vp2" && config.type === 1) return;
 
-        // ÂNCORA ABSOLUTA NA TELA: As bolinhas ficam em posição fixa no canvas, como botões de um dashboard.
-        // Ignoram completamente horizonY, panX, panY, zoom e horizonAngle.
-        // Posicionamos na parte inferior central para fácil acesso.
+        // ABSOLUTE SCREEN ANCHOR: Handles stay in fixed positions on canvas, like dashboard buttons.
+        // They completely ignore horizonY, panX, panY, zoom, and horizonAngle.
+        // Positioned at center for easy access.
         const screenCenterX = state.canvasWidth / 2;
         const restX = (handle.id === "vp1" && config.type === 1) ? 0 : handle.restX;
         const x = screenCenterX + restX + handle.x;
         const y = (state.canvasHeight / 2) + handle.y;
 
-        // 1. Aura semi-transparente
+        // 1. Semi-transparent aura
         ctx.beginPath();
         ctx.arc(x, y, 15, 0, Math.PI * 2);
         ctx.fillStyle = colors[handle.id as keyof typeof colors];
         ctx.globalAlpha = 0.4;
         ctx.fill();
 
-        // 2. Borda sutil
+        // 2. Subtle border
         ctx.lineWidth = 1.5;
         ctx.strokeStyle = "#ffffff";
         ctx.globalAlpha = 0.8;
         ctx.stroke();
 
-        // 3. Ponto branco central
+        // 3. Central white dot
         ctx.beginPath();
         ctx.arc(x, y, 3, 0, Math.PI * 2);
         ctx.fillStyle = "#ffffff";
@@ -471,8 +481,13 @@ function renderHandles(
     });
 }
 
+/**
+ * Exports canvas content as a high-resolution PNG image (1920x1080).
+ * Creates a temporary canvas to render the grid at export resolution.
+ * @param state Current perspective state.
+ * @param fileName Name of the file to be downloaded. Defaults to "perspective-grid".
+ */
 export function exportCanvasAsImage(
-    canvas: HTMLCanvasElement,
     state: PerspectiveState,
     fileName: string = "perspective-grid"
 ): void {
@@ -510,26 +525,35 @@ export function exportCanvasAsImage(
     link.click();
 }
 
+/**
+ * Identifies if a handle or vanishing point exists under the specified coordinates.
+ * @param state Current perspective state.
+ * @param x X coordinate on canvas.
+ * @param y Y coordinate on canvas.
+ * @param showUI If UI is visible (if false, returns null).
+ * @param threshold Detection radius in pixels around the handle. Defaults to 25.
+ * @returns The vanishing point ID ("vp1", "vp2", "vp3") or null if nothing is found.
+ */
 export function findVanishingPointAtPosition(
     state: PerspectiveState,
     x: number,
     y: number,
     showUI: boolean = true,
-    threshold: number = 25 // Limite maior para handles
+    threshold: number = 25
 ): string | null {
     if (!showUI) return null;
-    const { handles, camera, canvasWidth, config } = state;
-    const centerX = canvasWidth / 2 + camera.panX;
-    const centerY = camera.horizonY + camera.panY;
-    const angleRad = (camera.horizonAngle * Math.PI) / 180;
+
+    const { handles, config } = state;
+    const screenCenterX = state.canvasWidth / 2;
+    const screenBaseY = state.canvasHeight / 2;
 
     for (const handle of handles) {
         if (handle.id === "vp3" && config.type !== 3) continue;
         if (handle.id === "vp2" && config.type === 1) continue;
 
         const restX = (handle.id === "vp1" && config.type === 1) ? 0 : handle.restX;
-        const hx = (state.canvasWidth / 2) + restX + handle.x;
-        const hy = (state.canvasHeight / 2) + handle.y;
+        const hx = screenCenterX + restX + handle.x;
+        const hy = screenBaseY + handle.y;
 
         const dist = Math.hypot(x - hx, y - hy);
         if (dist < threshold) return handle.id;
@@ -537,6 +561,15 @@ export function findVanishingPointAtPosition(
     return null;
 }
 
+/**
+ * Updates the distance/position of a vanishing point based on mouse interaction with the handle.
+ * @param state Current perspective state.
+ * @param vpId ID of the vanishing point being updated ("vp1", "vp2", "vp3").
+ * @param mouseX Current mouse X coordinate.
+ * @param mouseY Current mouse Y coordinate.
+ * @param initialDragState Initial state captured at drag start for relative calculations.
+ * @returns A new PerspectiveState object with applied updates.
+ */
 export function updateVanishingPointDistance(
     state: PerspectiveState,
     vpId: string,
@@ -547,34 +580,34 @@ export function updateVanishingPointDistance(
     const screenCenterX = state.canvasWidth / 2;
     const screenBaseY = state.canvasHeight / 2;
 
-    // Distância do mouse em relação à âncora fixa na tela
-    // Ignoramos completamente a rotação do horizonte para o controle das bolinhas (UI fixa)
+    // Mouse distance relative to fixed screen anchor
+    // We completely ignore horizon rotation for handle control (fixed UI)
     const localX = mouseX - screenCenterX;
     const localY = mouseY - screenBaseY;
-
-    let newState = { ...state };
 
     if (vpId === "vp1" || vpId === "vp2") {
         const targetHandle = state.handles.find(h => h.id === vpId);
         if (!targetHandle || !initialDragState) return state;
 
         const restX = (vpId === "vp1" && state.config.type === 1) ? 0 : targetHandle.restX;
-        // OFFSET VISUAL na tela (movimento absoluto horizontal)
+        // VISUAL OFFSET on screen (absolute horizontal movement)
         const dragDeltaX = localX - restX;
 
-        newState.handles = state.handles.map(h =>
-            h.id === vpId ? { ...h, x: dragDeltaX } : h
-        );
-
-        // ATUALIZAR VP (MUNDO):
-        // Como o controle agora é uma UI absoluta, movemos o VP baseando-se no delta
-        // Mas respeitamos a sensibilidade amplificada para alcances maiores.
+        // UPDATE VP (WORLD):
+        // Since the control is now an absolute UI, we move the VP based on delta
+        // But we respect amplified sensitivity for larger ranges.
         const sensitivity = 1;
         const finalVpDist = initialDragState.vpDist + (dragDeltaX * sensitivity) / state.camera.zoom;
 
-        newState.vanishingPoints = state.vanishingPoints.map(vp =>
-            vp.id === vpId ? { ...vp, distanceFromCenter: finalVpDist } : vp
-        );
+        return {
+            ...state,
+            handles: state.handles.map(h =>
+                h.id === vpId ? { ...h, x: dragDeltaX } : h
+            ),
+            vanishingPoints: state.vanishingPoints.map(vp =>
+                vp.id === vpId ? { ...vp, distanceFromCenter: finalVpDist } : vp
+            )
+        };
 
     } else if (vpId === "vp3") {
         const targetHandle = state.handles.find(h => h.id === vpId);
@@ -583,27 +616,28 @@ export function updateVanishingPointDistance(
         const dragDeltaX = localX - targetHandle.restX;
         const dragDeltaY = localY;
 
-        newState.handles = state.handles.map(h =>
-            h.id === vpId ? { ...h, x: dragDeltaX, y: dragDeltaY } : h
-        );
-
         const sensitivity = 1;
         const newVpX = (initialDragState.vpx || 0) + (dragDeltaX * sensitivity) / state.camera.zoom;
         const newVpDist = initialDragState.vpDist + (dragDeltaY * sensitivity) / state.camera.zoom;
 
-        newState.vanishingPoints = state.vanishingPoints.map(vp =>
-            vp.id === vpId ? {
-                ...vp,
-                x: newVpX,
-                distanceFromCenter: newVpDist
-            } : vp
-        );
-
-        newState.config = {
-            ...state.config,
-            thirdPointOrientation: newVpDist < 0 ? "top" : "bottom"
+        return {
+            ...state,
+            handles: state.handles.map(h =>
+                h.id === vpId ? { ...h, x: dragDeltaX, y: dragDeltaY } : h
+            ),
+            vanishingPoints: state.vanishingPoints.map(vp =>
+                vp.id === vpId ? {
+                    ...vp,
+                    x: newVpX,
+                    distanceFromCenter: newVpDist
+                } : vp
+            ),
+            config: {
+                ...state.config,
+                thirdPointOrientation: newVpDist < 0 ? "top" : "bottom"
+            }
         };
     }
 
-    return newState;
+    return state;
 }

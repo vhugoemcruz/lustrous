@@ -1,7 +1,7 @@
 // @ts-check
 /**
  * @module Header
- * @description Header fixo com logo e burger menu para navegação
+ * @description Fixed header with logo and burger menu for navigation
  */
 
 "use client";
@@ -10,6 +10,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { BurgerMenu } from "./BurgerMenu";
 
+/**
+ * Header component.
+ * Contains the logo and the navigation menu button.
+ */
 export function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 

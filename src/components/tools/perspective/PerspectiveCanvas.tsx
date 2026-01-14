@@ -1,7 +1,7 @@
 // @ts-check
 /**
  * @module PerspectiveCanvas
- * @description Canvas interativo para renderização do grid de perspectiva
+ * @description Interactive canvas for rendering the perspective grid
  */
 
 "use client";
@@ -9,7 +9,10 @@
 import { useRef, useEffect, useState } from "react";
 import { usePerspectiveGrid } from "@/lib/hooks/usePerspectiveGrid";
 
-// Ícone de informação SVG
+// SVG info icon
+/**
+ * SVG info icon for the user guide.
+ */
 function InfoIcon({ size = 16, className = "" }: { size?: number; className?: string }) {
     return (
         <svg
@@ -30,7 +33,10 @@ function InfoIcon({ size = 16, className = "" }: { size?: number; className?: st
     );
 }
 
-// Ícone de exportação (câmera) SVG
+// SVG export (camera) icon
+/**
+ * SVG export (camera) icon for the download button.
+ */
 function ExportIcon() {
     return (
         <svg
@@ -49,7 +55,7 @@ function ExportIcon() {
     );
 }
 
-// Ícones para Fullscreen e UI
+// Icons for Fullscreen and UI
 function MaximizeIcon({ size = 16, className = "" }: { size?: number; className?: string }) {
     return (
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -86,6 +92,10 @@ function EyeOffIcon({ size = 16, className = "" }: { size?: number; className?: 
     );
 }
 
+/**
+ * Main Perspective Canvas component.
+ * Manages user interface, canvas interactions, and fullscreen mode.
+ */
 export function PerspectiveCanvas() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -122,7 +132,7 @@ export function PerspectiveCanvas() {
         setTimeout(() => {
             setShowHelp(false);
             setIsExiting(false);
-        }, 350); // Sincronizado com os 350ms do CSS
+        }, 350); // Synchronized with 350ms from CSS
     };
 
     const {
@@ -140,7 +150,7 @@ export function PerspectiveCanvas() {
         exportImage,
     } = usePerspectiveGrid(canvasRef, hideUI);
 
-    // Inicializar canvas com tamanho do container
+    // Initialize canvas with container size
     useEffect(() => {
         if (!containerRef.current) return;
 
@@ -159,7 +169,7 @@ export function PerspectiveCanvas() {
         return () => resizeObserver.disconnect();
     }, [initialize]);
 
-    // Determinar cursor
+    // Determine cursor
     const getCursor = () => {
         if (isDragging) return "grabbing";
         if (isPanning) return "grabbing";
@@ -176,7 +186,7 @@ export function PerspectiveCanvas() {
                     : "glass border-b border-glass-border relative"
                     } ${hideUI ? "opacity-0 invisible -translate-y-4" : "opacity-100 visible translate-y-0"}`}>
                     <div className={`flex flex-wrap items-center gap-4 w-full ${isFullscreen ? "pointer-events-none" : ""}`}>
-                        {/* Tipo de perspectiva */}
+                        {/* Perspective type */}
                         <div className="flex items-center gap-2 pointer-events-auto">
                             <span className="text-xs text-text-muted uppercase tracking-wider">
                                 Points:
@@ -197,7 +207,7 @@ export function PerspectiveCanvas() {
                             </div>
                         </div>
 
-                        {/* Orientação do terceiro ponto */}
+                        {/* Third point orientation */}
                         {state?.config.type === 3 && (
                             <div className="flex items-center gap-2 pointer-events-auto">
                                 <span className="text-xs text-text-muted uppercase tracking-wider">
@@ -226,7 +236,7 @@ export function PerspectiveCanvas() {
                             </div>
                         )}
 
-                        {/* Densidade */}
+                        {/* Density */}
                         <div className="flex items-center gap-2 pointer-events-auto">
                             <span className="text-xs text-text-muted uppercase tracking-wider">
                                 Density:
@@ -247,7 +257,7 @@ export function PerspectiveCanvas() {
                             </div>
                         </div>
 
-                        {/* Angulo do horizonte - Tilt até ±90° */}
+                        {/* Horizon angle - Tilt up to ±90° */}
                         <div className="flex items-center gap-2 pointer-events-auto">
                             <span className="text-xs text-text-muted uppercase tracking-wider">
                                 Tilt:
@@ -283,14 +293,14 @@ export function PerspectiveCanvas() {
                             <button
                                 onClick={reset}
                                 className="h-9 px-4 flex items-center gap-2 bg-slate-grey text-text-secondary rounded-lg hover:bg-medium-grey hover:text-text-primary transition-all text-sm font-medium"
-                                title="Resetar Grid"
+                                title="Reset Grid"
                             >
                                 Reset
                             </button>
                             <button
                                 onClick={exportImage}
                                 className="h-9 px-4 flex items-center gap-2 bg-aqua text-deep-obsidian rounded-lg hover:bg-opacity-90 transition-all text-sm font-bold shadow-lg shadow-aqua/20"
-                                title="Exportar Imagem"
+                                title="Export Image"
                             >
                                 <ExportIcon />
                                 Export
@@ -319,7 +329,7 @@ export function PerspectiveCanvas() {
                             <button
                                 onClick={() => setHideUI(!hideUI)}
                                 className={`w-11 h-11 flex items-center justify-center rounded-full text-aqua transition-all pointer-events-auto hover:bg-white/5 hover:scale-110 ${hideUI ? "bg-aqua/20" : ""}`}
-                                title={hideUI ? "Mostrar Controles" : "Esconder Controles"}
+                                title={hideUI ? "Show Controls" : "Hide Controls"}
                             >
                                 {hideUI ? <EyeOffIcon size={24} /> : <EyeIcon size={24} />}
                             </button>
@@ -329,7 +339,7 @@ export function PerspectiveCanvas() {
                         <button
                             onClick={toggleFullscreen}
                             className={`w-11 h-11 flex items-center justify-center rounded-full text-aqua transition-all pointer-events-auto hover:bg-white/5 hover:scale-110 ${hideUI ? "opacity-0 invisible" : "opacity-100 visible"}`}
-                            title={isFullscreen ? "Sair da Tela Cheia" : "Tela Cheia"}
+                            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
                         >
                             {isFullscreen ? <MinimizeIcon size={24} /> : <MaximizeIcon size={24} />}
                         </button>
@@ -352,7 +362,7 @@ export function PerspectiveCanvas() {
                         </div>
                     )}
 
-                    {/* Balão de Ajuda Centralizado com Backdrop (Relativo ao Canvas) */}
+                    {/* Help Balloon Centered with Backdrop (Relative to Canvas) */}
                     {showHelp && (
                         <div
                             className={`absolute inset-0 z-[100] flex items-center justify-center bg-deep-obsidian/30 ${isExiting ? "animate-backdrop-unfade" : "animate-backdrop-fade"
@@ -426,7 +436,7 @@ export function PerspectiveCanvas() {
                                                 </div>
                                                 <div className="bg-medium-grey/20 p-3 rounded-lg border border-white/5 transition-colors hover:bg-medium-grey/30 col-span-2">
                                                     <strong className="flex items-center gap-1.5 mb-1 tracking-tighter">
-                                                    Colored Circles
+                                                        Colored Circles
                                                     </strong>
                                                     <p className="text-text-secondary text-[10px] leading-relaxed">The colored circles on the screen are the controls for the vanishing points of their respective colors. Click and drag them to move the vanishing points.</p>
                                                 </div>

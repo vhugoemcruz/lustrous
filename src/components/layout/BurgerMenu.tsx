@@ -1,7 +1,7 @@
 // @ts-check
 /**
  * @module BurgerMenu
- * @description Menu de navegação com efeito glass listando as ferramentas
+ * @description Navigation menu with glass effect listing the tools
  */
 
 "use client";
@@ -35,6 +35,10 @@ const menuItems = [
     },
 ];
 
+/**
+ * Side Navigation Menu component (Burger Menu).
+ * Displays available tools in a side panel with glass effect.
+ */
 export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
     const menuRef = useRef<HTMLDivElement>(null);
 

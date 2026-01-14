@@ -1,7 +1,7 @@
 // @ts-check
 /**
  * @module layout
- * @description Layout raiz do Lustrous com tema escuro e estrutura base
+ * @description Lustrous root layout with dark theme and base structure
  */
 
 import type { Metadata } from "next";
@@ -35,6 +35,10 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Root Layout component.
+ * Defines the basic document structure, fonts, and theme.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

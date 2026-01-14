@@ -1,7 +1,7 @@
 // @ts-check
 /**
  * @module usePerspectiveGrid
- * @description Hook para gerenciar o estado do Perspective Grid
+ * @description Hook to manage the Perspective Grid state
  */
 
 "use client";
@@ -18,6 +18,14 @@ import {
     updateVanishingPointDistance,
 } from "@/lib/engines/perspective-engine";
 
+/**
+ * Hook to manage the Perspective Grid state and interactions.
+ * Provides logic for manipulating vanishing points, pan, zoom, and rendering.
+ * 
+ * @param canvasRef Reference to the HTMLCanvasElement.
+ * @param hideUI If true, hides interface elements (handles and vanishing points) during rendering.
+ * @returns An object containing the current state and event handlers for the canvas.
+ */
 export function usePerspectiveGrid(
     canvasRef: React.RefObject<HTMLCanvasElement | null>,
     hideUI: boolean = false
@@ -30,25 +38,25 @@ export function usePerspectiveGrid(
     const renderFrameRef = useRef<number | null>(null);
     const returnAnimFrameRef = useRef<number | null>(null);
 
-    // Inicializar estado quando o canvas estiver disponível
+    // Initialize state when canvas is available
     const initialize = useCallback((width: number, height: number) => {
         const initialState = createInitialState(width, height);
         setState(initialState);
     }, []);
 
-    // Atualizar configuração do grid
+    // Update grid configuration
     const updateConfig = useCallback((updates: Partial<GridConfig>) => {
         setState((prev) => {
             if (!prev) return prev;
 
             const newConfig = { ...prev.config, ...updates };
 
-            // Sincronizar posição do ponto vertical se a orientação mudar via botão
+            // Sync vertical point position if orientation changes via button
             let newVPs = prev.vanishingPoints;
             if (updates.thirdPointOrientation && updates.thirdPointOrientation !== prev.config.thirdPointOrientation) {
                 newVPs = prev.vanishingPoints.map(vp => {
                     if (vp.id === "vp3") {
-                        // Inverter sinal da distância para mover o ponto para o lado oposto
+                        // Invert distance sign to move point to opposite side
                         const currentDist = vp.distanceFromCenter;
                         const isTop = updates.thirdPointOrientation === "top";
                         const newDist = isTop ? -Math.abs(currentDist) : Math.abs(currentDist);
@@ -58,7 +66,7 @@ export function usePerspectiveGrid(
                 });
             }
 
-            // Centralizar VP1 automaticamente ao mudar para 1 ponto de fuga
+            // Automatically center VP1 when switching to 1 vanishing point
             if (updates.type === 1) {
                 newVPs = newVPs.map(vp => {
                     if (vp.id === "vp1") {
@@ -68,7 +76,7 @@ export function usePerspectiveGrid(
                 });
             }
 
-            // Restaurar offsets balanceados ao sair do modo de 1 ponto para 2 ou 3 pontos
+            // Restore balanced offsets when moving from 1 point to 2 or 3 points
             if ((updates.type === 2 || updates.type === 3) && prev.config.type === 1) {
                 newVPs = newVPs.map(vp => {
                     if (vp.id === "vp1") {
@@ -89,7 +97,7 @@ export function usePerspectiveGrid(
         });
     }, []);
 
-    // Atualizar posição Y do horizonte
+    // Update horizon Y position
     const updateHorizonY = useCallback((deltaY: number) => {
         setState((prev) => {
             if (!prev) return prev;
@@ -103,7 +111,7 @@ export function usePerspectiveGrid(
         });
     }, []);
 
-    // Atualizar ângulo do horizonte
+    // Update horizon angle
     const updateHorizonAngle = useCallback((angle: number) => {
         setState((prev) => {
             if (!prev) return prev;
@@ -114,7 +122,7 @@ export function usePerspectiveGrid(
         });
     }, []);
 
-    // Pan da câmera
+    // Camera pan
     const updatePan = useCallback((deltaX: number, deltaY: number) => {
         setState((prev) => {
             if (!prev) return prev;
@@ -129,24 +137,24 @@ export function usePerspectiveGrid(
         });
     }, []);
 
-    // Zoom da câmera
-    const updateZoom = useCallback((delta: number, centerX: number, centerY: number) => {
+    // Camera zoom
+    const updateZoom = useCallback((delta: number) => {
         setState((prev) => {
             if (!prev) return prev;
 
             const newZoom = Math.max(0.1, Math.min(5, prev.camera.zoom + delta));
 
-            // Ajustar pan para manter o ponto sob o cursor fixo
-            const zoomRatio = newZoom / prev.camera.zoom;
-            const newPanX = centerX - (centerX - prev.camera.panX) * zoomRatio;
-            const newPanY = centerY - (centerY - prev.camera.panY) * zoomRatio;
+            // Adjust pan to keep point under cursor fixed
+            // const zoomRatio = newZoom / prev.camera.zoom;
+            // const newPanX = centerX - (centerX - prev.camera.panX) * zoomRatio;
+            // const newPanY = centerY - (centerY - prev.camera.panY) * zoomRatio;
 
             return {
                 ...prev,
                 camera: {
                     ...prev.camera,
                     zoom: newZoom,
-                    panX: prev.camera.panX, // Simplificado por enquanto
+                    panX: prev.camera.panX, // Simplified for now
                     panY: prev.camera.panY,
                 },
             };
@@ -162,7 +170,7 @@ export function usePerspectiveGrid(
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
 
-            // Verificar se clicou em algum handle (bolinha interativa)
+            // Check if clicked on any handle (interactive dot)
             const vpId = findVanishingPointAtPosition(state, x, y, !hideUI);
 
             if (vpId) {
@@ -179,12 +187,12 @@ export function usePerspectiveGrid(
                     setIsDragging(vpId);
                 }
             } else {
-                // Iniciar pan
+                // Start panning
                 setIsPanning(true);
                 lastPanPos.current = { x: e.clientX, y: e.clientY };
             }
         },
-        [state, canvasRef]
+        [state, canvasRef, hideUI]
     );
 
     // Handler para mouse move
@@ -197,7 +205,7 @@ export function usePerspectiveGrid(
             const y = e.clientY - rect.top;
 
             if (isDragging && initialDragState.current) {
-                // Arrastar ponto de fuga de forma incremental
+                // Drag vanishing point incrementally
                 const newState = updateVanishingPointDistance(
                     state,
                     isDragging,
@@ -207,25 +215,25 @@ export function usePerspectiveGrid(
                 );
                 setState(newState);
             } else if (isPanning && lastPanPos.current) {
-                // Pan
+                // Panning
                 const deltaX = e.clientX - lastPanPos.current.x;
                 const deltaY = e.clientY - lastPanPos.current.y;
                 updatePan(deltaX, deltaY);
                 lastPanPos.current = { x: e.clientX, y: e.clientY };
             }
         },
-        [state, isDragging, isPanning, updatePan]
+        [state, isDragging, isPanning, updatePan, canvasRef]
     );
 
     // Handler para mouse up
     const handleMouseUp = useCallback(() => {
         setIsDragging((prevDragging) => {
             if (prevDragging) {
-                // Iniciar animação de retorno
+                // Start return animation
                 const startTime = performance.now();
                 const duration = 250; // ms
 
-                // Capturar valores iniciais para a animação
+                // Capture initial values for animation
                 let initialX = 0;
                 let initialY = 0;
 
@@ -265,7 +273,7 @@ export function usePerspectiveGrid(
                         returnAnimFrameRef.current = requestAnimationFrame(animate);
                     } else {
                         returnAnimFrameRef.current = null;
-                        // Garantir que chegue a exatamente 0
+                        // Ensure it reaches exactly 0
                         setState(prev => {
                             if (!prev) return prev;
                             return {
@@ -287,50 +295,46 @@ export function usePerspectiveGrid(
         lastPanPos.current = null;
     }, []);
 
-    // Handler para wheel (zoom)
+    // Wheel handler (zoom)
     const handleWheel = useCallback(
         (e: React.WheelEvent<HTMLCanvasElement>) => {
             e.preventDefault();
 
             if (!canvasRef.current) return;
 
-            const rect = canvasRef.current.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
             const delta = e.deltaY > 0 ? -0.1 : 0.1;
-            updateZoom(delta, x, y);
+            updateZoom(delta);
         },
         [canvasRef, updateZoom]
     );
 
-    // Resetar para estado inicial
+    // Reset to initial state
     const reset = useCallback(() => {
         if (!state) return;
         const newState = createInitialState(state.canvasWidth, state.canvasHeight);
         setState(newState);
     }, [state]);
 
-    // Exportar grid como imagem
+    // Export grid as image
     const exportImage = useCallback(() => {
-        if (canvasRef.current && state) {
-            exportCanvasAsImage(canvasRef.current, state, "perspective-grid");
+        if (state) {
+            exportCanvasAsImage(state, "perspective-grid");
         }
-    }, [canvasRef, state]);
+    }, [state]);
 
-    // Renderizar grid quando o estado mudar
+    // Render grid when state changes
     useEffect(() => {
         if (!state || !canvasRef.current) return;
 
         const ctx = canvasRef.current.getContext("2d");
         if (!ctx) return;
 
-        // Cancelar frame de renderização anterior se existir
+        // Cancel previous render frame if it exists
         if (renderFrameRef.current) {
             cancelAnimationFrame(renderFrameRef.current);
         }
 
-        // Renderizar no próximo frame
+        // Render on next frame
         renderFrameRef.current = requestAnimationFrame(() => {
             const lines = calculatePerspectiveLines(state);
             renderGrid(ctx, lines, state, !hideUI);

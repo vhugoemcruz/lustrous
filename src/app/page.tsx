@@ -1,7 +1,7 @@
 // @ts-check
 /**
  * @module Home
- * @description Página inicial do Lustrous com apresentação das ferramentas
+ * @description Lustrous home page presenting the tools
  */
 
 import Link from "next/link";
@@ -30,6 +30,10 @@ const tools = [
   },
 ];
 
+/**
+ * Home Page.
+ * Presents the project and links to available tools.
+ */
 export default function Home() {
   return (
     <div className="min-h-[calc(100vh-var(--header-height))] flex flex-col items-center justify-center px-4 py-16">
