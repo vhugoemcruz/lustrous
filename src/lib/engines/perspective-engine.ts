@@ -517,7 +517,7 @@ export function exportCanvasAsImage(
     };
 
     const lines = calculatePerspectiveLines(scaledState);
-    renderGrid(ctx, lines, scaledState);
+    renderGrid(ctx, lines, scaledState, false);
 
     const link = document.createElement("a");
     link.download = `${fileName}.png`;

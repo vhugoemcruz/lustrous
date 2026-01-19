@@ -40,8 +40,16 @@ export function usePerspectiveGrid(
 
     // Initialize state when canvas is available
     const initialize = useCallback((width: number, height: number) => {
-        const initialState = createInitialState(width, height);
-        setState(initialState);
+        setState((prev) => {
+            if (!prev) return createInitialState(width, height);
+
+            // Maintain current state but update canvas dimensions
+            return {
+                ...prev,
+                canvasWidth: width,
+                canvasHeight: height,
+            };
+        });
     }, []);
 
     // Update grid configuration
