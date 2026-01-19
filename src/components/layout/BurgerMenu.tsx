@@ -97,7 +97,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
                 role="navigation"
             >
                 <div className="flex flex-col gap-2 p-6">
-                    <p className="text-xs font-medium text-text-muted uppercase tracking-widest mb-4">
+                    <p className="text-xs font-medium text-diamond-dust uppercase tracking-widest mb-4">
                         Tools
                     </p>
 
@@ -110,10 +110,10 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
                         >
                             <span className="text-2xl">{item.icon}</span>
                             <div className="flex flex-col">
-                                <span className="text-base font-semibold text-text-primary group-hover:text-aqua transition-colors">
+                                <span className="text-base font-semibold text-pure-quartz group-hover:text-aqua transition-colors">
                                     {item.label}
                                 </span>
-                                <span className="text-sm text-text-muted mt-0.5">
+                                <span className="text-sm text-diamond-dust mt-0.5">
                                     {item.description}
                                 </span>
                             </div>
@@ -123,7 +123,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
 
                 {/* Footer */}
                 <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-glass-border">
-                    <p className="text-xs text-text-muted text-center">
+                    <p className="text-xs text-diamond-dust/60 text-center">
                         Free tools for artists ✨
                     </p>
                 </div>

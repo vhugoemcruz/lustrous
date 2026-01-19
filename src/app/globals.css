@@ -1,83 +1,126 @@
 @import "tailwindcss";
 
 /* ========================================
-   LUSTROUS - Design Tokens (Refined)
-   Paleta com alto contraste para legibilidade
+   LUSTROUS - Design System: The Mineral Spectrum
+   Inspirado em cristais, refração de luz e redes moleculares
    ======================================== */
 
 :root {
-  /* Core Colors - Professional Dark Theme */
+  /* ====================================
+     PRIMÁRIAS (Base Escura - Obsidian/Basalt)
+     ==================================== */
   --deep-obsidian: #0d0d12;
-  --anthracite: #16161d;
-  --slate-grey: #23232e;
-  --medium-grey: #3a3a4a;
+  --slate-grey: #1e1e2a;
+  --anthracite: #2f2f3d;
 
-  /* Text Colors - High Contrast */
-  --text-primary: #f5f5f7;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
+  /* ====================================
+     SECUNDÁRIAS (Neutras - Quartz/Diamond Dust)
+     ==================================== */
+  --pure-quartz: #f0f0f0;
+  --diamond-dust: #a0a0b0;
 
-  /* Accent Colors - Refined Prismatic */
-  --amethyst-purple: #a78bfa;
-  --aqua-cyan: #22d3ee;
-  --magenta-fusion: #f472b6;
-  --pyrite-gold: #fbbf24;
+  /* ====================================
+     ACENTOS (Espectrais - Opal/Tourmaline/Bismuth)
+     ==================================== */
+  --amethyst-purple: #8a2be2;
+  --aqua-cyan: #00ffff;
+  --magenta-fusion: #ff00ff;
+  --pyrite-gold: #ffd700;
   --emerald-green: #34d399;
 
-  /* Semantic Colors */
+  /* ====================================
+     SEMANTIC MAPPINGS
+     ==================================== */
   --background: var(--deep-obsidian);
-  --foreground: var(--text-primary);
-  --muted: var(--text-muted);
+  --foreground: var(--pure-quartz);
+  --text-primary: var(--pure-quartz);
+  --text-secondary: var(--diamond-dust);
+  --text-muted: #71717a;
   --accent: var(--aqua-cyan);
-  --accent-hover: #06b6d4;
+  --accent-hover: #00cccc;
 
-  /* Gradients - Softer for readability */
+  /* ====================================
+     GRADIENTES (Prismatic)
+     ==================================== */
   --gradient-prismatic: linear-gradient(135deg,
       var(--amethyst-purple),
       var(--aqua-cyan),
       var(--magenta-fusion));
 
+  --gradient-prismatic-vibrant: linear-gradient(90deg,
+      var(--amethyst-purple),
+      var(--aqua-cyan),
+      var(--magenta-fusion),
+      var(--amethyst-purple));
+
   --gradient-subtle: linear-gradient(180deg,
-      var(--anthracite),
+      var(--slate-grey),
       var(--deep-obsidian));
 
-  /* Glass Effect - Better visibility */
-  --glass-bg: rgba(22, 22, 29, 0.95);
+  /* ====================================
+     GLASS EFFECT (Frosted Glass / Ice)
+     ==================================== */
+  --glass-bg: rgba(13, 13, 18, 0.7);
+  --glass-bg-solid: rgba(30, 30, 42, 0.9);
   --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-blur: 16px;
+  --glass-blur: 20px;
 
-  /* Card backgrounds */
-  --card-bg: var(--anthracite);
-  --card-hover: var(--slate-grey);
+  /* ====================================
+     CARD STYLES
+     ==================================== */
+  --card-bg: var(--slate-grey);
+  --card-hover: var(--anthracite);
+  --card-border: var(--anthracite);
 
-  /* Typography */
+  /* ====================================
+     TYPOGRAPHY
+     ==================================== */
   --font-headline: "Montserrat", sans-serif;
   --font-body: "Inter", sans-serif;
 
-  /* Spacing */
-  --header-height: 64px;
+  /* ====================================
+     SPACING
+     ==================================== */
+  --header-height: 72px;
 
-  /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-normal: 250ms ease;
-  --transition-slow: 400ms ease;
+  /* ====================================
+     TRANSITIONS (Crystalline Flow)
+     ==================================== */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-glow: 300ms ease-out;
 
-  /* Border radius */
+  /* ====================================
+     BORDER RADIUS
+     ==================================== */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
+
+  /* ====================================
+     GLOW EFFECTS
+     ==================================== */
+  --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.4);
+  --glow-purple: 0 0 20px rgba(138, 43, 226, 0.4);
+  --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.4);
+  --glow-prismatic: 0 0 30px rgba(0, 255, 255, 0.3),
+    0 0 60px rgba(138, 43, 226, 0.2);
 }
+
+/* ========================================
+   TAILWIND THEME INTEGRATION
+   ======================================== */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
+  --color-muted: var(--text-muted);
   --color-accent: var(--accent);
   --color-deep-obsidian: var(--deep-obsidian);
-  --color-anthracite: var(--anthracite);
   --color-slate-grey: var(--slate-grey);
-  --color-medium-grey: var(--medium-grey);
+  --color-anthracite: var(--anthracite);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
@@ -88,16 +131,22 @@
   --color-emerald: var(--emerald-green);
   --color-card: var(--card-bg);
   --color-card-hover: var(--card-hover);
+  --color-pure-quartz: var(--pure-quartz);
+  --color-diamond-dust: var(--diamond-dust);
   --font-sans: var(--font-body);
   --font-mono: var(--font-geist-mono);
 }
 
 /* ========================================
-   Global Styles
+   GLOBAL STYLES
    ======================================== */
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -108,10 +157,11 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 /* ========================================
-   Typography Utilities
+   TYPOGRAPHY UTILITIES
    ======================================== */
 
 .text-primary {
@@ -127,7 +177,7 @@ body {
 }
 
 /* ========================================
-   Utility Classes
+   GLASS EFFECT (Frosted Glass / Ice)
    ======================================== */
 
 .glass {
@@ -137,15 +187,67 @@ body {
   border: 1px solid var(--glass-border);
 }
 
+.glass-solid {
+  background: var(--glass-bg-solid);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+}
+
+/* ========================================
+   CARD COMPONENT
+   ======================================== */
+
 .card {
   background: var(--card-bg);
-  border: 1px solid var(--glass-border);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius-lg);
+  transition: all var(--transition-normal);
+  position: relative;
 }
 
 .card:hover {
   background: var(--card-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--glow-prismatic);
 }
+
+/* Card with gradient border on hover */
+.card-glow {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-normal);
+}
+
+.card-glow::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: calc(var(--radius-lg) + 1px);
+  padding: 1px;
+  background: var(--gradient-prismatic);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--transition-glow);
+}
+
+.card-glow:hover::before {
+  opacity: 1;
+}
+
+.card-glow:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--glow-prismatic);
+}
+
+/* ========================================
+   GRADIENT TEXT
+   ======================================== */
 
 .gradient-text {
   background: var(--gradient-prismatic);
@@ -154,30 +256,208 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+.gradient-text-animated {
+  background: var(--gradient-prismatic-vibrant);
+  background-size: 300% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 8s linear infinite;
+}
+
+/* ========================================
+   BUTTON COMPONENTS
+   ======================================== */
+
+/* Primary Button - Gradient */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--gradient-prismatic);
+  background-size: 200% 100%;
+  color: white;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.btn-primary:hover {
+  background-position: 100% 0;
+  transform: translateY(-2px);
+  box-shadow: var(--glow-prismatic);
+}
+
+/* Secondary Button - Ghost */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  color: var(--aqua-cyan);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--aqua-cyan);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: var(--glow-cyan);
+}
+
+/* CTA Button - Solid Cyan */
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: var(--aqua-cyan);
+  color: var(--deep-obsidian);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.btn-cta:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--glow-cyan);
+}
+
+/* ========================================
+   GLOW EFFECTS
+   ======================================== */
+
 .glow {
-  box-shadow: 0 0 30px rgba(34, 211, 238, 0.15);
+  box-shadow: var(--glow-prismatic);
+}
+
+.glow-cyan {
+  box-shadow: var(--glow-cyan);
+}
+
+.glow-purple {
+  box-shadow: var(--glow-purple);
 }
 
 .glow-text {
-  text-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
 }
 
-/* Focus states for accessibility */
+/* ========================================
+   INPUT FIELDS
+   ======================================== */
+
+.input-field {
+  background: var(--slate-grey);
+  color: var(--pure-quartz);
+  border: 1px solid var(--anthracite);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  transition: all var(--transition-normal);
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: var(--aqua-cyan);
+  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.15);
+}
+
+.input-field::placeholder {
+  color: var(--diamond-dust);
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-/* Selection */
 ::selection {
   background: var(--amethyst-purple);
   color: var(--text-primary);
 }
 
 /* ========================================
-   Custom Animations
+   ANIMATIONS (Crystalline Flow)
    ======================================== */
 
+/* Shimmer effect for gradient text */
+@keyframes shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Particle pulse animation */
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* Prismatic flash for page transitions */
+@keyframes prismatic-flash {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* Float animation */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Balloon animations (modals) */
 @keyframes balloon-enter {
   from {
     opacity: 0;
@@ -226,6 +506,49 @@ body {
   }
 }
 
+/* Crystal spin for loaders */
+@keyframes crystal-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes crystal-pulse {
+
+  0%,
+  100% {
+    filter: hue-rotate(0deg);
+  }
+
+  33% {
+    filter: hue-rotate(60deg);
+  }
+
+  66% {
+    filter: hue-rotate(-60deg);
+  }
+}
+
+/* ========================================
+   ANIMATION UTILITIES
+   ======================================== */
+
+.animate-shimmer {
+  animation: shimmer 8s linear infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
 .animate-balloon-enter {
   animation: balloon-enter 350ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
@@ -240,4 +563,101 @@ body {
 
 .animate-backdrop-unfade {
   animation: backdrop-unfade 350ms ease-out forwards;
+}
+
+.animate-crystal-spin {
+  animation: crystal-spin 2s linear infinite;
+}
+
+.animate-crystal-pulse {
+  animation: crystal-pulse 4s ease-in-out infinite;
+}
+
+/* ========================================
+   NAV LINK STYLES
+   ======================================== */
+
+.nav-link {
+  position: relative;
+  color: var(--diamond-dust);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: color var(--transition-normal);
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--gradient-prismatic);
+  transition: all var(--transition-normal);
+  transform: translateX(-50%);
+}
+
+.nav-link:hover {
+  color: var(--pure-quartz);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-link.active {
+  color: var(--aqua-cyan);
+}
+
+.nav-link.active::after {
+  width: 100%;
+  background: var(--aqua-cyan);
+}
+
+/* ========================================
+   PARTICLE BACKGROUND CONTAINER
+   ======================================== */
+
+.particle-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ========================================
+   LOADER COMPONENT
+   ======================================== */
+
+.loader {
+  width: 40px;
+  height: 40px;
+  background: var(--gradient-prismatic);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  animation: crystal-spin 2s linear infinite, crystal-pulse 4s ease-in-out infinite;
+}
+
+/* ========================================
+   SCROLLBAR STYLING
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--deep-obsidian);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--anthracite);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--slate-grey);
 }

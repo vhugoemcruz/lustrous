@@ -1,10 +1,11 @@
 // @ts-check
 /**
  * @module Home
- * @description Lustrous home page presenting the tools
+ * @description Lustrous home page with particle background and tool cards.
  */
 
-import Link from "next/link";
+import { ParticleBackground } from "@/components/ui/ParticleBackground";
+import { FeatureCard } from "@/components/ui/FeatureCard";
 
 const tools = [
   {
@@ -13,6 +14,7 @@ const tools = [
     description:
       "Create configurable perspective grids with 1, 2, or 3 vanishing points for illustration study.",
     icon: "📐",
+    variant: "cyan" as const,
   },
   {
     href: "/obj-viewer",
@@ -20,6 +22,7 @@ const tools = [
     description:
       "Visualize and rotate .obj models to study three-dimensionality and form.",
     icon: "🧊",
+    variant: "purple" as const,
   },
   {
     href: "/color-analysis",
@@ -27,65 +30,95 @@ const tools = [
     description:
       "Upload images and analyze color palettes with theoretical interpretation.",
     icon: "🎨",
+    variant: "magenta" as const,
   },
 ];
 
 /**
  * Home Page.
- * Presents the project and links to available tools.
+ * Presents the project with animated particle background and links to available tools.
  */
 export default function Home() {
   return (
-    <div className="min-h-[calc(100vh-var(--header-height))] flex flex-col items-center justify-center px-4 py-16">
-      {/* Hero Section */}
-      <section className="text-center mb-16">
-        <h1 className="text-5xl md:text-6xl font-bold font-[family-name:var(--font-montserrat)] mb-6 tracking-tight">
-          <span className="gradient-text">LUSTROUS</span>
-        </h1>
-        <p className="text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
-          Free utility tools for artists. Study perspective, 3D visualization, and
-          color theory — all in your browser.
-        </p>
-      </section>
+    <>
+      {/* Animated Particle Background (The Molecular Dance) */}
+      <ParticleBackground
+        particleCount={100}
+        connectionDistance={120}
+        maxAttractedParticles={15}
+        interactive
+      />
 
-      {/* Tools Grid */}
-      <section className="w-full max-w-5xl">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {tools.map((tool) => (
-            <Link
-              key={tool.href}
-              href={tool.href}
-              className="group relative card p-6 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
-            >
-              {/* Gradient border on hover */}
-              <div className="absolute inset-0 bg-gradient-to-br from-amethyst/20 via-aqua/20 to-magenta/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-[var(--radius-lg)]" />
+      <div className="min-h-[calc(100vh-var(--header-height))] flex flex-col items-center justify-center px-4 py-16 relative">
+        {/* Hero Section */}
+        <section className="text-center mb-16 max-w-3xl mx-auto">
+          {/* Main Title */}
+          <h1 className="text-5xl md:text-7xl font-bold font-[family-name:var(--font-montserrat)] mb-6 tracking-tight">
+            <span className="gradient-text-animated">LUSTROUS</span>
+          </h1>
 
-              {/* Content */}
-              <div className="relative z-10">
-                <span className="text-4xl mb-4 block">{tool.icon}</span>
-                <h2 className="text-xl font-semibold text-text-primary mb-3 group-hover:text-aqua transition-colors">
-                  {tool.title}
-                </h2>
-                <p className="text-sm text-text-secondary leading-relaxed">
-                  {tool.description}
-                </p>
+          {/* Tagline */}
+          <p className="text-xl md:text-2xl text-diamond-dust mb-4 font-light">
+            The{" "}
+            <span className="text-aqua font-medium">all-in-one</span>
+            {" "}creative assistant built for artists, like you.
+          </p>
+
+          {/* Description */}
+          <p className="text-base text-diamond-dust/80 max-w-xl mx-auto leading-relaxed mb-8">
+            Free utility tools for artists. Study perspective, 3D visualization,
+            and color theory — all in your browser.
+          </p>
+
+          {/* Tool Icons Preview */}
+          <div className="flex items-center justify-center gap-4 mb-8">
+            {tools.map((tool) => (
+              <div
+                key={tool.href}
+                className="w-12 h-12 flex items-center justify-center rounded-xl bg-slate-grey/50 border border-anthracite text-2xl hover:border-aqua/50 hover:bg-slate-grey transition-all duration-300 cursor-default"
+                title={tool.title}
+              >
+                {tool.icon}
               </div>
+            ))}
+          </div>
 
-              {/* Arrow indicator */}
-              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300">
-                <span className="text-aqua text-xl">→</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+          {/* Browser Compatibility Indicator */}
+          <div className="flex items-center justify-center gap-3 text-sm text-diamond-dust/60">
+            <span>Works in all modern browsers</span>
+            <div className="flex gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald animate-pulse-glow" />
+              <span className="w-2.5 h-2.5 rounded-full bg-aqua animate-pulse-glow [animation-delay:0.2s]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-amethyst animate-pulse-glow [animation-delay:0.4s]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-magenta animate-pulse-glow [animation-delay:0.6s]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-gold animate-pulse-glow [animation-delay:0.8s]" />
+            </div>
+          </div>
+        </section>
 
-      {/* Footer Note */}
-      <section className="mt-16 text-center">
-        <p className="text-sm text-text-muted">
-          ✨ All tools run entirely in your browser — no data is sent to servers.
-        </p>
-      </section>
-    </div>
+        {/* Tools Grid */}
+        <section className="w-full max-w-5xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {tools.map((tool) => (
+              <FeatureCard
+                key={tool.href}
+                href={tool.href}
+                title={tool.title}
+                description={tool.description}
+                icon={tool.icon}
+                variant={tool.variant}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Footer Note */}
+        <section className="mt-16 text-center">
+          <p className="text-sm text-diamond-dust/50 flex items-center justify-center gap-2">
+            All tools run entirely locally in your browser, no data is sent to servers.
+          </p>
+        </section>
+      </div>
+    </>
   );
 }
