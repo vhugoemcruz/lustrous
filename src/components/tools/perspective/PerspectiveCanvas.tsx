@@ -147,6 +147,7 @@ export function PerspectiveCanvas() {
         handleMouseUp,
         handleWheel,
         reset,
+        resetCamera,
         exportImage,
     } = usePerspectiveGrid(canvasRef, hideUI);
 
@@ -291,11 +292,18 @@ export function PerspectiveCanvas() {
                         {/* Reset & Export */}
                         <div className={`flex items-center gap-2 pl-4 border-l border-white/10 pointer-events-auto ${isFullscreen ? "ml-auto" : ""}`}>
                             <button
+                                onClick={resetCamera}
+                                className="h-9 px-4 flex items-center gap-2 bg-slate-grey text-text-secondary rounded-lg hover:bg-medium-grey hover:text-text-primary transition-all text-sm font-medium"
+                                title="Center Camera (Reset Pan/Zoom/Tilt)"
+                            >
+                                Center
+                            </button>
+                            <button
                                 onClick={reset}
                                 className="h-9 px-4 flex items-center gap-2 bg-slate-grey text-text-secondary rounded-lg hover:bg-medium-grey hover:text-text-primary transition-all text-sm font-medium"
-                                title="Reset Grid"
+                                title="Reset Entire Grid"
                             >
-                                Reset
+                                Reset Grid
                             </button>
                             <button
                                 onClick={exportImage}

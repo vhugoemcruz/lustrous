@@ -323,6 +323,23 @@ export function usePerspectiveGrid(
         setState(newState);
     }, [state]);
 
+    // Reset only the camera (pan, zoom, horizon position/angle)
+    const resetCamera = useCallback(() => {
+        setState((prev) => {
+            if (!prev) return prev;
+            return {
+                ...prev,
+                camera: {
+                    horizonY: prev.canvasHeight / 2,
+                    horizonAngle: 0,
+                    panX: 0,
+                    panY: 0,
+                    zoom: 1,
+                },
+            };
+        });
+    }, []);
+
     // Export grid as image
     const exportImage = useCallback(() => {
         if (state) {
@@ -370,6 +387,7 @@ export function usePerspectiveGrid(
         handleMouseUp,
         handleWheel,
         reset,
+        resetCamera,
         exportImage,
     };
 }
