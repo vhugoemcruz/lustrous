@@ -61,32 +61,17 @@ export default function Home() {
           <p className="text-xl md:text-2xl text-diamond-dust mb-4 font-light">
             The{" "}
             <span className="text-aqua font-medium">all-in-one</span>
-            {" "}creative assistant built for artists, like you.
+            {" "}creative assistant built for artists, just like you.
           </p>
 
           {/* Description */}
           <p className="text-base text-diamond-dust/80 max-w-xl mx-auto leading-relaxed mb-8">
-            Free utility tools for artists. Study perspective, 3D visualization,
-            and color theory — all in your browser.
+            All the tools you need, dedicated to the artistic community, for free.
           </p>
-
-          {/* Tool Icons Preview */}
-          <div className="flex items-center justify-center gap-4 mb-8">
-            {tools.map((tool) => (
-              <div
-                key={tool.href}
-                className="w-12 h-12 flex items-center justify-center rounded-xl bg-slate-grey/50 border border-anthracite text-2xl hover:border-aqua/50 hover:bg-slate-grey transition-all duration-300 cursor-default"
-                title={tool.title}
-              >
-                {tool.icon}
-              </div>
-            ))}
-          </div>
 
           {/* Browser Compatibility Indicator */}
           <div className="flex items-center justify-center gap-3 text-sm text-diamond-dust/60">
-            <span>Works in all modern browsers</span>
-            <div className="flex gap-1.5">
+            <div className="flex gap-5.5">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald animate-pulse-glow" />
               <span className="w-2.5 h-2.5 rounded-full bg-aqua animate-pulse-glow [animation-delay:0.2s]" />
               <span className="w-2.5 h-2.5 rounded-full bg-amethyst animate-pulse-glow [animation-delay:0.4s]" />

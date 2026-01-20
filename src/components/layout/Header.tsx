@@ -27,9 +27,9 @@ export function Header() {
     const pathname = usePathname();
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 h-[var(--header-height)] glass border-b border-glass-border">
-            <div className="container mx-auto h-full px-6 flex items-center justify-between">
-                {/* Logo */}
+        <header className="fixed top-0 left-0 right-0 z-50 h-[var(--header-height)]">
+            <div className="h-full px-40 flex items-center justify-between">
+                {/* Logo - Left Corner */}
                 <Link
                     href="/"
                     className="hover:opacity-80 transition-opacity"
@@ -38,8 +38,8 @@ export function Header() {
                     <LustrousLogo size={28} showText />
                 </Link>
 
-                {/* Desktop Navigation */}
-                <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
+                {/* Desktop Navigation - Centered */}
+                <nav className="hidden md:flex items-center gap-1 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" aria-label="Main navigation">
                     {navLinks.map((link) => (
                         <Link
                             key={link.href}
@@ -51,8 +51,8 @@ export function Header() {
                     ))}
                 </nav>
 
-                {/* Right side: Burger Menu */}
-                <div className="flex items-center gap-4">
+                {/* Right side: Burger Menu - Right Corner */}
+                <div className="flex items-center">
                     {/* Burger Button - All screens */}
                     <button
                         id="burger-toggle-btn"

@@ -184,7 +184,7 @@ export function PerspectiveCanvas() {
                 {/* Toolbar - Moved inside for Fullscreen visibility */}
                 <div className={`flex flex-wrap items-center gap-4 p-4 transition-all duration-300 z-50 ${isFullscreen
                     ? "absolute top-0 left-0 w-full pointer-events-none"
-                    : "glass border-b border-glass-border relative"
+                    : "bg-deep-obsidian relative"
                     } ${hideUI ? "opacity-0 invisible -translate-y-4" : "opacity-100 visible translate-y-0"}`}>
                     <div className={`flex flex-wrap items-center gap-4 w-full ${isFullscreen ? "pointer-events-none" : ""}`}>
                         {/* Perspective type */}
@@ -192,14 +192,14 @@ export function PerspectiveCanvas() {
                             <span className="text-xs text-text-muted uppercase tracking-wider">
                                 Points:
                             </span>
-                            <div className="flex gap-1">
+                            <div className="flex gap-1.5">
                                 {([1, 2, 3] as const).map((type) => (
                                     <button
                                         key={type}
                                         onClick={() => updateConfig({ type })}
-                                        className={`w-9 h-9 rounded-lg text-sm font-semibold transition-all ${state?.config.type === type
-                                            ? "bg-aqua text-deep-obsidian shadow-lg"
-                                            : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
+                                        className={`w-10 h-10 rounded-xl text-sm font-bold transition-all duration-200 ${state?.config.type === type
+                                            ? "bg-aqua text-deep-obsidian shadow-lg shadow-aqua/30 scale-105"
+                                            : "bg-anthracite text-text-secondary hover:bg-slate-grey hover:text-text-primary hover:scale-105"
                                             }`}
                                     >
                                         {type}
@@ -214,21 +214,21 @@ export function PerspectiveCanvas() {
                                 <span className="text-xs text-text-muted uppercase tracking-wider">
                                     Third Point:
                                 </span>
-                                <div className="flex gap-1">
+                                <div className="flex gap-1.5">
                                     <button
                                         onClick={() => updateConfig({ thirdPointOrientation: "top" })}
-                                        className={`px-3 h-9 rounded-lg text-xs font-semibold transition-all ${state?.config.thirdPointOrientation === "top"
-                                            ? "bg-magenta text-white shadow-lg"
-                                            : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
+                                        className={`px-4 h-10 rounded-xl text-xs font-bold transition-all duration-200 ${state?.config.thirdPointOrientation === "top"
+                                            ? "bg-magenta text-white shadow-lg shadow-magenta/30 scale-105"
+                                            : "bg-anthracite text-text-secondary hover:bg-slate-grey hover:text-text-primary hover:scale-105"
                                             }`}
                                     >
                                         ↑ Above
                                     </button>
                                     <button
                                         onClick={() => updateConfig({ thirdPointOrientation: "bottom" })}
-                                        className={`px-3 h-9 rounded-lg text-xs font-semibold transition-all ${state?.config.thirdPointOrientation === "bottom"
-                                            ? "bg-magenta text-white shadow-lg"
-                                            : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
+                                        className={`px-4 h-10 rounded-xl text-xs font-bold transition-all duration-200 ${state?.config.thirdPointOrientation === "bottom"
+                                            ? "bg-magenta text-white shadow-lg shadow-magenta/30 scale-105"
+                                            : "bg-anthracite text-text-secondary hover:bg-slate-grey hover:text-text-primary hover:scale-105"
                                             }`}
                                     >
                                         ↓ Below
@@ -242,14 +242,14 @@ export function PerspectiveCanvas() {
                             <span className="text-xs text-text-muted uppercase tracking-wider">
                                 Density:
                             </span>
-                            <div className="flex gap-1">
+                            <div className="flex gap-1.5">
                                 {(["low", "medium", "high"] as const).map((density) => (
                                     <button
                                         key={density}
                                         onClick={() => updateConfig({ density })}
-                                        className={`px-3 h-9 rounded-lg text-xs font-semibold capitalize transition-all ${state?.config.density === density
-                                            ? "bg-amethyst text-white shadow-lg"
-                                            : "bg-slate-grey text-text-secondary hover:bg-medium-grey hover:text-text-primary"
+                                        className={`px-4 h-10 rounded-xl text-xs font-bold capitalize transition-all duration-200 ${state?.config.density === density
+                                            ? "bg-amethyst text-white shadow-lg shadow-amethyst/30 scale-105"
+                                            : "bg-anthracite text-text-secondary hover:bg-slate-grey hover:text-text-primary hover:scale-105"
                                             }`}
                                     >
                                         {density}
@@ -290,24 +290,24 @@ export function PerspectiveCanvas() {
                         {!isFullscreen && <div className="flex-1" />}
 
                         {/* Reset & Export */}
-                        <div className={`flex items-center gap-2 pl-4 border-l border-white/10 pointer-events-auto ${isFullscreen ? "ml-auto" : ""}`}>
+                        <div className={`flex items-center gap-2 pl-4 pointer-events-auto ${isFullscreen ? "ml-auto" : ""}`}>
                             <button
                                 onClick={resetCamera}
-                                className="h-9 px-4 flex items-center gap-2 bg-slate-grey text-text-secondary rounded-lg hover:bg-medium-grey hover:text-text-primary transition-all text-sm font-medium"
+                                className="h-10 px-5 flex items-center gap-2 bg-anthracite text-text-secondary rounded-xl hover:bg-slate-grey hover:text-text-primary hover:scale-105 transition-all duration-200 text-sm font-semibold"
                                 title="Center Camera (Reset Pan/Zoom/Tilt)"
                             >
                                 Center
                             </button>
                             <button
                                 onClick={reset}
-                                className="h-9 px-4 flex items-center gap-2 bg-slate-grey text-text-secondary rounded-lg hover:bg-medium-grey hover:text-text-primary transition-all text-sm font-medium"
+                                className="h-10 px-5 flex items-center gap-2 bg-anthracite text-text-secondary rounded-xl hover:bg-slate-grey hover:text-text-primary hover:scale-105 transition-all duration-200 text-sm font-semibold"
                                 title="Reset Entire Grid"
                             >
                                 Reset Grid
                             </button>
                             <button
                                 onClick={exportImage}
-                                className="h-9 px-4 flex items-center gap-2 bg-aqua text-deep-obsidian rounded-lg hover:bg-opacity-90 transition-all text-sm font-bold shadow-lg shadow-aqua/20"
+                                className="h-10 px-5 flex items-center gap-2 bg-aqua text-deep-obsidian rounded-xl hover:brightness-110 hover:scale-105 transition-all duration-200 text-sm font-bold shadow-lg shadow-aqua/25"
                                 title="Export Image"
                             >
                                 <ExportIcon />

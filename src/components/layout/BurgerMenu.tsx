@@ -105,7 +105,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
             {/* Menu Panel */}
             <nav
                 ref={menuRef}
-                className={`fixed right-0 top-[var(--header-height)] z-[101] h-[calc(100vh-var(--header-height))] w-full max-w-sm glass border-l border-glass-border transition-transform duration-300 ease-out ${isOpen ? "translate-x-0" : "translate-x-full"
+                className={`fixed right-0 top-[var(--header-height)] z-[101] h-[calc(100vh-var(--header-height))] w-full max-w-sm bg-deep-obsidian transition-transform duration-300 ease-out ${isOpen ? "translate-x-0" : "translate-x-full"
                     }`}
                 aria-label="Main navigation"
                 role="navigation"
@@ -120,14 +120,14 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
                             key={item.href}
                             href={item.href}
                             onClick={onClose}
-                            className="group flex items-start gap-4 p-4 rounded-xl hover:bg-slate-grey transition-all duration-200"
+                            className="group relative flex items-start gap-4 p-4 rounded-xl bg-slate-grey/30 hover:bg-slate-grey/60 transition-all duration-300 hover:shadow-lg hover:shadow-aqua/5"
                         >
-                            <span className="text-2xl">{item.icon}</span>
+                            <span className="text-2xl group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
                             <div className="flex flex-col">
-                                <span className="text-base font-semibold text-pure-quartz group-hover:text-aqua transition-colors">
+                                <span className="text-base font-semibold text-pure-quartz group-hover:text-aqua transition-colors duration-300">
                                     {item.label}
                                 </span>
-                                <span className="text-sm text-diamond-dust mt-0.5">
+                                <span className="text-sm text-diamond-dust/80 mt-0.5 group-hover:text-diamond-dust transition-colors duration-300">
                                     {item.description}
                                 </span>
                             </div>
@@ -136,8 +136,8 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
                 </div>
 
                 {/* Footer */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-glass-border">
-                    <p className="text-xs text-diamond-dust/60 text-center">
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <p className="text-xs text-diamond-dust/50 text-center">
                         Free tools for artists ✨
                     </p>
                 </div>
