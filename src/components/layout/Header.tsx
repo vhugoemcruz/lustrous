@@ -51,20 +51,13 @@ export function Header() {
                     ))}
                 </nav>
 
-                {/* Right side: CTA + Burger */}
+                {/* Right side: Burger Menu */}
                 <div className="flex items-center gap-4">
-                    {/* CTA Button - Desktop only */}
-                    <Link
-                        href="/perspective-grid"
-                        className="hidden md:flex btn-cta text-sm"
-                    >
-                        Open App
-                    </Link>
-
                     {/* Burger Button - All screens */}
                     <button
+                        id="burger-toggle-btn"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className="relative w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg hover:bg-anthracite transition-colors"
+                        className="relative z-[110] w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg hover:bg-anthracite transition-colors"
                         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                         aria-expanded={isMenuOpen}
                     >

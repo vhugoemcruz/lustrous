@@ -7,7 +7,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface BurgerMenuProps {
     isOpen: boolean;
@@ -38,9 +39,16 @@ const menuItems = [
 /**
  * Side Navigation Menu component (Burger Menu).
  * Displays available tools in a side panel with glass effect.
+ * Uses portal to render outside header stacking context.
  */
 export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
     const menuRef = useRef<HTMLDivElement>(null);
+    const [mounted, setMounted] = useState(false);
+
+    // Mount state for portal (client-side only)
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     // Close on Escape key
     useEffect(() => {
@@ -56,7 +64,13 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
     // Close on click outside
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
-            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+            const target = e.target as Node;
+            // Ignore clicks on the burger toggle button (it handles its own toggle)
+            const burgerBtn = document.getElementById("burger-toggle-btn");
+            if (burgerBtn && burgerBtn.contains(target)) {
+                return;
+            }
+            if (menuRef.current && !menuRef.current.contains(target)) {
                 onClose();
             }
         };
@@ -78,11 +92,11 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
         };
     }, [isOpen]);
 
-    return (
+    const menuContent = (
         <>
             {/* Backdrop */}
             <div
-                className={`fixed inset-0 bg-deep-obsidian/90 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+                className={`fixed inset-0 z-[100] bg-deep-obsidian/90 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
                     }`}
                 style={{ top: "var(--header-height)" }}
                 aria-hidden="true"
@@ -91,7 +105,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
             {/* Menu Panel */}
             <nav
                 ref={menuRef}
-                className={`fixed right-0 top-[var(--header-height)] h-[calc(100vh-var(--header-height))] w-full max-w-sm glass border-l border-glass-border transition-transform duration-300 ease-out ${isOpen ? "translate-x-0" : "translate-x-full"
+                className={`fixed right-0 top-[var(--header-height)] z-[101] h-[calc(100vh-var(--header-height))] w-full max-w-sm glass border-l border-glass-border transition-transform duration-300 ease-out ${isOpen ? "translate-x-0" : "translate-x-full"
                     }`}
                 aria-label="Main navigation"
                 role="navigation"
@@ -130,4 +144,8 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
             </nav>
         </>
     );
+
+    // Use portal to render outside header stacking context
+    if (!mounted) return null;
+    return createPortal(menuContent, document.body);
 }
