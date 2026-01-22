@@ -1,4 +1,4 @@
-// @ts-check
+
 /**
  * @module LustrousLogo
  * @description SVG logo component featuring a polyhedral crystal with prismatic gradient.

@@ -1,4 +1,4 @@
-// @ts-check
+
 /**
  * @module PerspectiveGridPage
  * @description Página da ferramenta de Perspective Grid

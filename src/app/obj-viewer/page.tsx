@@ -1,4 +1,4 @@
-// @ts-check
+
 /**
  * @module ObjViewerPage
  * @description Página da ferramenta de visualização de arquivos .obj

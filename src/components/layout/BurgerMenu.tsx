@@ -1,4 +1,4 @@
-// @ts-check
+
 /**
  * @module BurgerMenu
  * @description Navigation menu with glass effect listing the tools
@@ -47,6 +47,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
 
     // Mount state for portal (client-side only)
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true);
     }, []);
 

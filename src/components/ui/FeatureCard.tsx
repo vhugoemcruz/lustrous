@@ -1,4 +1,4 @@
-// @ts-check
+
 /**
  * @module FeatureCard
  * @description Premium card component with gradient border on hover and glow effects.

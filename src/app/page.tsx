@@ -1,4 +1,4 @@
-// @ts-check
+
 /**
  * @module Home
  * @description Lustrous home page with particle background and tool cards.
@@ -45,7 +45,6 @@ export default function Home() {
       <ParticleBackground
         particleCount={100}
         connectionDistance={120}
-        maxAttractedParticles={15}
         interactive
       />
 

@@ -1,4 +1,4 @@
-// @ts-check
+
 /**
  * @module ColorAnalysisPage
  * @description Página da ferramenta de análise de cores

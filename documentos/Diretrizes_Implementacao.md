@@ -195,12 +195,12 @@ const error: ToolError = {
 
 ---
 
-## Checklist de Qualidade
+## Diretrizes de Qualidade
 
-- [ ] TypeScript strict mode
-- [ ] ESLint + Prettier configurados
-- [ ] Testes unitários para engines
-- [ ] Acessibilidade WCAG AA
-- [ ] i18n para todos os textos
-- [ ] Export funcional em Full HD
-- [ ] Tratamento de erros padronizado
+- TypeScript strict mode
+- ESLint + Prettier configurados
+- Testes unitários para engines
+- Acessibilidade WCAG AA
+- i18n para todos os textos
+- Export funcional em Full HD
+- Tratamento de erros padronizado

@@ -1,4 +1,4 @@
-// @ts-check
+
 /**
  * @module Header
  * @description Fixed header with frosted glass effect, logo, nav links, and CTA button.
@@ -20,7 +20,7 @@ const navLinks = [
 
 /**
  * Header component.
- * Contains the logo, navigation links (desktop), CTA button, and burger menu (mobile).
+ * Contains the logo, navigation links (desktop), CTA button, and burger menu.
  */
 export function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,7 +28,7 @@ export function Header() {
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 h-[var(--header-height)]">
-            <div className="h-full px-40 flex items-center justify-between">
+            <div className="h-full px-20 flex items-center justify-between">
                 {/* Logo - Left Corner */}
                 <Link
                     href="/"

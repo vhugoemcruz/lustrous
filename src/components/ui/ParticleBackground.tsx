@@ -1,4 +1,4 @@
-// @ts-check
+
 /**
  * @module ParticleBackground
  * @description Animated particle background creating a molecular/crystalline network effect.
@@ -39,11 +39,6 @@ interface ParticleBackgroundProps {
      */
     interactive?: boolean;
     /**
-     * Maximum particles that can be attracted to cursor at once
-     * @default 8
-     */
-    maxAttractedParticles?: number;
-    /**
      * Additional CSS class names
      */
     className?: string;
@@ -53,6 +48,8 @@ const COLORS = [
     "rgba(138, 43, 226, 1)", // Amethyst Purple
     "rgba(0, 255, 255, 1)", // Aqua Cyan
     "rgba(255, 0, 255, 1)", // Magenta Fusion
+    "rgba(255, 215, 0, 1)", // Gold
+    "rgba(80, 200, 120, 1)", // Emerald Green
 ];
 
 /**
@@ -64,7 +61,6 @@ export function ParticleBackground({
     particleCount = 80,
     connectionDistance = 150,
     interactive = true,
-    maxAttractedParticles = 8,
     className = "",
 }: ParticleBackgroundProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -110,7 +106,7 @@ export function ParticleBackground({
      * Limits the number of particles that can be attracted to cursor.
      */
     const animate = useCallback(
-        (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+        function animate(ctx: CanvasRenderingContext2D, width: number, height: number) {
             const particles = particlesRef.current;
             const mouse = mouseRef.current;
             const time = Date.now() * 0.001;
@@ -206,7 +202,7 @@ export function ParticleBackground({
                 animate(ctx, width, height)
             );
         },
-        [connectionDistance, interactive, maxAttractedParticles]
+        [connectionDistance, interactive]
     );
 
     useEffect(() => {
@@ -259,7 +255,7 @@ export function ParticleBackground({
             window.removeEventListener("mouseleave", handleMouseLeave);
             cancelAnimationFrame(animationFrameRef.current);
         };
-    }, [initParticles, animate, interactive]);
+    }, [initParticles, animate, interactive, canvasRef]);
 
     return (
         <canvas
