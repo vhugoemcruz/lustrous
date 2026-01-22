@@ -1,0 +1,27 @@
+{
+    "version": 1.1,
+    "atDirectives": [
+        {
+            "name": "@theme",
+            "description": "Tailwind CSS v4 @theme directive. Used to define custom theme tokens that extend the default Tailwind design system.",
+            "references": [
+                {
+                    "name": "Tailwind CSS v4 Documentation",
+                    "url": "https://tailwindcss.com/docs/theme"
+                }
+            ]
+        },
+        {
+            "name": "@source",
+            "description": "Tailwind CSS v4 @source directive. Specifies source files for Tailwind to scan for class usage."
+        },
+        {
+            "name": "@utility",
+            "description": "Tailwind CSS v4 @utility directive. Used to define custom utility classes."
+        },
+        {
+            "name": "@variant",
+            "description": "Tailwind CSS v4 @variant directive. Used to define custom variants."
+        }
+    ]
+}
