@@ -1,4 +1,3 @@
-
 /**
  * @module perspective-engine
  * @description Perspective geometry calculation engine.

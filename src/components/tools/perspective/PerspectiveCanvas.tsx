@@ -1,4 +1,3 @@
-
 /**
  * @module PerspectiveCanvas
  * @description Interactive canvas for rendering the perspective grid

@@ -1,4 +1,3 @@
-
 /**
  * @module ParticleBackground
  * @description Animated particle background creating a molecular/crystalline network effect.

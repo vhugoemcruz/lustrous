@@ -1,4 +1,3 @@
-
 /**
  * @module Header
  * @description Fixed header with frosted glass effect, logo, nav links, and CTA button.

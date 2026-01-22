@@ -1,4 +1,3 @@
-
 /**
  * @module usePerspectiveGrid
  * @description Hook to manage the Perspective Grid state

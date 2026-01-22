@@ -1,4 +1,3 @@
-
 /**
  * @module BurgerMenu
  * @description Navigation menu with glass effect listing the tools

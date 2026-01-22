@@ -1,4 +1,3 @@
-
 /**
  * @module Home
  * @description Lustrous home page with particle background and tool cards.
@@ -65,7 +64,7 @@ export default function Home() {
 
           {/* Description */}
           <p className="text-base text-diamond-dust/80 max-w-xl mx-auto leading-relaxed mb-8">
-            All the tools you need, dedicated to the artistic community, for free.
+            All the tools dedicated to the artistic community, for free.
           </p>
 
           {/* Browser Compatibility Indicator */}
