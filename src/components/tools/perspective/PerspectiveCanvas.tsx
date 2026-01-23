@@ -7,7 +7,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { usePerspectiveGrid } from "@/lib/hooks/usePerspectiveGrid";
-import { ToolbarParticles } from "@/components/ui/ToolbarParticles";
+
 
 // SVG info icon
 /**
