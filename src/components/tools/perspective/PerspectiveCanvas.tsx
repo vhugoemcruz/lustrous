@@ -152,6 +152,35 @@ export function PerspectiveCanvas() {
     const [hideUI, setHideUI] = useState(false);
     const [showRefSubmenu, setShowRefSubmenu] = useState(false);
 
+    // Conditional styles for fullscreen mode (dark colors for light background)
+    const btnStyles = {
+        // Button base styles
+        inactive: isFullscreen
+            ? "bg-black/20 border border-black/30 text-gray-700 hover:bg-black/30 hover:text-gray-900"
+            : "bg-white/10 border border-white/15 text-text-secondary hover:bg-white/15 hover:border-white/25 hover:text-white",
+        active: isFullscreen
+            ? "bg-black/30 border border-black/40 text-gray-900"
+            : "bg-white/25 border border-white/40 text-white",
+        // Labels
+        label: isFullscreen ? "text-gray-600" : "text-text-muted",
+        value: isFullscreen ? "text-gray-700" : "text-text-secondary",
+        // Slider
+        slider: isFullscreen
+            ? "bg-black/20 accent-gray-600"
+            : "bg-white/10 accent-white/60",
+        // Export button (more prominent)
+        export: isFullscreen
+            ? "bg-black/30 border border-black/40 text-gray-900 hover:bg-black/40"
+            : "bg-white/20 border border-white/25 text-white hover:bg-white/25",
+        // Floating buttons (right side) - minimal style, just icons
+        floatInactive: isFullscreen
+            ? "text-gray-500 hover:text-gray-700"
+            : "text-text-muted hover:text-white",
+        floatActive: isFullscreen
+            ? "text-gray-700"
+            : "text-white",
+    };
+
     const toggleFullscreen = async () => {
         if (!containerRef.current) return;
 
@@ -250,17 +279,17 @@ export function PerspectiveCanvas() {
                     <div className={`flex flex-wrap items-center gap-4 w-full ${isFullscreen ? "pointer-events-none" : ""}`}>
                         {/* Perspective type */}
                         <div className="flex items-center gap-2 pointer-events-auto">
-                            <span className="text-xs text-text-muted uppercase tracking-wider">
+                            <span className={`text-xs ${btnStyles.label} uppercase tracking-wider`}>
                                 Points:
                             </span>
-                            <div className="flex gap-1.5">
+                            <div className="flex gap-1">
                                 {([1, 2, 3] as const).map((type) => (
                                     <button
                                         key={type}
                                         onClick={() => updateConfig({ type })}
-                                        className={`w-10 h-10 rounded-xl text-sm font-bold transition-all duration-200 ${state?.config.type === type
-                                            ? "bg-aqua text-deep-obsidian shadow-lg shadow-aqua/30 scale-105"
-                                            : "bg-anthracite text-text-secondary hover:bg-slate-grey hover:text-text-primary hover:scale-105"
+                                        className={`w-8 h-8 rounded-lg text-xs font-semibold transition-all duration-200 ${state?.config.type === type
+                                            ? btnStyles.active
+                                            : btnStyles.inactive
                                             }`}
                                     >
                                         {type}
@@ -272,24 +301,24 @@ export function PerspectiveCanvas() {
                         {/* Third point orientation */}
                         {state?.config.type === 3 && (
                             <div className="flex items-center gap-2 pointer-events-auto">
-                                <span className="text-xs text-text-muted uppercase tracking-wider">
+                                <span className={`text-xs ${btnStyles.label} uppercase tracking-wider`}>
                                     Third Point:
                                 </span>
-                                <div className="flex gap-1.5">
+                                <div className="flex gap-1">
                                     <button
                                         onClick={() => updateConfig({ thirdPointOrientation: "top" })}
-                                        className={`px-4 h-10 rounded-xl text-xs font-bold transition-all duration-200 ${state?.config.thirdPointOrientation === "top"
-                                            ? "bg-magenta text-white shadow-lg shadow-magenta/30 scale-105"
-                                            : "bg-anthracite text-text-secondary hover:bg-slate-grey hover:text-text-primary hover:scale-105"
+                                        className={`px-3 h-8 rounded-lg text-xs font-medium transition-all duration-200 ${state?.config.thirdPointOrientation === "top"
+                                            ? btnStyles.active
+                                            : btnStyles.inactive
                                             }`}
                                     >
                                         ↑ Above
                                     </button>
                                     <button
                                         onClick={() => updateConfig({ thirdPointOrientation: "bottom" })}
-                                        className={`px-4 h-10 rounded-xl text-xs font-bold transition-all duration-200 ${state?.config.thirdPointOrientation === "bottom"
-                                            ? "bg-magenta text-white shadow-lg shadow-magenta/30 scale-105"
-                                            : "bg-anthracite text-text-secondary hover:bg-slate-grey hover:text-text-primary hover:scale-105"
+                                        className={`px-3 h-8 rounded-lg text-xs font-medium transition-all duration-200 ${state?.config.thirdPointOrientation === "bottom"
+                                            ? btnStyles.active
+                                            : btnStyles.inactive
                                             }`}
                                     >
                                         ↓ Below
@@ -300,17 +329,17 @@ export function PerspectiveCanvas() {
 
                         {/* Density */}
                         <div className="flex items-center gap-2 pointer-events-auto">
-                            <span className="text-xs text-text-muted uppercase tracking-wider">
+                            <span className={`text-xs ${btnStyles.label} uppercase tracking-wider`}>
                                 Density:
                             </span>
-                            <div className="flex gap-1.5">
+                            <div className="flex gap-1">
                                 {(["low", "medium", "high"] as const).map((density) => (
                                     <button
                                         key={density}
                                         onClick={() => updateConfig({ density })}
-                                        className={`px-4 h-10 rounded-xl text-xs font-bold capitalize transition-all duration-200 ${state?.config.density === density
-                                            ? "bg-amethyst text-white shadow-lg shadow-amethyst/30 scale-105"
-                                            : "bg-anthracite text-text-secondary hover:bg-slate-grey hover:text-text-primary hover:scale-105"
+                                        className={`px-3 h-8 rounded-lg text-xs font-medium capitalize transition-all duration-200 ${state?.config.density === density
+                                            ? btnStyles.active
+                                            : btnStyles.inactive
                                             }`}
                                     >
                                         {density}
@@ -321,7 +350,7 @@ export function PerspectiveCanvas() {
 
                         {/* Horizon angle - Tilt up to ±90° */}
                         <div className="flex items-center gap-2 pointer-events-auto">
-                            <span className="text-xs text-text-muted uppercase tracking-wider">
+                            <span className={`text-xs ${btnStyles.label} uppercase tracking-wider`}>
                                 Tilt:
                             </span>
                             <input
@@ -330,19 +359,19 @@ export function PerspectiveCanvas() {
                                 max="90"
                                 value={state?.camera.horizonAngle ?? 0}
                                 onChange={(e) => updateHorizonAngle(Number(e.target.value))}
-                                className="w-28 h-2 bg-slate-grey rounded-lg appearance-none cursor-pointer accent-gold"
+                                className={`w-24 h-1.5 rounded-full appearance-none cursor-pointer ${btnStyles.slider}`}
                             />
-                            <span className="text-xs text-text-secondary w-10 tabular-nums">
+                            <span className={`text-xs ${btnStyles.value} w-10 tabular-nums`}>
                                 {state?.camera.horizonAngle ?? 0}°
                             </span>
                         </div>
 
                         {/* Zoom indicator */}
                         <div className="flex items-center gap-2 pointer-events-auto">
-                            <span className="text-xs text-text-muted uppercase tracking-wider">
+                            <span className={`text-xs ${btnStyles.label} uppercase tracking-wider`}>
                                 Zoom:
                             </span>
-                            <span className="text-xs text-text-secondary tabular-nums">
+                            <span className={`text-xs ${btnStyles.value} tabular-nums`}>
                                 {Math.round((state?.camera.zoom ?? 1) * 100)}%
                             </span>
                         </div>
@@ -354,21 +383,21 @@ export function PerspectiveCanvas() {
                         <div className={`flex items-center gap-2 pl-4 pointer-events-auto ${isFullscreen ? "ml-auto" : ""}`}>
                             <button
                                 onClick={resetCamera}
-                                className="h-10 px-5 flex items-center gap-2 bg-anthracite text-text-secondary rounded-xl hover:bg-slate-grey hover:text-text-primary hover:scale-105 transition-all duration-200 text-sm font-semibold"
+                                className={`h-8 px-4 flex items-center gap-2 rounded-lg transition-all duration-200 text-xs font-medium ${btnStyles.inactive}`}
                                 title="Recenter (Reset Pan/Zoom - Preserves Tilt)"
                             >
                                 Center
                             </button>
                             <button
                                 onClick={reset}
-                                className="h-10 px-5 flex items-center gap-2 bg-anthracite text-text-secondary rounded-xl hover:bg-slate-grey hover:text-text-primary hover:scale-105 transition-all duration-200 text-sm font-semibold"
+                                className={`h-8 px-4 flex items-center gap-2 rounded-lg transition-all duration-200 text-xs font-medium ${btnStyles.inactive}`}
                                 title="Reset Entire Grid"
                             >
                                 Reset Grid
                             </button>
                             <button
                                 onClick={exportImage}
-                                className="h-10 px-5 flex items-center gap-2 bg-aqua text-deep-obsidian rounded-xl hover:brightness-110 hover:scale-105 transition-all duration-200 text-sm font-bold shadow-lg shadow-aqua/25"
+                                className={`h-8 px-4 flex items-center gap-2 rounded-lg transition-all duration-200 text-xs font-semibold ${btnStyles.export}`}
                                 title="Export Image"
                             >
                                 <ExportIcon />
@@ -397,30 +426,28 @@ export function PerspectiveCanvas() {
                         {isFullscreen && (
                             <button
                                 onClick={() => setHideUI(!hideUI)}
-                                className={`w-11 h-11 flex items-center justify-center rounded-full text-aqua transition-all pointer-events-auto hover:bg-white/5 hover:scale-110 ${hideUI ? "bg-aqua/20" : ""}`}
+                                className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all pointer-events-auto ${hideUI ? btnStyles.floatActive : btnStyles.floatInactive}`}
                                 title={hideUI ? "Show Controls" : "Hide Controls"}
                             >
-                                {hideUI ? <EyeOffIcon size={24} /> : <EyeIcon size={24} />}
+                                {hideUI ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
                             </button>
                         )}
 
                         {/* Fullscreen Button */}
                         <button
                             onClick={toggleFullscreen}
-                            className={`w-11 h-11 flex items-center justify-center rounded-full text-aqua transition-all pointer-events-auto hover:bg-white/5 hover:scale-110 ${hideUI ? "opacity-0 invisible" : "opacity-100 visible"}`}
+                            className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all pointer-events-auto ${btnStyles.floatInactive} ${hideUI ? "opacity-0 invisible" : "opacity-100 visible"}`}
                             title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
                         >
-                            {isFullscreen ? <MinimizeIcon size={24} /> : <MaximizeIcon size={24} />}
+                            {isFullscreen ? <MinimizeIcon size={20} /> : <MaximizeIcon size={20} />}
                         </button>
 
-                        {/* Help Button */}
                         <button
                             onClick={() => setShowHelp(!showHelp)}
-                            className={`w-11 h-11 flex items-center justify-center rounded-full text-aqua transition-all pointer-events-auto hover:bg-white/5 ${showHelp ? "rotate-12 scale-110" : "hover:scale-110"
-                                } ${hideUI ? "opacity-0 invisible" : "opacity-100 visible"}`}
+                            className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all pointer-events-auto ${showHelp ? btnStyles.floatActive : btnStyles.floatInactive} ${hideUI ? "opacity-0 invisible" : "opacity-100 visible"}`}
                             title="User Guide"
                         >
-                            <InfoIcon size={24} />
+                            <InfoIcon size={20} />
                         </button>
 
                         {/* Reference Image Button */}
@@ -428,35 +455,35 @@ export function PerspectiveCanvas() {
                             {!state?.referenceImage ? (
                                 <button
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="w-11 h-11 flex items-center justify-center rounded-full text-aqua transition-all pointer-events-auto hover:bg-white/5 hover:scale-110"
+                                    className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all pointer-events-auto ${btnStyles.floatInactive}`}
                                     title="Add Reference Image"
                                 >
-                                    <ImageIcon size={24} />
+                                    <ImageIcon size={20} />
                                 </button>
                             ) : (
                                 <div className="flex flex-col items-center gap-2">
                                     {/* Visibility Toggle */}
                                     <button
                                         onClick={() => updateReferenceImage({ isVisible: !state.referenceImage?.isVisible })}
-                                        className={`w-11 h-11 flex items-center justify-center rounded-full transition-all pointer-events-auto hover:scale-110 ${state.referenceImage.isVisible
-                                            ? "bg-emerald/20 text-emerald"
-                                            : "text-text-muted hover:text-text-secondary hover:bg-white/5"
+                                        className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all pointer-events-auto ${state.referenceImage.isVisible
+                                            ? btnStyles.floatActive
+                                            : btnStyles.floatInactive
                                             }`}
                                         title={state.referenceImage.isVisible ? "Hide Reference" : "Show Reference"}
                                     >
-                                        {state.referenceImage.isVisible ? <EyeIcon size={24} /> : <EyeOffIcon size={24} />}
+                                        {state.referenceImage.isVisible ? <EyeIcon size={20} /> : <EyeOffIcon size={20} />}
                                     </button>
 
                                     {/* Settings Button */}
                                     <button
                                         onClick={() => setShowRefSubmenu(!showRefSubmenu)}
-                                        className={`w-11 h-11 flex items-center justify-center rounded-full transition-all pointer-events-auto hover:scale-110 ${showRefSubmenu
-                                            ? "bg-emerald/20 text-emerald shadow-lg shadow-emerald/10"
-                                            : "text-text-muted hover:text-text-secondary hover:bg-white/5"
+                                        className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all pointer-events-auto ${showRefSubmenu
+                                            ? btnStyles.floatActive
+                                            : btnStyles.floatInactive
                                             }`}
                                         title="Reference Settings"
                                     >
-                                        <SettingsIcon size={24} />
+                                        <SettingsIcon size={20} />
                                     </button>
                                 </div>
                             )}
@@ -466,7 +493,7 @@ export function PerspectiveCanvas() {
                                 <div className="absolute right-0 top-full mt-2 w-72 bg-deep-obsidian/95 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-2xl flex flex-col gap-4 z-[70] animate-in fade-in slide-in-from-top-2 duration-200 pointer-events-auto">
                                     <div className="flex items-center justify-between mb-1">
                                         <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest flex items-center gap-2">
-                                            <ImageIcon size={14} className="text-emerald" />
+                                            <ImageIcon size={14} className="text-white/60" />
                                             Reference Settings
                                         </h3>
                                         <button
@@ -481,13 +508,13 @@ export function PerspectiveCanvas() {
                                     <div className="space-y-2">
                                         <div className="flex justify-between items-center">
                                             <label className="text-[10px] text-text-muted uppercase">Opacity</label>
-                                            <span className="text-[10px] text-emerald tabular-nums">{Math.round((state.referenceImage?.opacity ?? 0) * 100)}%</span>
+                                            <span className="text-[10px] text-white/70 tabular-nums">{Math.round((state.referenceImage?.opacity ?? 0) * 100)}%</span>
                                         </div>
                                         <input
                                             type="range" min="0.05" max="1" step="0.05"
                                             value={state.referenceImage?.opacity ?? 0.5}
                                             onChange={(e) => updateReferenceImage({ opacity: parseFloat(e.target.value) })}
-                                            className="w-full h-1.5 bg-anthracite rounded-lg appearance-none cursor-pointer accent-emerald"
+                                            className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white/60"
                                         />
                                     </div>
 
@@ -500,7 +527,7 @@ export function PerspectiveCanvas() {
                                                     <button
                                                         key={angle}
                                                         onClick={() => updateReferenceImage({ rotation: angle })}
-                                                        className={`text-[9px] px-1.5 py-0.5 rounded ${state.referenceImage?.rotation === angle ? "bg-emerald/20 text-emerald" : "bg-white/5 text-text-muted hover:text-white"}`}
+                                                        className={`text-[9px] px-1.5 py-0.5 rounded ${state.referenceImage?.rotation === angle ? "bg-white/20 text-white" : "bg-white/5 text-text-muted hover:text-white"}`}
                                                     >
                                                         {angle}°
                                                     </button>
@@ -524,7 +551,7 @@ export function PerspectiveCanvas() {
                                                     }
                                                     updateReferenceImage({ rotation: val });
                                                 }}
-                                                className="flex-1 h-1.5 bg-anthracite rounded-lg appearance-none cursor-pointer accent-emerald"
+                                                className="flex-1 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white/60"
                                             />
                                             <span className="text-[10px] text-text-secondary w-8 tabular-nums">{state.referenceImage?.rotation ?? 0}°</span>
                                         </div>
@@ -534,7 +561,7 @@ export function PerspectiveCanvas() {
                                     <div className="space-y-2">
                                         <div className="flex justify-between items-center">
                                             <label className="text-[10px] text-text-muted uppercase">Image Zoom</label>
-                                            <span className="text-[10px] text-emerald tabular-nums">{Math.round((state.referenceImage?.scale ?? 1) * 100)}%</span>
+                                            <span className="text-[10px] text-white/70 tabular-nums">{Math.round((state.referenceImage?.scale ?? 1) * 100)}%</span>
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <ZoomIcon size={14} className="text-text-muted" />
@@ -542,7 +569,7 @@ export function PerspectiveCanvas() {
                                                 type="range" min="0.1" max="5" step="0.1"
                                                 value={state.referenceImage?.scale ?? 1}
                                                 onChange={(e) => updateReferenceImage({ scale: parseFloat(e.target.value) })}
-                                                className="flex-1 h-1.5 bg-anthracite rounded-lg appearance-none cursor-pointer accent-emerald"
+                                                className="flex-1 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white/60"
                                             />
                                         </div>
                                     </div>
@@ -551,28 +578,28 @@ export function PerspectiveCanvas() {
                                     <div className="grid grid-cols-2 gap-2 mt-1">
                                         <button
                                             onClick={() => updateReferenceImage({ followHorizon: !state.referenceImage?.followHorizon })}
-                                            className={`flex items-center gap-2 p-2 rounded-xl border transition-all text-[10px] font-medium ${state.referenceImage.followHorizon ? "bg-emerald/10 border-emerald/30 text-emerald" : "bg-white/5 border-transparent text-text-muted hover:border-white/10"}`}
+                                            className={`flex items-center gap-2 p-2 rounded-lg border transition-all text-[10px] font-medium ${state.referenceImage.followHorizon ? "bg-white/15 border-white/30 text-white" : "bg-white/5 border-white/10 text-text-muted hover:border-white/20 hover:text-white"}`}
                                         >
-                                            <div className={`w-3 h-3 rounded-full border ${state.referenceImage.followHorizon ? "bg-emerald border-emerald" : "border-text-muted"}`} />
+                                            <div className={`w-3 h-3 rounded-full border ${state.referenceImage.followHorizon ? "bg-white border-white" : "border-text-muted"}`} />
                                             Sync Tilt
                                         </button>
                                         <button
                                             onClick={() => updateReferenceImage({ followZoom: !state.referenceImage?.followZoom })}
-                                            className={`flex items-center gap-2 p-2 rounded-xl border transition-all text-[10px] font-medium ${state.referenceImage.followZoom ? "bg-emerald/10 border-emerald/30 text-emerald" : "bg-white/5 border-transparent text-text-muted hover:border-white/10"}`}
+                                            className={`flex items-center gap-2 p-2 rounded-lg border transition-all text-[10px] font-medium ${state.referenceImage.followZoom ? "bg-white/15 border-white/30 text-white" : "bg-white/5 border-white/10 text-text-muted hover:border-white/20 hover:text-white"}`}
                                         >
-                                            <div className={`w-3 h-3 rounded-full border ${state.referenceImage.followZoom ? "bg-emerald border-emerald" : "border-text-muted"}`} />
+                                            <div className={`w-3 h-3 rounded-full border ${state.referenceImage.followZoom ? "bg-white border-white" : "border-text-muted"}`} />
                                             Sync Zoom
                                         </button>
                                         <button
                                             onClick={() => updateReferenceImage({ isInteractive: !state.referenceImage?.isInteractive })}
-                                            className={`flex items-center gap-2 p-2 rounded-xl border transition-all text-[10px] font-medium ${state.referenceImage.isInteractive ? "bg-emerald/10 border-emerald/30 text-emerald" : "bg-white/5 border-transparent text-text-muted hover:border-white/10"}`}
+                                            className={`flex items-center gap-2 p-2 rounded-lg border transition-all text-[10px] font-medium ${state.referenceImage.isInteractive ? "bg-white/15 border-white/30 text-white" : "bg-white/5 border-white/10 text-text-muted hover:border-white/20 hover:text-white"}`}
                                         >
-                                            <div className={`w-3 h-3 rounded-full border ${state.referenceImage.isInteractive ? "bg-emerald border-emerald" : "border-text-muted"}`} />
+                                            <div className={`w-3 h-3 rounded-full border ${state.referenceImage.isInteractive ? "bg-white border-white" : "border-text-muted"}`} />
                                             Move Handle
                                         </button>
                                         <button
                                             onClick={resetReferenceImage}
-                                            className="flex items-center gap-2 p-2 rounded-xl border border-white/10 bg-white/5 text-text-muted hover:bg-white/10 hover:text-white transition-all text-[10px] font-medium"
+                                            className="flex items-center gap-2 p-2 rounded-lg border border-white/10 bg-white/5 text-text-muted hover:bg-white/10 hover:text-white transition-all text-[10px] font-medium"
                                         >
                                             Reset Pos
                                         </button>
@@ -581,7 +608,7 @@ export function PerspectiveCanvas() {
                                     <div className="pt-2 border-t border-white/5 mt-1 flex gap-2">
                                         <button
                                             onClick={clearReferenceImage}
-                                            className="flex-1 h-9 flex items-center justify-center gap-2 bg-magenta/10 text-magenta hover:bg-magenta/20 rounded-xl transition-all text-xs font-bold"
+                                            className="flex-1 h-9 flex items-center justify-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/15 rounded-lg transition-all text-xs font-medium"
                                         >
                                             <TrashIcon size={14} />
                                             Remove Image
