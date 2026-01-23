@@ -7,6 +7,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { usePerspectiveGrid } from "@/lib/hooks/usePerspectiveGrid";
+import { ToolbarParticles } from "@/components/ui/ToolbarParticles";
 
 // SVG info icon
 /**
@@ -268,13 +269,13 @@ export function PerspectiveCanvas() {
     };
 
     return (
-        <div className="flex flex-col h-full bg-anthracite overflow-hidden">
+        <div className="flex flex-col h-full overflow-hidden">
             {/* Canvas Container - Includes Toolbar for Fullscreen Context */}
-            <div ref={containerRef} className="flex-1 relative overflow-hidden bg-anthracite flex flex-col">
+            <div ref={containerRef} className="flex-1 relative overflow-hidden flex flex-col">
                 {/* Toolbar - Moved inside for Fullscreen visibility */}
                 <div className={`flex flex-wrap items-center gap-4 p-4 transition-all duration-300 z-50 ${isFullscreen
                     ? "absolute top-0 left-0 w-full pointer-events-none"
-                    : "bg-deep-obsidian relative"
+                    : "relative"
                     } ${hideUI ? "opacity-0 invisible -translate-y-4" : "opacity-100 visible translate-y-0"}`}>
                     <div className={`flex flex-wrap items-center gap-4 w-full ${isFullscreen ? "pointer-events-none" : ""}`}>
                         {/* Perspective type */}
