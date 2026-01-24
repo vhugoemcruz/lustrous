@@ -9,6 +9,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import {
     PerspectiveState,
     GridConfig,
+    VanishingPoint,
     createInitialState,
     calculatePerspectiveLines,
     renderGrid,
@@ -111,6 +112,26 @@ export function usePerspectiveGrid(
             return {
                 ...prev,
                 config: newConfig,
+                vanishingPoints: newVPs
+            };
+        });
+    }, [setState]);
+
+    /**
+     * Updates a specific vanishing point's properties (color, etc.)
+     * @param id The ID of the vanishing point (vp1, vp2, vp3)
+     * @param updates Partial updates for the VP
+     */
+    const updateVanishingPoint = useCallback((id: string, updates: Partial<VanishingPoint>) => {
+        setState((prev) => {
+            if (!prev) return prev;
+
+            const newVPs = prev.vanishingPoints.map(vp =>
+                vp.id === id ? { ...vp, ...updates } : vp
+            );
+
+            return {
+                ...prev,
                 vanishingPoints: newVPs
             };
         });
@@ -598,6 +619,7 @@ export function usePerspectiveGrid(
         isPanning,
         initialize,
         updateConfig,
+        updateVanishingPoint,
         updateHorizonY,
         updateHorizonAngle,
         updateZoom,

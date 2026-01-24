@@ -20,6 +20,8 @@ export interface VanishingPoint {
     id: string;
     /** Distance from horizon center in pixels (world space) */
     distanceFromCenter: number;
+    /** Color of the vanishing point lines and handle */
+    color: string;
 }
 
 /**
@@ -47,6 +49,8 @@ export interface GridConfig {
     thirdPointOrientation: "top" | "bottom";
     /** Grid line density */
     density: "low" | "medium" | "high";
+    /** Grid opacity (0-1) */
+    opacity: number;
 }
 
 /**
@@ -168,9 +172,9 @@ export function createInitialState(
 ): PerspectiveState {
     return {
         vanishingPoints: [
-            { id: "vp1", x: 0, y: 0, distanceFromCenter: -canvasWidth * 0.35 },
-            { id: "vp2", x: 0, y: 0, distanceFromCenter: canvasWidth * 0.35 },
-            { id: "vp3", x: 0, y: 0, distanceFromCenter: -canvasHeight * 3 },
+            { id: "vp1", x: 0, y: 0, distanceFromCenter: -canvasWidth * 0.35, color: "#90CEE0" },
+            { id: "vp2", x: 0, y: 0, distanceFromCenter: canvasWidth * 0.35, color: "#EDC687" },
+            { id: "vp3", x: 0, y: 0, distanceFromCenter: -canvasHeight * 3, color: "#E8CAED" },
         ],
         handles: [
             { id: "vp1", x: 0, y: 0, restX: -150 },
@@ -181,6 +185,7 @@ export function createInitialState(
             type: 2,
             thirdPointOrientation: "top",
             density: "medium",
+            opacity: 1,
         },
         camera: {
             horizonY: canvasHeight / 2,
@@ -228,13 +233,13 @@ export function getReferenceHandlePosition(state: PerspectiveState): { x: number
  */
 export function getTransformedVanishingPoints(
     state: PerspectiveState
-): { x: number; y: number; id: string }[] {
+): { x: number; y: number; id: string; color: string }[] {
     const { vanishingPoints, camera, canvasWidth } = state;
     const centerX = canvasWidth / 2 + camera.panX;
     const centerY = camera.horizonY + camera.panY;
     const angleRad = (camera.horizonAngle * Math.PI) / 180;
 
-    const transformed: { x: number; y: number; id: string }[] = [];
+    const transformed: { x: number; y: number; id: string; color: string }[] = [];
 
     // VP1 and VP2 on the horizon line
     for (let i = 0; i < 2; i++) {
@@ -242,7 +247,7 @@ export function getTransformedVanishingPoints(
         const dist = vp.distanceFromCenter * camera.zoom;
         const x = centerX + dist * Math.cos(angleRad);
         const y = centerY + dist * Math.sin(angleRad);
-        transformed.push({ x, y, id: vp.id });
+        transformed.push({ x, y, id: vp.id, color: vp.color });
     }
 
     // VP3 above or below (omnidirectional)
@@ -255,7 +260,7 @@ export function getTransformedVanishingPoints(
     const transformedVP3X = centerX + vp3OffsetX * Math.cos(angleRad) - vp3Dist * Math.sin(angleRad);
     const transformedVP3Y = centerY + vp3OffsetX * Math.sin(angleRad) + vp3Dist * Math.cos(angleRad);
 
-    transformed.push({ x: transformedVP3X, y: transformedVP3Y, id: vp3.id });
+    transformed.push({ x: transformedVP3X, y: transformedVP3Y, id: vp3.id, color: vp3.color });
 
     return transformed;
 }
@@ -280,22 +285,23 @@ export function calculatePerspectiveLines(state: PerspectiveState): Line[] {
         x2: centerX + lineLength * Math.cos(angleRad),
         y2: centerY + lineLength * Math.sin(angleRad),
         color: LINE_COLORS.horizon,
-        // Uses value > 1 to increase visibility; renderGrid handles non-standard opacity
-        opacity: 3,
+        // Opacity logic: Config opacity is 0-1.
+        // Base opacity for horizon is 3 (very strong).
+        opacity: 3 * state.config.opacity,
         width: 1.5,
     });
 
-    const vpColors = [LINE_COLORS.vp1, LINE_COLORS.vp2, LINE_COLORS.vp3];
+
 
     for (let i = 0; i < Math.min(config.type, 2); i++) {
         const vp = transformedVPs[i];
-        const color = vpColors[i];
-        lines.push(...createRadialLinesFromVP(vp, config.density, canvasWidth, canvasHeight, color, angleRad));
+        const color = vp.color;
+        lines.push(...createRadialLinesFromVP(vp, config.density, canvasWidth, canvasHeight, color, angleRad, config.opacity));
     }
 
     if (config.type === 3) {
         const vp3 = transformedVPs[2];
-        lines.push(...createRadialLinesForVP3(vp3, config.density, canvasWidth, canvasHeight, LINE_COLORS.vp3, angleRad));
+        lines.push(...createRadialLinesForVP3(vp3, config.density, canvasWidth, canvasHeight, vp3.color, angleRad, config.opacity));
     }
 
     return lines;
@@ -319,7 +325,8 @@ function createRadialLinesFromVP(
     canvasWidth: number,
     canvasHeight: number,
     color: string,
-    angleOffset: number
+    angleOffset: number,
+    globalOpacity: number
 ): Line[] {
     const lines: Line[] = [];
     const maxDist = Math.hypot(canvasWidth, canvasHeight) * 5;
@@ -347,7 +354,7 @@ function createRadialLinesFromVP(
                 x2: clipped.x2,
                 y2: clipped.y2,
                 color,
-                opacity: 0.75,
+                opacity: 0.75 * globalOpacity,
                 width: 1,
             });
         }
@@ -374,7 +381,8 @@ function createRadialLinesForVP3(
     canvasWidth: number,
     canvasHeight: number,
     color: string,
-    angleOffset: number
+    angleOffset: number,
+    globalOpacity: number
 ): Line[] {
     const lines: Line[] = [];
     const count = VP3_LINE_COUNT[density];
@@ -413,7 +421,7 @@ function createRadialLinesForVP3(
                 x2: clipped.x2,
                 y2: clipped.y2,
                 color,
-                opacity: 2,
+                opacity: 2 * globalOpacity,
                 width: 1,
             });
         }
@@ -543,7 +551,6 @@ export function renderGrid(
 
     if (showUI) {
         const transformedVPs = getTransformedVanishingPoints(state);
-        const vpColors = [LINE_COLORS.vp1, LINE_COLORS.vp2, LINE_COLORS.vp3];
 
         for (let i = 0; i < state.config.type; i++) {
             const vp = transformedVPs[i];
@@ -556,7 +563,7 @@ export function renderGrid(
 
             ctx.beginPath();
             ctx.arc(vp.x, vp.y, 8, 0, Math.PI * 2);
-            ctx.strokeStyle = vpColors[i];
+            ctx.strokeStyle = vp.color;
             ctx.lineWidth = 1;
             ctx.globalAlpha = 0.3;
             ctx.stroke();
@@ -666,13 +673,8 @@ function renderHandles(
     ctx: CanvasRenderingContext2D,
     state: PerspectiveState
 ): void {
-    const { handles, config } = state;
+    const { handles, config, vanishingPoints } = state;
 
-    const colors = {
-        vp1: LINE_COLORS.vp1,
-        vp2: LINE_COLORS.vp2,
-        vp3: LINE_COLORS.vp3,
-    };
 
     handles.forEach((handle) => {
         if (handle.id === "vp3" && config.type !== 3) return;
@@ -684,9 +686,13 @@ function renderHandles(
         const x = screenCenterX + restX + handle.x;
         const y = (state.canvasHeight / 2) + handle.y;
 
+        // Find corresponding VP color
+        const vp = vanishingPoints.find(v => v.id === handle.id);
+        const color = vp ? vp.color : "#ffffff";
+
         ctx.beginPath();
         ctx.arc(x, y, 15, 0, Math.PI * 2);
-        ctx.fillStyle = colors[handle.id as keyof typeof colors];
+        ctx.fillStyle = color;
         ctx.globalAlpha = 0.4;
         ctx.fill();
 

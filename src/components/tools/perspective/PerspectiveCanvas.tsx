@@ -5,7 +5,7 @@
 
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { usePerspectiveGrid } from "@/lib/hooks/usePerspectiveGrid";
 
 
@@ -140,6 +140,172 @@ function ZoomIcon({ size = 16, className = "" }: { size?: number; className?: st
     );
 }
 
+// Color conversion helpers
+// Color conversion helpers (HSV based for accurate picker)
+function hsvToHex(h: number, s: number, v: number): string {
+    s /= 100;
+    v /= 100;
+    const f = (n: number) => {
+        const k = (n + h / 60) % 6;
+        return v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
+    };
+    const rgb = [f(5), f(3), f(1)].map(c => Math.round(c * 255).toString(16).padStart(2, '0'));
+    return `#${rgb.join('')}`;
+}
+
+function hexToHsv(hex: string): { h: number, s: number, v: number } {
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!result) return { h: 0, s: 0, v: 0 };
+    let r = parseInt(result[1], 16) / 255;
+    let g = parseInt(result[2], 16) / 255;
+    let b = parseInt(result[3], 16) / 255;
+    let max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h = 0, s = 0, v = max;
+    let d = max - min;
+    s = max === 0 ? 0 : d / max;
+    if (max !== min) {
+        switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+    return { h: h * 360, s: s * 100, v: v * 100 };
+}
+
+/**
+ * Custom Color Picker Component
+ */
+function ColorPicker({ color, onChange }: { color: string; onChange: (hex: string) => void }) {
+    const [hsv, setHsv] = useState(hexToHsv(color));
+    const [isDraggingError, setIsDragging] = useState<string | null>(null); // "sv" or "h"
+    const svRef = useRef<HTMLDivElement>(null);
+    const hueRef = useRef<HTMLDivElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    // Render Canvas (SV Box)
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        if (!ctx) return;
+
+        // Default to client dimensions if available, else small default
+        const width = canvas.clientWidth || 200;
+        const height = canvas.clientHeight || 200;
+
+        // Match buffer size to display size
+        if (canvas.width !== width || canvas.height !== height) {
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        ctx.fillStyle = `hsl(${hsv.h}, 100%, 50%)`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const gradSat = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        gradSat.addColorStop(0, 'white');
+        gradSat.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = gradSat;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const gradVal = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        gradVal.addColorStop(0, 'rgba(0,0,0,0)');
+        gradVal.addColorStop(1, 'black');
+        ctx.fillStyle = gradVal;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }, [hsv.h]);
+
+    // Sync internal state if prop changes freely (optional, might cause loops if not careful)
+    useEffect(() => {
+        const newHsv = hexToHsv(color);
+        // Only update if significantly different to avoid rounding loops
+        if (Math.abs(newHsv.h - hsv.h) > 1 || Math.abs(newHsv.s - hsv.s) > 1 || Math.abs(newHsv.v - hsv.v) > 1) {
+            setHsv(newHsv);
+        }
+    }, [color]);
+
+    const handleSvMove = useCallback((e: MouseEvent | React.MouseEvent, isDown: boolean = false) => {
+        if (!svRef.current) return;
+        const rect = svRef.current.getBoundingClientRect();
+        const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+
+        // s = x, v = 1 - y
+        const newS = x * 100;
+        const newV = (1 - y) * 100;
+
+        const newHsv = { ...hsv, s: newS, v: newV };
+        setHsv(newHsv);
+        onChange(hsvToHex(newHsv.h, newHsv.s, newHsv.v));
+    }, [hsv, onChange]);
+
+    const handleHueMove = useCallback((e: MouseEvent | React.MouseEvent, isDown: boolean = false) => {
+        if (!hueRef.current) return;
+        const rect = hueRef.current.getBoundingClientRect();
+        const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+
+        const newH = x * 360;
+        const newHsv = { ...hsv, h: newH };
+        setHsv(newHsv);
+        onChange(hsvToHex(newHsv.h, newHsv.s, newHsv.v));
+    }, [hsv, onChange]);
+
+    useEffect(() => {
+        const handleUp = () => setIsDragging(null);
+        const handleMove = (e: MouseEvent) => {
+            if (isDraggingError === "sv") handleSvMove(e);
+            if (isDraggingError === "hue") handleHueMove(e);
+        };
+        if (isDraggingError) {
+            window.addEventListener("mouseup", handleUp);
+            window.addEventListener("mousemove", handleMove);
+        }
+        return () => {
+            window.removeEventListener("mouseup", handleUp);
+            window.removeEventListener("mousemove", handleMove);
+        }
+    }, [isDraggingError, handleSvMove, handleHueMove]);
+
+
+    return (
+        <div className="flex flex-col gap-3 w-full p-1 select-none">
+            {/* Saturation/Value Box - Canvas */}
+            <div
+                ref={svRef}
+                className="w-full aspect-square rounded-lg cursor-crosshair relative border border-white/10 overflow-hidden"
+                onMouseDown={(e) => { setIsDragging("sv"); handleSvMove(e, true); }}
+            >
+                <canvas ref={canvasRef} className="w-full h-full block" />
+                <div
+                    className="absolute w-3 h-3 rounded-full border-2 border-white shadow-sm transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                    style={{
+                        left: `${hsv.s}%`,
+                        top: `${100 - hsv.v}%`,
+                        backgroundColor: color
+                    }}
+                />
+            </div>
+
+            {/* Hue Slider */}
+            <div
+                ref={hueRef}
+                className="w-full h-3 rounded-full cursor-pointer relative border border-white/10"
+                style={{
+                    background: "linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%)"
+                }}
+                onMouseDown={(e) => { setIsDragging("hue"); handleHueMove(e, true); }}
+            >
+                <div
+                    className="absolute w-3 h-3 bg-white rounded-full shadow-sm transform -translate-x-1/2 top-0 pointer-events-none border border-black/20"
+                    style={{ left: `${(hsv.h / 360) * 100}%` }}
+                />
+            </div>
+        </div>
+    );
+}
+
 /**
  * Main Perspective Canvas component.
  * Manages user interface, canvas interactions, and fullscreen mode.
@@ -152,6 +318,25 @@ export function PerspectiveCanvas() {
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [hideUI, setHideUI] = useState(false);
     const [showRefSubmenu, setShowRefSubmenu] = useState(false);
+    const [showGridSettings, setShowGridSettings] = useState(false);
+    const [activeColorPicker, setActiveColorPicker] = useState<string | null>(null);
+    const popoverRef = useRef<HTMLDivElement>(null);
+
+    // Handle click outside color picker
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (activeColorPicker && popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+                setActiveColorPicker(null);
+            }
+        }
+
+        if (activeColorPicker) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [activeColorPicker]);
 
     // Conditional styles for fullscreen mode (dark colors for light background)
     const btnStyles = {
@@ -231,6 +416,7 @@ export function PerspectiveCanvas() {
         updateReferenceImage,
         resetReferenceImage,
         clearReferenceImage,
+        updateVanishingPoint,
     } = usePerspectiveGrid(canvasRef, hideUI);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -450,6 +636,104 @@ export function PerspectiveCanvas() {
                         >
                             <InfoIcon size={20} />
                         </button>
+
+                        {/* Grid Settings */}
+                        <div className={`relative ${hideUI ? "opacity-0 invisible" : "opacity-100 visible"}`}>
+                            <button
+                                onClick={() => setShowGridSettings(!showGridSettings)}
+                                className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all pointer-events-auto ${showGridSettings
+                                    ? btnStyles.floatActive
+                                    : btnStyles.floatInactive
+                                    }`}
+                                title="Grid Settings"
+                            >
+                                <SettingsIcon size={20} />
+                            </button>
+
+                            {/* Grid Settings Submenu */}
+                            {showGridSettings && state && (
+                                <div className="absolute right-0 top-full mt-2 w-72 bg-deep-obsidian/95 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-2xl flex flex-col gap-4 z-[70] animate-in fade-in slide-in-from-top-2 duration-200 pointer-events-auto">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest flex items-center gap-2">
+                                            <SettingsIcon size={14} className="text-white/60" />
+                                            Grid Settings
+                                        </h3>
+                                        <button
+                                            onClick={() => setShowGridSettings(false)}
+                                            className="text-text-muted hover:text-white transition-colors"
+                                        >
+                                            <span className="text-lg">&times;</span>
+                                        </button>
+                                    </div>
+
+                                    {/* Opacity */}
+                                    <div className="space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <label className="text-[10px] text-text-muted uppercase">Line Opacity</label>
+                                            <span className="text-[10px] text-white/70 tabular-nums">{Math.round((state.config.opacity ?? 1) * 100)}%</span>
+                                        </div>
+                                        <input
+                                            type="range" min="0.1" max="1" step="0.1"
+                                            value={state.config.opacity ?? 1}
+                                            onChange={(e) => updateConfig({ opacity: parseFloat(e.target.value) })}
+                                            className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white/60"
+                                        />
+                                    </div>
+
+                                    {/* VP Colors */}
+                                    <div className="space-y-3 pt-2 border-t border-white/5">
+                                        <label className="text-[10px] text-text-muted uppercase block mb-1">Point Colors</label>
+
+                                        {/* Dynamic list of active VPs */}
+                                        {state.vanishingPoints
+                                            .filter(vp => {
+                                                if (vp.id === "vp3" && state.config.type !== 3) return false;
+                                                if (vp.id === "vp2" && state.config.type === 1) return false;
+                                                return true;
+                                            })
+                                            .map(vp => (
+                                                <div key={vp.id} className="relative">
+                                                    <div className="flex justify-between items-center bg-white/5 p-2 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
+                                                        <span className="text-[10px] text-white/70 uppercase font-medium">{vp.id.replace('vp', 'Point ')}</span>
+                                                        <button
+                                                            onClick={() => setActiveColorPicker(activeColorPicker === vp.id ? null : vp.id)}
+                                                            className="flex items-center gap-2 group"
+                                                        >
+                                                            <div
+                                                                className="w-6 h-4 rounded border border-white/20 shadow-sm"
+                                                                style={{ backgroundColor: vp.color }}
+                                                            />
+                                                        </button>
+                                                    </div>
+
+                                                    {/* Color Picker Popover */}
+                                                    {activeColorPicker === vp.id && (
+                                                        <div
+                                                            ref={popoverRef}
+                                                            className="absolute right-0 top-full mt-2 w-48 bg-deep-obsidian border border-white/10 rounded-t-xl rounded-b-md p-2 shadow-xl z-[80] animate-in fade-in slide-in-from-top-1"
+                                                        >
+                                                            <div className="flex justify-between items-center mb-2 px-1">
+                                                                <span className="text-[10px] text-text-muted uppercase font-bold">Pick Color</span>
+                                                                <button
+                                                                    onClick={() => setActiveColorPicker(null)}
+                                                                    className="text-text-muted hover:text-white transition-colors"
+                                                                >
+                                                                    <span className="text-lg leading-none">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <ColorPicker
+                                                                color={vp.color}
+                                                                onChange={(hex) => updateVanishingPoint(vp.id, { color: hex })}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                                </div>
+                            )}
+                        </div>
 
                         {/* Reference Image Button */}
                         <div className={`relative ${hideUI ? "opacity-0 invisible" : "opacity-100 visible"}`}>
