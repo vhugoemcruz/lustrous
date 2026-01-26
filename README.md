@@ -37,14 +37,14 @@ A common problem is addressed: artists, especially beginners, often find technic
 
 An interactive tool for building and studying perspective. The interface allows artists to construct customizable perspective grids to assist in illustration work.
 
-| Feature | Description |
-|---------|-------------|
-| **Vanishing Points** | Support for 1, 2, or 3 configurable vanishing points |
+| Feature                 | Description                                            |
+| ----------------------- | ------------------------------------------------------ |
+| **Vanishing Points**    | Support for 1, 2, or 3 configurable vanishing points   |
 | **Direct Manipulation** | Vanishing points can be dragged directly on the canvas |
-| **Eye-level Control** | The eye level is adjusted via camera movement |
-| **Horizon Rotation** | The horizon line inclination can be customized |
-| **Grid Density** | Options include Low, Medium, and High density |
-| **Export** | Scenes are exported in Full HD (1920×1080) |
+| **Eye-level Control**   | The eye level is adjusted via camera movement          |
+| **Horizon Rotation**    | The horizon line inclination can be customized         |
+| **Grid Density**        | Options include Low, Medium, and High density          |
+| **Export**              | Scenes are exported in Full HD (1920×1080)             |
 
 ---
 
@@ -52,14 +52,14 @@ An interactive tool for building and studying perspective. The interface allows 
 
 A visualization tool for 3D models focused on the study of three-dimensionality. The viewer enables artists to examine objects from any angle to understand volume, form, and spatial relationships.
 
-| Feature | Description |
-|---------|-------------|
-| **File Upload** | `.obj` files can be uploaded or default models can be selected |
-| **Trackball Control** | Models are rotated via click and drag interaction |
-| **Zoom** | Zoom in and out functionality is provided |
-| **Real-time Rendering** | WebGL rendering is performed client-side via Three.js |
-| **Reset Position** | The model can be reset to its original orientation |
-| **Export** | Scenes are exported in Full HD resolution |
+| Feature                 | Description                                                    |
+| ----------------------- | -------------------------------------------------------------- |
+| **File Upload**         | `.obj` files can be uploaded or default models can be selected |
+| **Trackball Control**   | Models are rotated via click and drag interaction              |
+| **Zoom**                | Zoom in and out functionality is provided                      |
+| **Real-time Rendering** | WebGL rendering is performed client-side via Three.js          |
+| **Reset Position**      | The model can be reset to its original orientation             |
+| **Export**              | Scenes are exported in Full HD resolution                      |
 
 ---
 
@@ -67,13 +67,13 @@ A visualization tool for 3D models focused on the study of three-dimensionality.
 
 A tool for studying color theory through automated image analysis. The analyzer extracts color palettes and provides theoretical interpretations to aid in understanding color usage.
 
-| Feature | Description |
-|---------|-------------|
-| **Image Upload** | Images can be uploaded for analysis |
-| **Region Sampling** | Colors are extracted from different regions of the image |
-| **Palette Generation** | Dominant colors are identified with HEX values and names |
+| Feature                        | Description                                                                   |
+| ------------------------------ | ----------------------------------------------------------------------------- |
+| **Image Upload**               | Images can be uploaded for analysis                                           |
+| **Region Sampling**            | Colors are extracted from different regions of the image                      |
+| **Palette Generation**         | Dominant colors are identified with HEX values and names                      |
 | **Theoretical Interpretation** | Educational insights about temperature, contrast, and saturation are provided |
-| **PDF Export** | Analysis reports can be exported as PDF documents |
+| **PDF Export**                 | Analysis reports can be exported as PDF documents                             |
 
 ---
 
@@ -104,12 +104,12 @@ The application can be accessed at [http://localhost:3000](http://localhost:3000
 
 ### Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Starts the development server |
-| `npm run build` | Creates the production build |
-| `npm run start` | Starts the production server |
-| `npm run lint` | Runs the linter |
+| Command         | Description                   |
+| --------------- | ----------------------------- |
+| `npm run dev`   | Starts the development server |
+| `npm run build` | Creates the production build  |
+| `npm run start` | Starts the production server  |
+| `npm run lint`  | Runs the linter               |
 
 ---
 
@@ -133,14 +133,14 @@ lustrous/
 
 ### Technical Stack
 
-| Layer | Technology |
-|-------|------------|
-| **Framework** | Next.js 16 (App Router) |
-| **UI** | React 19 + TailwindCSS 4 |
-| **Language** | TypeScript 5 |
-| **2D Rendering** | Canvas API |
-| **3D Rendering** | Three.js (WebGL) |
-| **Deploy** | Vercel |
+| Layer            | Technology               |
+| ---------------- | ------------------------ |
+| **Framework**    | Next.js 16 (App Router)  |
+| **UI**           | React 19 + TailwindCSS 4 |
+| **Language**     | TypeScript 5             |
+| **2D Rendering** | Canvas API               |
+| **3D Rendering** | Three.js (WebGL)         |
+| **Deploy**       | Vercel                   |
 
 ---
 
@@ -148,13 +148,13 @@ lustrous/
 
 Complete technical documentation is available in the `/documentos` folder:
 
-| Document | Description |
-|----------|-------------|
-| [LUSTROUS_MASTER.md](./documentos/LUSTROUS_MASTER.md) | Project quick reference |
-| [DVP_Lustrous.md](./documentos/DVP_Lustrous.md) | Product Vision Document |
-| [Requisitos_Lustrous.md](./documentos/Requisitos_Lustrous.md) | Functional and non-functional requirements |
-| [Arquitetura_Ferramentas_Lustrous.md](./documentos/Arquitetura_Ferramentas_Lustrous.md) | Detailed tool architecture |
-| [User_Stories_Lustrous.md](./documentos/User_Stories_Lustrous.md) | User stories |
+| Document                                                                                | Description                                |
+| --------------------------------------------------------------------------------------- | ------------------------------------------ |
+| [LUSTROUS_MASTER.md](./documentos/LUSTROUS_MASTER.md)                                   | Project quick reference                    |
+| [DVP_Lustrous.md](./documentos/DVP_Lustrous.md)                                         | Product Vision Document                    |
+| [Requisitos_Lustrous.md](./documentos/Requisitos_Lustrous.md)                           | Functional and non-functional requirements |
+| [Arquitetura_Ferramentas_Lustrous.md](./documentos/Arquitetura_Ferramentas_Lustrous.md) | Detailed tool architecture                 |
+| [User_Stories_Lustrous.md](./documentos/User_Stories_Lustrous.md)                       | User stories                               |
 
 ---
 

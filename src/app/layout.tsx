@@ -25,7 +25,14 @@ export const metadata: Metadata = {
   title: "Lustrous | Tools for Artists",
   description:
     "Free utility tools for artists - perspective grids, 3D visualization, and color analysis",
-  keywords: ["art", "illustration", "perspective", "3D", "color theory", "tools"],
+  keywords: [
+    "art",
+    "illustration",
+    "perspective",
+    "3D",
+    "color theory",
+    "tools",
+  ],
   authors: [{ name: "Lustrous" }],
   openGraph: {
     title: "Lustrous | Tools for Artists",
@@ -46,7 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${montserrat.variable} antialiased min-h-screen bg-background text-foreground`}
+        className={`${inter.variable} ${montserrat.variable} bg-background text-foreground min-h-screen antialiased`}
         suppressHydrationWarning
       >
         <Header />

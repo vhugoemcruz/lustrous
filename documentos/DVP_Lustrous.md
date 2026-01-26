@@ -1,4 +1,5 @@
 # Documento de Visão do Produto (DVP)
+
 ## Projeto: Lustrous
 
 ---
@@ -26,7 +27,8 @@ Ideia / concepção.
 
 ## 2. Público-Alvo e Usuários
 
-**Perfil dos usuários:**  
+**Perfil dos usuários:**
+
 - Artistas ilustradores
 - Estudantes de arte
 - Pessoas em aprendizado de fundamentos de ilustração
@@ -36,6 +38,7 @@ Leigo.
 
 **Cenários de uso:**  
 O usuário está estudando ou produzindo uma ilustração e necessita de material de apoio técnico. Ele acessa o Lustrous para:
+
 - Construir grids de perspectiva
 - Visualizar objetos 3D para compreender volume e forma
 - Analisar paletas e uso de cores em imagens de referência
@@ -47,10 +50,12 @@ O usuário está estudando ou produzindo uma ilustração e necessita de materia
 ### Funcionalidades Principais (MVP)
 
 #### 3.1 Ferramenta de Perspective Grid
+
 Ferramenta interativa para construção e estudo de perspectiva, inspirada em:
 https://www.reubenlara.com/perspectivegrid/
 
 **Características principais:**
+
 - Suporte a **1, 2 ou 3 pontos de fuga**
 - Até **2 pontos no horizonte**
 - **Terceiro ponto opcional**, podendo ser posicionado acima ou abaixo do horizonte
@@ -68,9 +73,11 @@ https://www.reubenlara.com/perspectivegrid/
 ---
 
 #### 3.2 Visualizador de Arquivos `.obj`
+
 Ferramenta para visualização de modelos 3D com foco em estudo de tridimensionalidade.
 
 **Características principais:**
+
 - Upload de arquivos `.obj` com limite de tamanho
 - Biblioteca de modelos padrão fornecidos pelo site
 - Visualização 3D em tempo real
@@ -81,15 +88,18 @@ Ferramenta para visualização de modelos 3D com foco em estudo de tridimensiona
 - Renderização client-side
 
 **Funcionalidades futuras desejáveis:**
+
 - Múltiplos objetos na mesma cena
 - Integração de perspective grid na visualização 3D
 
 ---
 
 #### 3.3 Ferramenta de Análise de Gama de Cores
+
 Ferramenta para estudo de teoria das cores a partir de imagens.
 
 **Características principais:**
+
 - Upload de imagem
 - Algoritmo client-side para análise de cores
 - Geração de relatório contendo:
@@ -102,17 +112,20 @@ Ferramenta para estudo de teoria das cores a partir de imagens.
 ---
 
 ### 3.4 Processamento
+
 - Todas as ferramentas devem priorizar **processamento no lado do cliente**
 - Objetivo: reduzir carga no servidor e custos operacionais
 
 ---
 
 ### Funcionalidades Desejáveis
+
 - Sistema de doações via PayPal e Google Pay
 
 ---
 
 ### Fases Futuras
+
 - Ferramenta de estudo de gesture com imagens aleatórias e timer
 - Plataforma de commissions integrada (similar ao VGEN)
 - Aplicativo mobile

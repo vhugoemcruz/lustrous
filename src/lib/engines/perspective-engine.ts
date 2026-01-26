@@ -1,7 +1,7 @@
 /**
  * @module perspective-engine
  * @description Perspective geometry calculation engine.
- * 
+ *
  * 3D grid implementation with mesh:
  * - Lines distributed by projected distance in 3D space
  * - Creates depth effect with perspective compression
@@ -12,16 +12,16 @@
  * Represents a vanishing point in 2D space.
  */
 export interface VanishingPoint {
-    /** X coordinate of the point (used only for VP3) */
-    x: number;
-    /** Y coordinate of the point (not currently used) */
-    y: number;
-    /** Unique identifier: "vp1", "vp2" or "vp3" */
-    id: string;
-    /** Distance from horizon center in pixels (world space) */
-    distanceFromCenter: number;
-    /** Color of the vanishing point lines and handle */
-    color: string;
+  /** X coordinate of the point (used only for VP3) */
+  x: number;
+  /** Y coordinate of the point (not currently used) */
+  y: number;
+  /** Unique identifier: "vp1", "vp2" or "vp3" */
+  id: string;
+  /** Distance from horizon center in pixels (world space) */
+  distanceFromCenter: number;
+  /** Color of the vanishing point lines and handle */
+  color: string;
 }
 
 /**
@@ -29,135 +29,135 @@ export interface VanishingPoint {
  * Handles are fixed UI elements on screen that control VPs.
  */
 export interface Handle {
-    /** Current X displacement of handle (relative to rest position) */
-    x: number;
-    /** Current Y displacement of handle (relative to rest position) */
-    y: number;
-    /** ID of associated VP: "vp1", "vp2" or "vp3" */
-    id: string;
-    /** Rest X position relative to screen center */
-    restX: number;
+  /** Current X displacement of handle (relative to rest position) */
+  x: number;
+  /** Current Y displacement of handle (relative to rest position) */
+  y: number;
+  /** ID of associated VP: "vp1", "vp2" or "vp3" */
+  id: string;
+  /** Rest X position relative to screen center */
+  restX: number;
 }
 
 /**
  * Grid rendering configuration.
  */
 export interface GridConfig {
-    /** Number of active vanishing points (1, 2 or 3) */
-    type: 1 | 2 | 3;
-    /** Orientation of the third vanishing point */
-    thirdPointOrientation: "top" | "bottom";
-    /** Grid line density */
-    density: "low" | "medium" | "high";
-    /** Grid opacity (0-1) */
-    opacity: number;
+  /** Number of active vanishing points (1, 2 or 3) */
+  type: 1 | 2 | 3;
+  /** Orientation of the third vanishing point */
+  thirdPointOrientation: "top" | "bottom";
+  /** Grid line density */
+  density: "low" | "medium" | "high";
+  /** Grid opacity (0-1) */
+  opacity: number;
 }
 
 /**
  * Camera state (pan, zoom, horizon controls).
  */
 export interface CameraState {
-    /** Horizon Y position in pixels */
-    horizonY: number;
-    /** Horizon tilt angle in degrees */
-    horizonAngle: number;
-    /** Horizontal camera offset */
-    panX: number;
-    /** Vertical camera offset */
-    panY: number;
-    /** Zoom level (1 = 100%) */
-    zoom: number;
+  /** Horizon Y position in pixels */
+  horizonY: number;
+  /** Horizon tilt angle in degrees */
+  horizonAngle: number;
+  /** Horizontal camera offset */
+  panX: number;
+  /** Vertical camera offset */
+  panY: number;
+  /** Zoom level (1 = 100%) */
+  zoom: number;
 }
 
 /**
  * Geometric line for canvas rendering.
  */
 export interface Line {
-    /** Start X coordinate */
-    x1: number;
-    /** Start Y coordinate */
-    y1: number;
-    /** End X coordinate */
-    x2: number;
-    /** End Y coordinate */
-    y2: number;
-    /** Line color in hex format */
-    color: string;
-    /** Line opacity (0-1) */
-    opacity: number;
-    /** Line width in pixels */
-    width: number;
+  /** Start X coordinate */
+  x1: number;
+  /** Start Y coordinate */
+  y1: number;
+  /** End X coordinate */
+  x2: number;
+  /** End Y coordinate */
+  y2: number;
+  /** Line color in hex format */
+  color: string;
+  /** Line opacity (0-1) */
+  opacity: number;
+  /** Line width in pixels */
+  width: number;
 }
 
 /**
  * Reference image configuration.
  */
 export interface ReferenceImage {
-    /** Image URL (blob or http) */
-    url: string;
-    /** Image opacity (0-1) */
-    opacity: number;
-    /** Whether image is visible */
-    isVisible: boolean;
-    /** Original image width/height ratio */
-    aspectRatio: number;
+  /** Image URL (blob or http) */
+  url: string;
+  /** Image opacity (0-1) */
+  opacity: number;
+  /** Whether image is visible */
+  isVisible: boolean;
+  /** Original image width/height ratio */
+  aspectRatio: number;
 
-    // Transform properties
-    /** Manual scale multiplier (relative to fit) */
-    scale: number;
-    /** Manual rotation in degrees */
-    rotation: number;
-    /** Image offset X in pixels (cumulative) */
-    offsetX: number;
-    /** Image offset Y in pixels (cumulative) */
-    offsetY: number;
-    /** Whether image tilts with horizon */
-    followHorizon: boolean;
-    /** Whether image scales with grid zoom */
-    followZoom: boolean;
-    /** Whether image shows an interactive handle for movement */
-    isInteractive: boolean;
+  // Transform properties
+  /** Manual scale multiplier (relative to fit) */
+  scale: number;
+  /** Manual rotation in degrees */
+  rotation: number;
+  /** Image offset X in pixels (cumulative) */
+  offsetX: number;
+  /** Image offset Y in pixels (cumulative) */
+  offsetY: number;
+  /** Whether image tilts with horizon */
+  followHorizon: boolean;
+  /** Whether image scales with grid zoom */
+  followZoom: boolean;
+  /** Whether image shows an interactive handle for movement */
+  isInteractive: boolean;
 
-    // Handle displacement (like VP handles - returns to 0 after release)
-    /** Current handle X displacement (visual, for animation) */
-    handleX: number;
-    /** Current handle Y displacement (visual, for animation) */
-    handleY: number;
+  // Handle displacement (like VP handles - returns to 0 after release)
+  /** Current handle X displacement (visual, for animation) */
+  handleX: number;
+  /** Current handle Y displacement (visual, for animation) */
+  handleY: number;
 }
 
 /**
  * Global state of the perspective grid system.
  */
 export interface PerspectiveState {
-    /** Array of vanishing points (always 3, even if not active) */
-    vanishingPoints: VanishingPoint[];
-    /** Array of control handles (always 3) */
-    handles: Handle[];
-    /** Current grid configuration */
-    config: GridConfig;
-    /** Camera state */
-    camera: CameraState;
-    /** Canvas width in pixels */
-    canvasWidth: number;
-    /** Canvas height in pixels */
-    canvasHeight: number;
-    /** Optional reference image */
-    referenceImage?: ReferenceImage;
+  /** Array of vanishing points (always 3, even if not active) */
+  vanishingPoints: VanishingPoint[];
+  /** Array of control handles (always 3) */
+  handles: Handle[];
+  /** Current grid configuration */
+  config: GridConfig;
+  /** Camera state */
+  camera: CameraState;
+  /** Canvas width in pixels */
+  canvasWidth: number;
+  /** Canvas height in pixels */
+  canvasHeight: number;
+  /** Optional reference image */
+  referenceImage?: ReferenceImage;
 }
 
 /** Number of lines for VP3 (third point) - different values from other VPs */
 const VP3_LINE_COUNT = {
-    low: 96,
-    medium: 192,
-    high: 384,
+  low: 96,
+  medium: 192,
+  high: 384,
 };
 
 /** Default colors for each line set */
 const LINE_COLORS = {
-    vp1: "#90CEE0",
-    vp2: "#EDC687",
-    vp3: "#E8CAED",
-    horizon: "#ff0000ff",
+  vp1: "#90CEE0",
+  vp2: "#EDC687",
+  vp3: "#E8CAED",
+  horizon: "#ff0000ff",
 };
 
 /**
@@ -167,36 +167,54 @@ const LINE_COLORS = {
  * @returns The initial state configured with default values.
  */
 export function createInitialState(
-    canvasWidth: number,
-    canvasHeight: number
+  canvasWidth: number,
+  canvasHeight: number
 ): PerspectiveState {
-    return {
-        vanishingPoints: [
-            { id: "vp1", x: 0, y: 0, distanceFromCenter: -canvasWidth * 0.35, color: "#90CEE0" },
-            { id: "vp2", x: 0, y: 0, distanceFromCenter: canvasWidth * 0.35, color: "#EDC687" },
-            { id: "vp3", x: 0, y: 0, distanceFromCenter: -canvasHeight * 3, color: "#E8CAED" },
-        ],
-        handles: [
-            { id: "vp1", x: 0, y: 0, restX: -150 },
-            { id: "vp2", x: 0, y: 0, restX: 150 },
-            { id: "vp3", x: 0, y: 0, restX: 0 },
-        ],
-        config: {
-            type: 2,
-            thirdPointOrientation: "top",
-            density: "medium",
-            opacity: 1,
-        },
-        camera: {
-            horizonY: canvasHeight / 2,
-            horizonAngle: 0,
-            panX: 0,
-            panY: 0,
-            zoom: 1,
-        },
-        canvasWidth,
-        canvasHeight,
-    };
+  return {
+    vanishingPoints: [
+      {
+        id: "vp1",
+        x: 0,
+        y: 0,
+        distanceFromCenter: -canvasWidth * 0.35,
+        color: "#90CEE0",
+      },
+      {
+        id: "vp2",
+        x: 0,
+        y: 0,
+        distanceFromCenter: canvasWidth * 0.35,
+        color: "#EDC687",
+      },
+      {
+        id: "vp3",
+        x: 0,
+        y: 0,
+        distanceFromCenter: -canvasHeight * 3,
+        color: "#E8CAED",
+      },
+    ],
+    handles: [
+      { id: "vp1", x: 0, y: 0, restX: -150 },
+      { id: "vp2", x: 0, y: 0, restX: 150 },
+      { id: "vp3", x: 0, y: 0, restX: 0 },
+    ],
+    config: {
+      type: 2,
+      thirdPointOrientation: "top",
+      density: "medium",
+      opacity: 1,
+    },
+    camera: {
+      horizonY: canvasHeight / 2,
+      horizonAngle: 0,
+      panX: 0,
+      panY: 0,
+      zoom: 1,
+    },
+    canvasWidth,
+    canvasHeight,
+  };
 }
 
 /**
@@ -206,24 +224,26 @@ export function createInitialState(
  * @param state Current perspective state.
  * @returns Object with x and y screen coordinates, or null if no reference image.
  */
-export function getReferenceHandlePosition(state: PerspectiveState): { x: number; y: number } | null {
-    if (!state.referenceImage) return null;
+export function getReferenceHandlePosition(
+  state: PerspectiveState
+): { x: number; y: number } | null {
+  if (!state.referenceImage) return null;
 
-    const { referenceImage, canvasWidth, canvasHeight } = state;
+  const { referenceImage, canvasWidth, canvasHeight } = state;
 
-    // Fixed rest position: centered horizontally, 80px below center
-    const restX = 0;
-    const restY = 80;
+  // Fixed rest position: centered horizontally, 80px below center
+  const restX = 0;
+  const restY = 80;
 
-    // Screen center (same as VP handles anchor)
-    const screenCenterX = canvasWidth / 2;
-    const screenCenterY = canvasHeight / 2;
+  // Screen center (same as VP handles anchor)
+  const screenCenterX = canvasWidth / 2;
+  const screenCenterY = canvasHeight / 2;
 
-    // Handle position = rest position + current handle displacement (visual feedback)
-    const hx = screenCenterX + restX + (referenceImage.handleX || 0);
-    const hy = screenCenterY + restY + (referenceImage.handleY || 0);
+  // Handle position = rest position + current handle displacement (visual feedback)
+  const hx = screenCenterX + restX + (referenceImage.handleX || 0);
+  const hy = screenCenterY + restY + (referenceImage.handleY || 0);
 
-    return { x: hx, y: hy };
+  return { x: hx, y: hy };
 }
 
 /**
@@ -232,37 +252,44 @@ export function getReferenceHandlePosition(state: PerspectiveState): { x: number
  * @returns Array of objects containing transformed coordinates and ID for each VP.
  */
 export function getTransformedVanishingPoints(
-    state: PerspectiveState
+  state: PerspectiveState
 ): { x: number; y: number; id: string; color: string }[] {
-    const { vanishingPoints, camera, canvasWidth } = state;
-    const centerX = canvasWidth / 2 + camera.panX;
-    const centerY = camera.horizonY + camera.panY;
-    const angleRad = (camera.horizonAngle * Math.PI) / 180;
+  const { vanishingPoints, camera, canvasWidth } = state;
+  const centerX = canvasWidth / 2 + camera.panX;
+  const centerY = camera.horizonY + camera.panY;
+  const angleRad = (camera.horizonAngle * Math.PI) / 180;
 
-    const transformed: { x: number; y: number; id: string; color: string }[] = [];
+  const transformed: { x: number; y: number; id: string; color: string }[] = [];
 
-    // VP1 and VP2 on the horizon line
-    for (let i = 0; i < 2; i++) {
-        const vp = vanishingPoints[i];
-        const dist = vp.distanceFromCenter * camera.zoom;
-        const x = centerX + dist * Math.cos(angleRad);
-        const y = centerY + dist * Math.sin(angleRad);
-        transformed.push({ x, y, id: vp.id, color: vp.color });
-    }
+  // VP1 and VP2 on the horizon line
+  for (let i = 0; i < 2; i++) {
+    const vp = vanishingPoints[i];
+    const dist = vp.distanceFromCenter * camera.zoom;
+    const x = centerX + dist * Math.cos(angleRad);
+    const y = centerY + dist * Math.sin(angleRad);
+    transformed.push({ x, y, id: vp.id, color: vp.color });
+  }
 
-    // VP3 above or below (omnidirectional)
-    const vp3 = vanishingPoints[2];
-    const vp3Dist = vp3.distanceFromCenter * camera.zoom;
-    const vp3OffsetX = vp3.x * camera.zoom;
+  // VP3 above or below (omnidirectional)
+  const vp3 = vanishingPoints[2];
+  const vp3Dist = vp3.distanceFromCenter * camera.zoom;
+  const vp3OffsetX = vp3.x * camera.zoom;
 
-    // VP3 is transformed relative to the horizon center,
-    // rotated along with the horizon angle to maintain consistency
-    const transformedVP3X = centerX + vp3OffsetX * Math.cos(angleRad) - vp3Dist * Math.sin(angleRad);
-    const transformedVP3Y = centerY + vp3OffsetX * Math.sin(angleRad) + vp3Dist * Math.cos(angleRad);
+  // VP3 is transformed relative to the horizon center,
+  // rotated along with the horizon angle to maintain consistency
+  const transformedVP3X =
+    centerX + vp3OffsetX * Math.cos(angleRad) - vp3Dist * Math.sin(angleRad);
+  const transformedVP3Y =
+    centerY + vp3OffsetX * Math.sin(angleRad) + vp3Dist * Math.cos(angleRad);
 
-    transformed.push({ x: transformedVP3X, y: transformedVP3Y, id: vp3.id, color: vp3.color });
+  transformed.push({
+    x: transformedVP3X,
+    y: transformedVP3Y,
+    id: vp3.id,
+    color: vp3.color,
+  });
 
-    return transformed;
+  return transformed;
 }
 
 /**
@@ -271,40 +298,58 @@ export function getTransformedVanishingPoints(
  * @returns Array of lines ready to be rendered.
  */
 export function calculatePerspectiveLines(state: PerspectiveState): Line[] {
-    const lines: Line[] = [];
-    const { config, camera, canvasWidth, canvasHeight } = state;
-    const transformedVPs = getTransformedVanishingPoints(state);
-    const centerX = canvasWidth / 2 + camera.panX;
-    const centerY = camera.horizonY + camera.panY;
-    const angleRad = (camera.horizonAngle * Math.PI) / 180;
+  const lines: Line[] = [];
+  const { config, camera, canvasWidth, canvasHeight } = state;
+  const transformedVPs = getTransformedVanishingPoints(state);
+  const centerX = canvasWidth / 2 + camera.panX;
+  const centerY = camera.horizonY + camera.panY;
+  const angleRad = (camera.horizonAngle * Math.PI) / 180;
 
-    const lineLength = Math.max(canvasWidth, canvasHeight) * 3;
-    lines.push({
-        x1: centerX - lineLength * Math.cos(angleRad),
-        y1: centerY - lineLength * Math.sin(angleRad),
-        x2: centerX + lineLength * Math.cos(angleRad),
-        y2: centerY + lineLength * Math.sin(angleRad),
-        color: LINE_COLORS.horizon,
-        // Opacity logic: Config opacity is 0-1.
-        // Base opacity for horizon is 3 (very strong).
-        opacity: 3 * state.config.opacity,
-        width: 1.5,
-    });
+  const lineLength = Math.max(canvasWidth, canvasHeight) * 3;
+  lines.push({
+    x1: centerX - lineLength * Math.cos(angleRad),
+    y1: centerY - lineLength * Math.sin(angleRad),
+    x2: centerX + lineLength * Math.cos(angleRad),
+    y2: centerY + lineLength * Math.sin(angleRad),
+    color: LINE_COLORS.horizon,
+    // Opacity logic: Config opacity is 0-1.
+    // Base opacity for horizon is 3 (very strong).
+    opacity: 3 * state.config.opacity,
+    width: 1.5,
+  });
 
+  for (let i = 0; i < Math.min(config.type, 2); i++) {
+    const vp = transformedVPs[i];
+    const color = vp.color;
+    lines.push(
+      ...createRadialLinesFromVP(
+        vp,
+        config.density,
+        canvasWidth,
+        canvasHeight,
+        color,
+        angleRad,
+        config.opacity
+      )
+    );
+  }
 
+  if (config.type === 3) {
+    const vp3 = transformedVPs[2];
+    lines.push(
+      ...createRadialLinesForVP3(
+        vp3,
+        config.density,
+        canvasWidth,
+        canvasHeight,
+        vp3.color,
+        angleRad,
+        config.opacity
+      )
+    );
+  }
 
-    for (let i = 0; i < Math.min(config.type, 2); i++) {
-        const vp = transformedVPs[i];
-        const color = vp.color;
-        lines.push(...createRadialLinesFromVP(vp, config.density, canvasWidth, canvasHeight, color, angleRad, config.opacity));
-    }
-
-    if (config.type === 3) {
-        const vp3 = transformedVPs[2];
-        lines.push(...createRadialLinesForVP3(vp3, config.density, canvasWidth, canvasHeight, vp3.color, angleRad, config.opacity));
-    }
-
-    return lines;
+  return lines;
 }
 
 /**
@@ -320,47 +365,47 @@ export function calculatePerspectiveLines(state: PerspectiveState): Line[] {
  * @returns Array of radial lines.
  */
 function createRadialLinesFromVP(
-    vp: { x: number; y: number },
-    density: "low" | "medium" | "high",
-    canvasWidth: number,
-    canvasHeight: number,
-    color: string,
-    angleOffset: number,
-    globalOpacity: number
+  vp: { x: number; y: number },
+  density: "low" | "medium" | "high",
+  canvasWidth: number,
+  canvasHeight: number,
+  color: string,
+  angleOffset: number,
+  globalOpacity: number
 ): Line[] {
-    const lines: Line[] = [];
-    const maxDist = Math.hypot(canvasWidth, canvasHeight) * 5;
+  const lines: Line[] = [];
+  const maxDist = Math.hypot(canvasWidth, canvasHeight) * 5;
 
-    // Distribute lines in 360° using half turns per line (each line passes through the VP)
-    const angles = getGeometricAngles(density);
+  // Distribute lines in 360° using half turns per line (each line passes through the VP)
+  const angles = getGeometricAngles(density);
 
-    for (const angle of angles) {
-        // Rotate base angles according to horizon tilt
-        const finalAngle = angle + angleOffset;
-        const cos = Math.cos(finalAngle);
-        const sin = Math.sin(finalAngle);
+  for (const angle of angles) {
+    // Rotate base angles according to horizon tilt
+    const finalAngle = angle + angleOffset;
+    const cos = Math.cos(finalAngle);
+    const sin = Math.sin(finalAngle);
 
-        const x1 = vp.x + cos * maxDist;
-        const y1 = vp.y + sin * maxDist;
-        const x2 = vp.x - cos * maxDist;
-        const y2 = vp.y - sin * maxDist;
+    const x1 = vp.x + cos * maxDist;
+    const y1 = vp.y + sin * maxDist;
+    const x2 = vp.x - cos * maxDist;
+    const y2 = vp.y - sin * maxDist;
 
-        const clipped = clipLine(x1, y1, x2, y2, 0, 0, canvasWidth, canvasHeight);
+    const clipped = clipLine(x1, y1, x2, y2, 0, 0, canvasWidth, canvasHeight);
 
-        if (clipped) {
-            lines.push({
-                x1: clipped.x1,
-                y1: clipped.y1,
-                x2: clipped.x2,
-                y2: clipped.y2,
-                color,
-                opacity: 0.75 * globalOpacity,
-                width: 1,
-            });
-        }
+    if (clipped) {
+      lines.push({
+        x1: clipped.x1,
+        y1: clipped.y1,
+        x2: clipped.x2,
+        y2: clipped.y2,
+        color,
+        opacity: 0.75 * globalOpacity,
+        width: 1,
+      });
     }
+  }
 
-    return lines;
+  return lines;
 }
 
 /**
@@ -376,58 +421,58 @@ function createRadialLinesFromVP(
  * @returns Array of radial lines for VP3.
  */
 function createRadialLinesForVP3(
-    vp: { x: number; y: number },
-    density: "low" | "medium" | "high",
-    canvasWidth: number,
-    canvasHeight: number,
-    color: string,
-    angleOffset: number,
-    globalOpacity: number
+  vp: { x: number; y: number },
+  density: "low" | "medium" | "high",
+  canvasWidth: number,
+  canvasHeight: number,
+  color: string,
+  angleOffset: number,
+  globalOpacity: number
 ): Line[] {
-    const lines: Line[] = [];
-    const count = VP3_LINE_COUNT[density];
+  const lines: Line[] = [];
+  const count = VP3_LINE_COUNT[density];
 
-    // Calculate distance from VP3 to canvas center
-    const centerX = canvasWidth / 2;
-    const centerY = canvasHeight / 2;
-    const distToCenter = Math.hypot(vp.x - centerX, vp.y - centerY);
+  // Calculate distance from VP3 to canvas center
+  const centerX = canvasWidth / 2;
+  const centerY = canvasHeight / 2;
+  const distToCenter = Math.hypot(vp.x - centerX, vp.y - centerY);
 
-    // maxDist needs to be greater than distance from VP to canvas + margin
-    const baseDist = Math.hypot(canvasWidth, canvasHeight) * 5;
-    const maxDist = Math.max(baseDist, distToCenter * 2 + baseDist);
+  // maxDist needs to be greater than distance from VP to canvas + margin
+  const baseDist = Math.hypot(canvasWidth, canvasHeight) * 5;
+  const maxDist = Math.max(baseDist, distToCenter * 2 + baseDist);
 
-    // Distribute lines uniformly over 180° (each line passes through VP3)
-    // We rotate along with the horizon (angleOffset) + 90° (perpendicular)
-    // Each line covers 180° passing through VP3, so divide PI by count
-    const step = Math.PI / count;
+  // Distribute lines uniformly over 180° (each line passes through VP3)
+  // We rotate along with the horizon (angleOffset) + 90° (perpendicular)
+  // Each line covers 180° passing through VP3, so divide PI by count
+  const step = Math.PI / count;
 
-    for (let i = 0; i < count; i++) {
-        const angle = (i * step) + angleOffset + Math.PI / 2;
+  for (let i = 0; i < count; i++) {
+    const angle = i * step + angleOffset + Math.PI / 2;
 
-        const cos = Math.cos(angle);
-        const sin = Math.sin(angle);
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
 
-        const x1 = vp.x + cos * maxDist;
-        const y1 = vp.y + sin * maxDist;
-        const x2 = vp.x - cos * maxDist;
-        const y2 = vp.y - sin * maxDist;
+    const x1 = vp.x + cos * maxDist;
+    const y1 = vp.y + sin * maxDist;
+    const x2 = vp.x - cos * maxDist;
+    const y2 = vp.y - sin * maxDist;
 
-        const clipped = clipLine(x1, y1, x2, y2, 0, 0, canvasWidth, canvasHeight);
+    const clipped = clipLine(x1, y1, x2, y2, 0, 0, canvasWidth, canvasHeight);
 
-        if (clipped) {
-            lines.push({
-                x1: clipped.x1,
-                y1: clipped.y1,
-                x2: clipped.x2,
-                y2: clipped.y2,
-                color,
-                opacity: 2 * globalOpacity,
-                width: 1,
-            });
-        }
+    if (clipped) {
+      lines.push({
+        x1: clipped.x1,
+        y1: clipped.y1,
+        x2: clipped.x2,
+        y2: clipped.y2,
+        color,
+        opacity: 2 * globalOpacity,
+        width: 1,
+      });
     }
+  }
 
-    return lines;
+  return lines;
 }
 
 /**
@@ -438,27 +483,27 @@ function createRadialLinesForVP3(
  * @returns Array of angles in radians covering ±90° (full 360° when lines pass through VP).
  */
 function getGeometricAngles(density: "low" | "medium" | "high"): number[] {
-    const factorMap = { low: 0.18, medium: 0.11, high: 0.05 };
-    const baseAngleMap = { low: 0.012, medium: 0.006, high: 0.003 };
+  const factorMap = { low: 0.18, medium: 0.11, high: 0.05 };
+  const baseAngleMap = { low: 0.012, medium: 0.006, high: 0.003 };
 
-    const spreadFactor = factorMap[density];
-    const baseAngle = baseAngleMap[density];
+  const spreadFactor = factorMap[density];
+  const baseAngle = baseAngleMap[density];
 
-    const angles: number[] = [0];
-    let currentAngle = 0;
-    let increment = baseAngle;
+  const angles: number[] = [0];
+  let currentAngle = 0;
+  let increment = baseAngle;
 
-    // Each iteration increases increment exponentially: increment *= (1 + spreadFactor)
-    // This creates geometric progression: lines cluster near 0° and spread toward 90°
-    while (currentAngle < Math.PI / 2) {
-        currentAngle += increment;
-        if (currentAngle < Math.PI / 2) {
-            angles.push(currentAngle);
-            angles.push(-currentAngle);
-        }
-        increment *= (1 + spreadFactor);
+  // Each iteration increases increment exponentially: increment *= (1 + spreadFactor)
+  // This creates geometric progression: lines cluster near 0° and spread toward 90°
+  while (currentAngle < Math.PI / 2) {
+    currentAngle += increment;
+    if (currentAngle < Math.PI / 2) {
+      angles.push(currentAngle);
+      angles.push(-currentAngle);
     }
-    return angles;
+    increment *= 1 + spreadFactor;
+  }
+  return angles;
 }
 
 /**
@@ -474,40 +519,68 @@ function getGeometricAngles(density: "low" | "medium" | "high"): number[] {
  * @returns Clipped line or null if outside bounds.
  */
 function clipLine(
-    x1: number, y1: number, x2: number, y2: number,
-    minX: number, minY: number, maxX: number, maxY: number
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number
 ): { x1: number; y1: number; x2: number; y2: number } | null {
-    // Cohen-Sutherland region codes (bitmask for each boundary)
-    const INSIDE = 0, LEFT = 1, RIGHT = 2, BOTTOM = 4, TOP = 8;
+  // Cohen-Sutherland region codes (bitmask for each boundary)
+  const INSIDE = 0,
+    LEFT = 1,
+    RIGHT = 2,
+    BOTTOM = 4,
+    TOP = 8;
 
-    const code = (x: number, y: number) => {
-        let c = INSIDE;
-        if (x < minX) c |= LEFT;
-        else if (x > maxX) c |= RIGHT;
-        if (y < minY) c |= TOP;
-        else if (y > maxY) c |= BOTTOM;
-        return c;
-    };
+  const code = (x: number, y: number) => {
+    let c = INSIDE;
+    if (x < minX) c |= LEFT;
+    else if (x > maxX) c |= RIGHT;
+    if (y < minY) c |= TOP;
+    else if (y > maxY) c |= BOTTOM;
+    return c;
+  };
 
-    let c1 = code(x1, y1), c2 = code(x2, y2);
+  let c1 = code(x1, y1),
+    c2 = code(x2, y2);
 
-    // Max 20 iterations prevents infinite loops on edge cases
-    for (let i = 0; i < 20; i++) {
-        if (!(c1 | c2)) return { x1, y1, x2, y2 };
-        if (c1 & c2) return null;
+  // Max 20 iterations prevents infinite loops on edge cases
+  for (let i = 0; i < 20; i++) {
+    if (!(c1 | c2)) return { x1, y1, x2, y2 };
+    if (c1 & c2) return null;
 
-        const c = c1 || c2;
-        let x = 0, y = 0;
+    const c = c1 || c2;
+    let x = 0,
+      y = 0;
 
-        if (c & TOP) { x = x1 + (x2 - x1) * (minY - y1) / (y2 - y1); y = minY; }
-        else if (c & BOTTOM) { x = x1 + (x2 - x1) * (maxY - y1) / (y2 - y1); y = maxY; }
-        else if (c & RIGHT) { y = y1 + (y2 - y1) * (maxX - x1) / (x2 - x1); x = maxX; }
-        else if (c & LEFT) { y = y1 + (y2 - y1) * (minX - x1) / (x2 - x1); x = minX; }
-
-        if (c === c1) { x1 = x; y1 = y; c1 = code(x1, y1); }
-        else { x2 = x; y2 = y; c2 = code(x2, y2); }
+    if (c & TOP) {
+      x = x1 + ((x2 - x1) * (minY - y1)) / (y2 - y1);
+      y = minY;
+    } else if (c & BOTTOM) {
+      x = x1 + ((x2 - x1) * (maxY - y1)) / (y2 - y1);
+      y = maxY;
+    } else if (c & RIGHT) {
+      y = y1 + ((y2 - y1) * (maxX - x1)) / (x2 - x1);
+      x = maxX;
+    } else if (c & LEFT) {
+      y = y1 + ((y2 - y1) * (minX - x1)) / (x2 - x1);
+      x = minX;
     }
-    return null;
+
+    if (c === c1) {
+      x1 = x;
+      y1 = y;
+      c1 = code(x1, y1);
+    } else {
+      x2 = x;
+      y2 = y;
+      c2 = code(x2, y2);
+    }
+  }
+  return null;
 }
 
 /**
@@ -519,83 +592,90 @@ function clipLine(
  * @param referenceImageElement Optional HTMLImageElement for background reference.
  */
 export function renderGrid(
-    ctx: CanvasRenderingContext2D,
-    lines: Line[],
-    state: PerspectiveState,
-    showUI: boolean = true,
-    referenceImageElement?: HTMLImageElement | null
+  ctx: CanvasRenderingContext2D,
+  lines: Line[],
+  state: PerspectiveState,
+  showUI: boolean = true,
+  referenceImageElement?: HTMLImageElement | null
 ): void {
-    const { canvasWidth, canvasHeight, referenceImage } = state;
+  const { canvasWidth, canvasHeight, referenceImage } = state;
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    // Reference image (if available and visible)
-    if (referenceImageElement && referenceImage?.isVisible) {
-        drawReferenceImage(ctx, referenceImageElement, referenceImage, canvasWidth, canvasHeight, state.camera);
+  // Reference image (if available and visible)
+  if (referenceImageElement && referenceImage?.isVisible) {
+    drawReferenceImage(
+      ctx,
+      referenceImageElement,
+      referenceImage,
+      canvasWidth,
+      canvasHeight,
+      state.camera
+    );
+  }
+
+  lines.forEach((line) => {
+    ctx.beginPath();
+    ctx.moveTo(line.x1, line.y1);
+    ctx.lineTo(line.x2, line.y2);
+    ctx.strokeStyle = line.color;
+    ctx.globalAlpha = line.opacity;
+    ctx.lineWidth = line.width;
+    ctx.stroke();
+  });
+
+  ctx.globalAlpha = 1;
+
+  if (showUI) {
+    const transformedVPs = getTransformedVanishingPoints(state);
+
+    for (let i = 0; i < state.config.type; i++) {
+      const vp = transformedVPs[i];
+
+      ctx.beginPath();
+      ctx.arc(vp.x, vp.y, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = "#ffffff";
+      ctx.globalAlpha = 1;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(vp.x, vp.y, 8, 0, Math.PI * 2);
+      ctx.strokeStyle = vp.color;
+      ctx.lineWidth = 1;
+      ctx.globalAlpha = 0.3;
+      ctx.stroke();
     }
 
-    lines.forEach((line) => {
+    renderHandles(ctx, state);
+
+    // Reference image handle
+    if (referenceImage?.isInteractive && referenceImage?.isVisible) {
+      const hPos = getReferenceHandlePosition(state);
+      if (hPos) {
+        const { x: hx, y: hy } = hPos;
+
         ctx.beginPath();
-        ctx.moveTo(line.x1, line.y1);
-        ctx.lineTo(line.x2, line.y2);
-        ctx.strokeStyle = line.color;
-        ctx.globalAlpha = line.opacity;
-        ctx.lineWidth = line.width;
+        ctx.arc(hx, hy, 15, 0, Math.PI * 2);
+        ctx.fillStyle = "#10b981";
+        ctx.globalAlpha = 0.4;
+        ctx.fill();
+
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = "#ffffff";
+        ctx.globalAlpha = 0.8;
         ctx.stroke();
-    });
 
-    ctx.globalAlpha = 1;
-
-    if (showUI) {
-        const transformedVPs = getTransformedVanishingPoints(state);
-
-        for (let i = 0; i < state.config.type; i++) {
-            const vp = transformedVPs[i];
-
-            ctx.beginPath();
-            ctx.arc(vp.x, vp.y, 2.5, 0, Math.PI * 2);
-            ctx.fillStyle = "#ffffff";
-            ctx.globalAlpha = 1;
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.arc(vp.x, vp.y, 8, 0, Math.PI * 2);
-            ctx.strokeStyle = vp.color;
-            ctx.lineWidth = 1;
-            ctx.globalAlpha = 0.3;
-            ctx.stroke();
-        }
-
-        renderHandles(ctx, state);
-
-        // Reference image handle
-        if (referenceImage?.isInteractive && referenceImage?.isVisible) {
-            const hPos = getReferenceHandlePosition(state);
-            if (hPos) {
-                const { x: hx, y: hy } = hPos;
-
-                ctx.beginPath();
-                ctx.arc(hx, hy, 15, 0, Math.PI * 2);
-                ctx.fillStyle = "#10b981";
-                ctx.globalAlpha = 0.4;
-                ctx.fill();
-
-                ctx.lineWidth = 1.5;
-                ctx.strokeStyle = "#ffffff";
-                ctx.globalAlpha = 0.8;
-                ctx.stroke();
-
-                ctx.beginPath();
-                ctx.arc(hx, hy, 3, 0, Math.PI * 2);
-                ctx.fillStyle = "#ffffff";
-                ctx.globalAlpha = 1;
-                ctx.fill();
-            }
-        }
+        ctx.beginPath();
+        ctx.arc(hx, hy, 3, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffffff";
+        ctx.globalAlpha = 1;
+        ctx.fill();
+      }
     }
+  }
 }
 
 /**
@@ -609,59 +689,59 @@ export function renderGrid(
  * @param camera Camera state.
  */
 function drawReferenceImage(
-    ctx: CanvasRenderingContext2D,
-    img: HTMLImageElement,
-    config: ReferenceImage,
-    canvasWidth: number,
-    canvasHeight: number,
-    camera: CameraState
+  ctx: CanvasRenderingContext2D,
+  img: HTMLImageElement,
+  config: ReferenceImage,
+  canvasWidth: number,
+  canvasHeight: number,
+  camera: CameraState
 ): void {
-    ctx.save();
+  ctx.save();
 
-    // 1. Move to center of canvas (pivot point for grid transforms)
-    ctx.translate(canvasWidth / 2, canvasHeight / 2);
+  // 1. Move to center of canvas (pivot point for grid transforms)
+  ctx.translate(canvasWidth / 2, canvasHeight / 2);
 
-    // 2. Apply Camera Zoom (if followZoom is true)
-    if (config.followZoom) {
-        ctx.scale(camera.zoom, camera.zoom);
-    }
+  // 2. Apply Camera Zoom (if followZoom is true)
+  if (config.followZoom) {
+    ctx.scale(camera.zoom, camera.zoom);
+  }
 
-    // 3. Apply Camera/Horizon Rotation (if followHorizon is true)
-    if (config.followHorizon) {
-        ctx.rotate((camera.horizonAngle * Math.PI) / 180);
-    }
+  // 3. Apply Camera/Horizon Rotation (if followHorizon is true)
+  if (config.followHorizon) {
+    ctx.rotate((camera.horizonAngle * Math.PI) / 180);
+  }
 
-    // 4. Apply Manual/Reference Scale
-    ctx.scale(config.scale, config.scale);
+  // 4. Apply Manual/Reference Scale
+  ctx.scale(config.scale, config.scale);
 
-    // 5. Apply Manual/Reference Rotation
-    ctx.rotate((config.rotation * Math.PI) / 180);
+  // 5. Apply Manual/Reference Rotation
+  ctx.rotate((config.rotation * Math.PI) / 180);
 
-    // 6. Apply Manual/Reference Pan (Offset)
-    // NOTE: handleX/handleY are for the visual return animation and should NOT stay here 
-    // permanently. They are handled by usePerspectiveGrid during drag.
-    ctx.translate(config.offsetX, config.offsetY);
+  // 6. Apply Manual/Reference Pan (Offset)
+  // NOTE: handleX/handleY are for the visual return animation and should NOT stay here
+  // permanently. They are handled by usePerspectiveGrid during drag.
+  ctx.translate(config.offsetX, config.offsetY);
 
-    // 7. Calculate base dimensions to cover canvas (Before transforms)
-    const imgWidth = img.width;
-    const imgHeight = img.height;
-    const canvasRatio = canvasWidth / canvasHeight;
-    const imgRatio = imgWidth / imgHeight;
+  // 7. Calculate base dimensions to cover canvas (Before transforms)
+  const imgWidth = img.width;
+  const imgHeight = img.height;
+  const canvasRatio = canvasWidth / canvasHeight;
+  const imgRatio = imgWidth / imgHeight;
 
-    let drawWidth, drawHeight;
+  let drawWidth, drawHeight;
 
-    if (imgRatio > canvasRatio) {
-        drawHeight = canvasHeight;
-        drawWidth = canvasHeight * imgRatio;
-    } else {
-        drawWidth = canvasWidth;
-        drawHeight = canvasWidth / imgRatio;
-    }
+  if (imgRatio > canvasRatio) {
+    drawHeight = canvasHeight;
+    drawWidth = canvasHeight * imgRatio;
+  } else {
+    drawWidth = canvasWidth;
+    drawHeight = canvasWidth / imgRatio;
+  }
 
-    ctx.globalAlpha = config.opacity;
-    ctx.drawImage(img, -drawWidth / 2, -drawHeight / 2, drawWidth, drawHeight);
+  ctx.globalAlpha = config.opacity;
+  ctx.drawImage(img, -drawWidth / 2, -drawHeight / 2, drawWidth, drawHeight);
 
-    ctx.restore();
+  ctx.restore();
 }
 
 /**
@@ -670,43 +750,42 @@ function drawReferenceImage(
  * @param state Current perspective state.
  */
 function renderHandles(
-    ctx: CanvasRenderingContext2D,
-    state: PerspectiveState
+  ctx: CanvasRenderingContext2D,
+  state: PerspectiveState
 ): void {
-    const { handles, config, vanishingPoints } = state;
+  const { handles, config, vanishingPoints } = state;
 
+  handles.forEach((handle) => {
+    if (handle.id === "vp3" && config.type !== 3) return;
+    if (handle.id === "vp2" && config.type === 1) return;
 
-    handles.forEach((handle) => {
-        if (handle.id === "vp3" && config.type !== 3) return;
-        if (handle.id === "vp2" && config.type === 1) return;
+    // Handles use fixed screen position (ignores camera transforms)
+    const screenCenterX = state.canvasWidth / 2;
+    const restX = handle.id === "vp1" && config.type === 1 ? 0 : handle.restX;
+    const x = screenCenterX + restX + handle.x;
+    const y = state.canvasHeight / 2 + handle.y;
 
-        // Handles use fixed screen position (ignores camera transforms)
-        const screenCenterX = state.canvasWidth / 2;
-        const restX = (handle.id === "vp1" && config.type === 1) ? 0 : handle.restX;
-        const x = screenCenterX + restX + handle.x;
-        const y = (state.canvasHeight / 2) + handle.y;
+    // Find corresponding VP color
+    const vp = vanishingPoints.find((v) => v.id === handle.id);
+    const color = vp ? vp.color : "#ffffff";
 
-        // Find corresponding VP color
-        const vp = vanishingPoints.find(v => v.id === handle.id);
-        const color = vp ? vp.color : "#ffffff";
+    ctx.beginPath();
+    ctx.arc(x, y, 15, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.4;
+    ctx.fill();
 
-        ctx.beginPath();
-        ctx.arc(x, y, 15, 0, Math.PI * 2);
-        ctx.fillStyle = color;
-        ctx.globalAlpha = 0.4;
-        ctx.fill();
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = "#ffffff";
+    ctx.globalAlpha = 0.8;
+    ctx.stroke();
 
-        ctx.lineWidth = 1.5;
-        ctx.strokeStyle = "#ffffff";
-        ctx.globalAlpha = 0.8;
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.arc(x, y, 3, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffffff";
-        ctx.globalAlpha = 1;
-        ctx.fill();
-    });
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffffff";
+    ctx.globalAlpha = 1;
+    ctx.fill();
+  });
 }
 
 /**
@@ -716,42 +795,43 @@ function renderHandles(
  * @param fileName Name of the file to be downloaded. Defaults to "perspective-grid".
  */
 export function exportCanvasAsImage(
-    state: PerspectiveState,
-    fileName: string = "perspective-grid"
+  state: PerspectiveState,
+  fileName: string = "perspective-grid"
 ): void {
-    const exportCanvas = document.createElement("canvas");
-    exportCanvas.width = 1920;
-    exportCanvas.height = 1080;
-    const ctx = exportCanvas.getContext("2d");
-    if (!ctx) return;
+  const exportCanvas = document.createElement("canvas");
+  exportCanvas.width = 1920;
+  exportCanvas.height = 1080;
+  const ctx = exportCanvas.getContext("2d");
+  if (!ctx) return;
 
-    // Scale factors to map current canvas size to export resolution
-    const scaleX = 1920 / state.canvasWidth;
-    const scaleY = 1080 / state.canvasHeight;
+  // Scale factors to map current canvas size to export resolution
+  const scaleX = 1920 / state.canvasWidth;
+  const scaleY = 1080 / state.canvasHeight;
 
-    const scaledState: PerspectiveState = {
-        ...state,
-        canvasWidth: 1920,
-        canvasHeight: 1080,
-        camera: {
-            ...state.camera,
-            horizonY: state.camera.horizonY * scaleY,
-            panX: state.camera.panX * scaleX,
-            panY: state.camera.panY * scaleY,
-        },
-        vanishingPoints: state.vanishingPoints.map(vp => ({
-            ...vp,
-            distanceFromCenter: vp.distanceFromCenter * (vp.id === "vp3" ? scaleY : scaleX),
-        })),
-    };
+  const scaledState: PerspectiveState = {
+    ...state,
+    canvasWidth: 1920,
+    canvasHeight: 1080,
+    camera: {
+      ...state.camera,
+      horizonY: state.camera.horizonY * scaleY,
+      panX: state.camera.panX * scaleX,
+      panY: state.camera.panY * scaleY,
+    },
+    vanishingPoints: state.vanishingPoints.map((vp) => ({
+      ...vp,
+      distanceFromCenter:
+        vp.distanceFromCenter * (vp.id === "vp3" ? scaleY : scaleX),
+    })),
+  };
 
-    const lines = calculatePerspectiveLines(scaledState);
-    renderGrid(ctx, lines, scaledState, false);
+  const lines = calculatePerspectiveLines(scaledState);
+  renderGrid(ctx, lines, scaledState, false);
 
-    const link = document.createElement("a");
-    link.download = `${fileName}.png`;
-    link.href = exportCanvas.toDataURL("image/png");
-    link.click();
+  const link = document.createElement("a");
+  link.download = `${fileName}.png`;
+  link.href = exportCanvas.toDataURL("image/png");
+  link.click();
 }
 
 /**
@@ -764,30 +844,30 @@ export function exportCanvasAsImage(
  * @returns The vanishing point ID ("vp1", "vp2", "vp3") or null if nothing is found.
  */
 export function findVanishingPointAtPosition(
-    state: PerspectiveState,
-    x: number,
-    y: number,
-    showUI: boolean = true,
-    threshold: number = 25
+  state: PerspectiveState,
+  x: number,
+  y: number,
+  showUI: boolean = true,
+  threshold: number = 25
 ): string | null {
-    if (!showUI) return null;
+  if (!showUI) return null;
 
-    const { handles, config } = state;
-    const screenCenterX = state.canvasWidth / 2;
-    const screenBaseY = state.canvasHeight / 2;
+  const { handles, config } = state;
+  const screenCenterX = state.canvasWidth / 2;
+  const screenBaseY = state.canvasHeight / 2;
 
-    for (const handle of handles) {
-        if (handle.id === "vp3" && config.type !== 3) continue;
-        if (handle.id === "vp2" && config.type === 1) continue;
+  for (const handle of handles) {
+    if (handle.id === "vp3" && config.type !== 3) continue;
+    if (handle.id === "vp2" && config.type === 1) continue;
 
-        const restX = (handle.id === "vp1" && config.type === 1) ? 0 : handle.restX;
-        const hx = screenCenterX + restX + handle.x;
-        const hy = screenBaseY + handle.y;
+    const restX = handle.id === "vp1" && config.type === 1 ? 0 : handle.restX;
+    const hx = screenCenterX + restX + handle.x;
+    const hy = screenBaseY + handle.y;
 
-        const dist = Math.hypot(x - hx, y - hy);
-        if (dist < threshold) return handle.id;
-    }
-    return null;
+    const dist = Math.hypot(x - hx, y - hy);
+    if (dist < threshold) return handle.id;
+  }
+  return null;
 }
 
 /**
@@ -800,75 +880,91 @@ export function findVanishingPointAtPosition(
  * @returns A new PerspectiveState object with applied updates.
  */
 export function updateVanishingPointDistance(
-    state: PerspectiveState,
-    vpId: string,
-    mouseX: number,
-    mouseY: number,
-    initialDragState: { handleX: number; handleY: number; vpDist: number; vpx?: number } | null = null
+  state: PerspectiveState,
+  vpId: string,
+  mouseX: number,
+  mouseY: number,
+  initialDragState: {
+    handleX: number;
+    handleY: number;
+    vpDist: number;
+    vpx?: number;
+  } | null = null
 ): PerspectiveState {
-    const screenCenterX = state.canvasWidth / 2;
-    const screenBaseY = state.canvasHeight / 2;
+  const screenCenterX = state.canvasWidth / 2;
+  const screenBaseY = state.canvasHeight / 2;
 
-    // Mouse position relative to screen center (fixed UI, ignores camera)
-    const localX = mouseX - screenCenterX;
-    const localY = mouseY - screenBaseY;
+  // Mouse position relative to screen center (fixed UI, ignores camera)
+  const localX = mouseX - screenCenterX;
+  const localY = mouseY - screenBaseY;
 
-    // VP1/VP2: Horizontal movement only (along horizon line)
-    if (vpId === "vp1" || vpId === "vp2") {
-        const targetHandle = state.handles.find(h => h.id === vpId);
-        if (!targetHandle || !initialDragState) return state;
+  // VP1/VP2: Horizontal movement only (along horizon line)
+  if (vpId === "vp1" || vpId === "vp2") {
+    const targetHandle = state.handles.find((h) => h.id === vpId);
+    if (!targetHandle || !initialDragState) return state;
 
-        const restX = (vpId === "vp1" && state.config.type === 1) ? 0 : targetHandle.restX;
-        const currentDisplacementX = localX - restX;
-        const incrementalDeltaX = currentDisplacementX - initialDragState.handleX;
+    const restX =
+      vpId === "vp1" && state.config.type === 1 ? 0 : targetHandle.restX;
+    const currentDisplacementX = localX - restX;
+    const incrementalDeltaX = currentDisplacementX - initialDragState.handleX;
 
-        // Convert screen displacement to world distance (compensate for zoom)
-        const sensitivity = 1;
-        const finalVpDist = initialDragState.vpDist + (incrementalDeltaX * sensitivity) / state.camera.zoom;
+    // Convert screen displacement to world distance (compensate for zoom)
+    const sensitivity = 1;
+    const finalVpDist =
+      initialDragState.vpDist +
+      (incrementalDeltaX * sensitivity) / state.camera.zoom;
 
-        return {
-            ...state,
-            handles: state.handles.map(h =>
-                h.id === vpId ? { ...h, x: currentDisplacementX } : h
-            ),
-            vanishingPoints: state.vanishingPoints.map(vp =>
-                vp.id === vpId ? { ...vp, distanceFromCenter: finalVpDist } : vp
-            )
-        };
+    return {
+      ...state,
+      handles: state.handles.map((h) =>
+        h.id === vpId ? { ...h, x: currentDisplacementX } : h
+      ),
+      vanishingPoints: state.vanishingPoints.map((vp) =>
+        vp.id === vpId ? { ...vp, distanceFromCenter: finalVpDist } : vp
+      ),
+    };
 
-        // VP3: Bidirectional movement (horizontal + vertical)
-    } else if (vpId === "vp3") {
-        const targetHandle = state.handles.find(h => h.id === vpId);
-        if (!targetHandle || !initialDragState) return state;
+    // VP3: Bidirectional movement (horizontal + vertical)
+  } else if (vpId === "vp3") {
+    const targetHandle = state.handles.find((h) => h.id === vpId);
+    if (!targetHandle || !initialDragState) return state;
 
-        const currentDisplacementX = localX - targetHandle.restX;
-        const currentDisplacementY = localY;
+    const currentDisplacementX = localX - targetHandle.restX;
+    const currentDisplacementY = localY;
 
-        const incrementalDeltaX = currentDisplacementX - initialDragState.handleX;
-        const incrementalDeltaY = currentDisplacementY - initialDragState.handleY;
+    const incrementalDeltaX = currentDisplacementX - initialDragState.handleX;
+    const incrementalDeltaY = currentDisplacementY - initialDragState.handleY;
 
-        const sensitivity = 1;
-        const newVpX = (initialDragState.vpx || 0) + (incrementalDeltaX * sensitivity) / state.camera.zoom;
-        const newVpDist = initialDragState.vpDist + (incrementalDeltaY * sensitivity) / state.camera.zoom;
+    const sensitivity = 1;
+    const newVpX =
+      (initialDragState.vpx || 0) +
+      (incrementalDeltaX * sensitivity) / state.camera.zoom;
+    const newVpDist =
+      initialDragState.vpDist +
+      (incrementalDeltaY * sensitivity) / state.camera.zoom;
 
-        return {
-            ...state,
-            handles: state.handles.map(h =>
-                h.id === vpId ? { ...h, x: currentDisplacementX, y: currentDisplacementY } : h
-            ),
-            vanishingPoints: state.vanishingPoints.map(vp =>
-                vp.id === vpId ? {
-                    ...vp,
-                    x: newVpX,
-                    distanceFromCenter: newVpDist
-                } : vp
-            ),
-            config: {
-                ...state.config,
-                thirdPointOrientation: newVpDist < 0 ? "top" : "bottom"
+    return {
+      ...state,
+      handles: state.handles.map((h) =>
+        h.id === vpId
+          ? { ...h, x: currentDisplacementX, y: currentDisplacementY }
+          : h
+      ),
+      vanishingPoints: state.vanishingPoints.map((vp) =>
+        vp.id === vpId
+          ? {
+              ...vp,
+              x: newVpX,
+              distanceFromCenter: newVpDist,
             }
-        };
-    }
+          : vp
+      ),
+      config: {
+        ...state.config,
+        thirdPointOrientation: newVpDist < 0 ? "top" : "bottom",
+      },
+    };
+  }
 
-    return state;
+  return state;
 }

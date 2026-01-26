@@ -42,20 +42,26 @@
   /* ====================================
      GRADIENTES (Prismatic)
      ==================================== */
-  --gradient-prismatic: linear-gradient(135deg,
-      var(--amethyst-purple),
-      var(--aqua-cyan),
-      var(--magenta-fusion));
+  --gradient-prismatic: linear-gradient(
+    135deg,
+    var(--amethyst-purple),
+    var(--aqua-cyan),
+    var(--magenta-fusion)
+  );
 
-  --gradient-prismatic-vibrant: linear-gradient(90deg,
-      var(--amethyst-purple),
-      var(--aqua-cyan),
-      var(--magenta-fusion),
-      var(--amethyst-purple));
+  --gradient-prismatic-vibrant: linear-gradient(
+    90deg,
+    var(--amethyst-purple),
+    var(--aqua-cyan),
+    var(--magenta-fusion),
+    var(--amethyst-purple)
+  );
 
-  --gradient-subtle: linear-gradient(180deg,
-      var(--slate-grey),
-      var(--deep-obsidian));
+  --gradient-subtle: linear-gradient(
+    180deg,
+    var(--slate-grey),
+    var(--deep-obsidian)
+  );
 
   /* ====================================
      GLASS EFFECT (Frosted Glass / Ice)
@@ -105,8 +111,8 @@
   --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.4);
   --glow-purple: 0 0 20px rgba(138, 43, 226, 0.4);
   --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.4);
-  --glow-prismatic: 0 0 30px rgba(0, 255, 255, 0.3),
-    0 0 60px rgba(138, 43, 226, 0.2);
+  --glow-prismatic:
+    0 0 30px rgba(0, 255, 255, 0.3), 0 0 60px rgba(138, 43, 226, 0.2);
 }
 
 /* ========================================
@@ -228,8 +234,12 @@ body {
   border-radius: calc(var(--radius-lg) + 1px);
   padding: 1px;
   background: var(--gradient-prismatic);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: 0;
@@ -414,7 +424,6 @@ body {
 
 /* Particle pulse animation */
 @keyframes pulse-glow {
-
   0%,
   100% {
     opacity: 0.5;
@@ -446,7 +455,6 @@ body {
 
 /* Float animation */
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0);
@@ -518,7 +526,6 @@ body {
 }
 
 @keyframes crystal-pulse {
-
   0%,
   100% {
     filter: hue-rotate(0deg);
@@ -637,7 +644,9 @@ body {
   height: 40px;
   background: var(--gradient-prismatic);
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  animation: crystal-spin 2s linear infinite, crystal-pulse 4s ease-in-out infinite;
+  animation:
+    crystal-spin 2s linear infinite,
+    crystal-pulse 4s ease-in-out infinite;
 }
 
 /* ========================================

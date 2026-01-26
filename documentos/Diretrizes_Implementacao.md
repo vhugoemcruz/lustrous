@@ -6,17 +6,17 @@ Padrões técnicos e estrutura recomendada para desenvolvimento do projeto.
 
 ## Stack Técnica
 
-| Tecnologia | Versão | Propósito |
-|------------|--------|-----------|
-| **Next.js** | 15+ | Framework React (App Router, Server Components) |
-| **React** | 18+ | UI Components |
-| **Three.js** | latest | Renderização 3D (.obj viewer) |
-| **Canvas 2D** | nativo | Perspective Grid / Color Analysis |
-| **TypeScript** | 5+ | Type safety |
-| **Tailwind CSS** | 3+ | Estilização |
-| **next-intl** | latest | Internacionalização |
-| **jsPDF** | latest | Geração de PDF |
-| **Zod** | latest | Validação de schemas |
+| Tecnologia       | Versão | Propósito                                       |
+| ---------------- | ------ | ----------------------------------------------- |
+| **Next.js**      | 15+    | Framework React (App Router, Server Components) |
+| **React**        | 18+    | UI Components                                   |
+| **Three.js**     | latest | Renderização 3D (.obj viewer)                   |
+| **Canvas 2D**    | nativo | Perspective Grid / Color Analysis               |
+| **TypeScript**   | 5+     | Type safety                                     |
+| **Tailwind CSS** | 3+     | Estilização                                     |
+| **next-intl**    | latest | Internacionalização                             |
+| **jsPDF**        | latest | Geração de PDF                                  |
+| **Zod**          | latest | Validação de schemas                            |
 
 ---
 
@@ -76,14 +76,14 @@ lustrous/
 
 ## Convenções de Nomenclatura
 
-| Contexto | Padrão | Exemplo |
-|----------|--------|---------|
-| **Componentes** | PascalCase | `PerspectiveGrid.tsx` |
-| **Hooks** | camelCase + use prefix | `usePerspectiveState.ts` |
-| **Engines/Utils** | kebab-case | `perspective-engine.ts` |
-| **Constantes** | SCREAMING_SNAKE_CASE | `MAX_FILE_SIZE` |
-| **CSS Classes** | kebab-case (Tailwind) | `bg-deep-obsidian` |
-| **Rotas** | kebab-case | `/perspective-grid` |
+| Contexto          | Padrão                 | Exemplo                  |
+| ----------------- | ---------------------- | ------------------------ |
+| **Componentes**   | PascalCase             | `PerspectiveGrid.tsx`    |
+| **Hooks**         | camelCase + use prefix | `usePerspectiveState.ts` |
+| **Engines/Utils** | kebab-case             | `perspective-engine.ts`  |
+| **Constantes**    | SCREAMING_SNAKE_CASE   | `MAX_FILE_SIZE`          |
+| **CSS Classes**   | kebab-case (Tailwind)  | `bg-deep-obsidian`       |
+| **Rotas**         | kebab-case             | `/perspective-grid`      |
 
 ---
 
@@ -96,25 +96,21 @@ lustrous/
  * @description Componente principal da ferramenta de grid de perspectiva
  */
 
-'use client';
+"use client";
 
-import { useState } from 'react';
-import type { FC } from 'react';
+import { useState } from "react";
+import type { FC } from "react";
 
 interface PerspectiveGridProps {
   initialPoints?: number;
 }
 
-export const PerspectiveGrid: FC<PerspectiveGridProps> = ({ 
-  initialPoints = 2 
+export const PerspectiveGrid: FC<PerspectiveGridProps> = ({
+  initialPoints = 2,
 }) => {
   const [points, setPoints] = useState(initialPoints);
-  
-  return (
-    <div className="perspective-grid">
-      {/* ... */}
-    </div>
-  );
+
+  return <div className="perspective-grid">{/* ... */}</div>;
 };
 ```
 
@@ -129,7 +125,7 @@ export const PerspectiveGrid: FC<PerspectiveGridProps> = ({
  * @description Motor de cálculo de geometria de perspectiva
  */
 
-import type { VanishingPoint, GridConfig } from '@/types';
+import type { VanishingPoint, GridConfig } from "@/types";
 
 export function calculatePerspectiveLines(
   points: VanishingPoint[],
@@ -152,22 +148,22 @@ export function calculatePerspectiveLines(
   --anthracite: #1a1a2e;
   --quartz: #e8e8f0;
   --diamond-dust: #ffffff;
-  
+
   /* Cores de destaque */
   --amethyst-purple: #9b59b6;
   --aqua-cyan: #00d9ff;
   --magenta-fusion: #ff006e;
   --pyrite-gold: #ffd700;
-  
+
   /* Tipografia */
-  --font-headline: 'Montserrat', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  
+  --font-headline: "Montserrat", sans-serif;
+  --font-body: "Inter", sans-serif;
+
   /* Gradientes */
   --gradient-prismatic: linear-gradient(
-    135deg, 
-    var(--amethyst-purple), 
-    var(--aqua-cyan), 
+    135deg,
+    var(--amethyst-purple),
+    var(--aqua-cyan),
     var(--magenta-fusion)
   );
 }
@@ -182,14 +178,14 @@ export function calculatePerspectiveLines(
 interface ToolError {
   code: string;
   message: string;
-  action: 'restart' | 'retry' | 'contact';
+  action: "restart" | "retry" | "contact";
 }
 
 // Exemplo
 const error: ToolError = {
-  code: 'OBJ_INVALID_FORMAT',
-  message: 'O arquivo não é um .obj válido',
-  action: 'retry'
+  code: "OBJ_INVALID_FORMAT",
+  message: "O arquivo não é um .obj válido",
+  action: "retry",
 };
 ```
 

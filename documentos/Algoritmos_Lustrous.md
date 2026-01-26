@@ -5,6 +5,7 @@
 ## 1. Algoritmo de Perspective Grid
 
 ### Objetivo
+
 Gerar grids de perspectiva configuráveis com até **3 pontos de fuga**, incluindo controle explícito da **orientação do terceiro ponto**.
 
 ---
@@ -14,9 +15,9 @@ Gerar grids de perspectiva configuráveis com até **3 pontos de fuga**, incluin
 - VanishingPoint { x, y }
 - Horizon { angle, y }
 - GridConfig {
-    type: 1 | 2 | 3,
-    thirdPointOrientation: 'top' | 'bottom' | null,
-    density: 'low' | 'medium' | 'high'
+  type: 1 | 2 | 3,
+  thirdPointOrientation: 'top' | 'bottom' | null,
+  density: 'low' | 'medium' | 'high'
   }
 - CameraState { eyeLevelOffset }
 
@@ -39,6 +40,7 @@ Gerar grids de perspectiva configuráveis com até **3 pontos de fuga**, incluin
 ---
 
 ### Observações
+
 - Todo cálculo ocorre antes do render
 - Re-render completo a cada alteração de estado
 
@@ -47,6 +49,7 @@ Gerar grids de perspectiva configuráveis com até **3 pontos de fuga**, incluin
 ## 2. Algoritmo de Visualização 3D (.obj)
 
 ### Objetivo
+
 Renderizar modelos `.obj` com controle total de câmera e exportação.
 
 ---
@@ -77,6 +80,7 @@ Renderizar modelos `.obj` com controle total de câmera e exportação.
 ## 3. Algoritmo de Análise de Gama de Cores
 
 ### Objetivo
+
 Gerar relatório educacional de uso de cores em uma imagem.
 
 ---

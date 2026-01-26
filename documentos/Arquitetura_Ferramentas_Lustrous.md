@@ -5,6 +5,7 @@
 ## Visão Geral
 
 Cada ferramenta do Lustrous é projetada como um **módulo isolado**, totalmente independente, com:
+
 - Renderização **client-side**
 - Processamento local
 - Estado próprio
@@ -13,13 +14,13 @@ Cada ferramenta do Lustrous é projetada como um **módulo isolado**, totalmente
 Arquitetura base de cada ferramenta:
 
 [ UI (Página Fullscreen) ]
-        ↓
+↓
 [ Tool Controller ]
-        ↓
+↓
 [ Domain / Algorithm Engine ]
-        ↓
+↓
 [ Renderer ]
-        ↓
+↓
 [ Export / Reset / Error Handling ]
 
 ---
@@ -27,6 +28,7 @@ Arquitetura base de cada ferramenta:
 ## 1. Perspective Grid Tool
 
 ### Objetivo
+
 Permitir a construção e exportação de grids de perspectiva altamente configuráveis para estudo de ilustração.
 
 ---
@@ -34,20 +36,20 @@ Permitir a construção e exportação de grids de perspectiva altamente configu
 ### Diagrama Lógico Detalhado
 
 [ User Input ]
-   │
-   ▼
+│
+▼
 [ UI Controls ]
-   │
-   ▼
+│
+▼
 [ Perspective Tool Controller ]
-   │
-   ▼
+│
+▼
 [ Perspective Geometry Engine ]
-   │
-   ▼
+│
+▼
 [ Canvas 2D Renderer ]
-   │
-   ▼
+│
+▼
 [ Export / Reset / Error Handler ]
 
 ---
@@ -77,6 +79,7 @@ Permitir a construção e exportação de grids de perspectiva altamente configu
 ### Perspective Tool Controller
 
 Responsável por:
+
 - Gerenciar o estado completo da cena:
   - Pontos de fuga
   - Orientação do terceiro ponto
@@ -92,6 +95,7 @@ Responsável por:
 ### Perspective Geometry Engine
 
 Responsável por:
+
 - Cálculo geométrico das linhas de perspectiva
 - Geração de linhas convergentes:
   - Horizontais
@@ -131,6 +135,7 @@ Responsável por:
 ## 2. Visualizador de Arquivos `.obj`
 
 ### Objetivo
+
 Permitir o estudo de tridimensionalidade através da visualização interativa de modelos 3D.
 
 ---
@@ -138,20 +143,20 @@ Permitir o estudo de tridimensionalidade através da visualização interativa d
 ### Diagrama Lógico Detalhado
 
 [ File Input / Preset Selector ]
-           │
-           ▼
+│
+▼
 [ OBJ Loader & Validator ]
-           │
-           ▼
+│
+▼
 [ Scene Setup ]
-           │
-           ▼
+│
+▼
 [ Camera & Trackball Controller ]
-           │
-           ▼
+│
+▼
 [ WebGL Renderer (Three.js) ]
-           │
-           ▼
+│
+▼
 [ Export / Reset / Error Handler ]
 
 ---
@@ -204,6 +209,7 @@ Permitir o estudo de tridimensionalidade através da visualização interativa d
 ## 3. Ferramenta de Análise de Gama de Cores
 
 ### Objetivo
+
 Auxiliar no estudo de teoria das cores através da análise automatizada de imagens.
 
 ---
@@ -211,23 +217,23 @@ Auxiliar no estudo de teoria das cores através da análise automatizada de imag
 ### Diagrama Lógico Detalhado
 
 [ Image Upload ]
-      │
-      ▼
+│
+▼
 [ Image Decoder ]
-      │
-      ▼
+│
+▼
 [ Pixel Sampler ]
-      │
-      ▼
+│
+▼
 [ Color Clustering Engine ]
-      │
-      ▼
+│
+▼
 [ Color Interpretation Engine ]
-      │
-      ▼
+│
+▼
 [ Report Generator ]
-      │
-      ▼
+│
+▼
 [ PDF Export / Error Handler ]
 
 ---

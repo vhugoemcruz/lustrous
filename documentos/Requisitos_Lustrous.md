@@ -1,4 +1,5 @@
 # Documento de Requisitos
+
 ## Projeto: Lustrous
 
 ---
@@ -39,6 +40,7 @@ Lustrous será uma aplicação web moderna, focada em renderização client-side
 ## 5. Requisitos Funcionais
 
 ### RF-01 — Navegação Geral
+
 - O site deve possuir um **menu tipo burger**
 - O menu deve listar todas as ferramentas disponíveis
 - Cada ferramenta deve possuir sua **própria página**
@@ -47,6 +49,7 @@ Lustrous será uma aplicação web moderna, focada em renderização client-side
 ---
 
 ### RF-02 — Perspective Grid Tool
+
 - O usuário deve selecionar:
   - 1, 2 ou 3 pontos de fuga
   - Orientação do terceiro ponto (acima ou abaixo)
@@ -64,6 +67,7 @@ Lustrous será uma aplicação web moderna, focada em renderização client-side
 ---
 
 ### RF-03 — Visualizador de Arquivos `.obj`
+
 - O usuário pode importar arquivos `.obj`
 - O sistema deve validar tamanho máximo do arquivo
 - O usuário pode:
@@ -75,6 +79,7 @@ Lustrous será uma aplicação web moderna, focada em renderização client-side
 ---
 
 ### RF-04 — Análise de Gama de Cores
+
 - O usuário pode importar uma imagem
 - O sistema deve analisar as cores da imagem
 - O sistema deve gerar um relatório contendo:
@@ -87,6 +92,7 @@ Lustrous será uma aplicação web moderna, focada em renderização client-side
 ---
 
 ### RF-05 — Tratamento de Erros
+
 - Em caso de erro:
   - Exibir mensagem centralizada
   - Solicitar reinício da ferramenta
@@ -97,31 +103,38 @@ Lustrous será uma aplicação web moderna, focada em renderização client-side
 ## 6. Requisitos Não Funcionais
 
 ### Performance
+
 - Resposta compatível com padrões médios de aplicações web modernas
 
 ### Escalabilidade e Disponibilidade
+
 - Sem SLA garantido inicialmente
 - Evolução conforme capacidade do desenvolvedor
 
 ### Segurança
+
 - Conformidade básica com LGPD
 - Não coleta de dados sensíveis no MVP
 - Uploads tratados de forma segura
 - Sem autenticação de usuários no MVP
 
 ### Usabilidade
+
 - Interface simples, direta e eficiente
 - Foco total nas ferramentas
 
 ### Acessibilidade
+
 - Conformidade WCAG AA
 - Navegação por teclado
 - Contraste adequado de cores
 
 ### Compatibilidade
+
 - Suporte aos navegadores mais utilizados
 
 ### Internacionalização
+
 - Português (Brasil)
 - Inglês
 - Japonês
@@ -143,28 +156,34 @@ Lustrous será uma aplicação web moderna, focada em renderização client-side
 ## 8. UX / UI — Diretrizes de Design
 
 ### Conceito Visual
+
 Identidade inspirada em minerais, prismas e refração da luz.
 
 ### Princípios
+
 - Precisão geométrica
 - Luminosidade espectral
 - Textura sutil
 - Fluxo contínuo
 
 ### Paleta de Cores
+
 (Deep Obsidian, Slate Grey, Anthracite, Quartz, Diamond Dust, Amethyst Purple, Aqua Cyan, Magenta Fusion, Pyrite Gold)
 
 ### Tipografia
+
 - Headline: Montserrat (Bold / SemiBold)
 - Body: Inter (Regular / Medium)
 
 ### Componentes
+
 - Botões com gradiente prismático
 - Cards com profundidade sutil
 - Inputs com foco luminoso
 - Navbar com efeito glassmorphism
 
 ### Animações
+
 - Fundo animado com partículas prismáticas
 - Microinterações com glow
 - Transições rápidas de página
