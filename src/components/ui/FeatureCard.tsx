@@ -1,6 +1,6 @@
 /**
  * @module FeatureCard
- * @description Premium card component with gradient border on hover and glow effects.
+ * @description Card component for tool showcase with centered icon, fixed height, and gradient background.
  */
 
 import type { FC, ReactNode } from "react";
@@ -22,11 +22,11 @@ interface FeatureCardProps {
    */
   description: string;
   /**
-   * Icon element to display
+   * Icon element to display (centered)
    */
   icon: ReactNode;
   /**
-   * Gradient color variant for the border
+   * Gradient color variant for the border and effects
    * @default "prismatic"
    */
   variant?: GradientVariant;
@@ -36,24 +36,36 @@ interface FeatureCardProps {
   className?: string;
 }
 
-const variantStyles: Record<GradientVariant, string> = {
-  cyan: "hover:shadow-[0_0_30px_rgba(0,255,255,0.3)]",
-  purple: "hover:shadow-[0_0_30px_rgba(138,43,226,0.3)]",
-  magenta: "hover:shadow-[0_0_30px_rgba(255,0,255,0.3)]",
-  prismatic:
-    "hover:shadow-[0_0_30px_rgba(0,255,255,0.3),0_0_60px_rgba(138,43,226,0.2)]",
-};
-
-const variantBorderGradients: Record<GradientVariant, string> = {
-  cyan: "linear-gradient(135deg, #00ffff, #00cccc)",
-  purple: "linear-gradient(135deg, #8a2be2, #6a1fb2)",
-  magenta: "linear-gradient(135deg, #ff00ff, #cc00cc)",
-  prismatic: "linear-gradient(135deg, #8a2be2, #00ffff, #ff00ff)",
+const variantConfig: Record<
+  GradientVariant,
+  { hover: string; gradient: string; border: string }
+> = {
+  cyan: {
+    hover: "hover:shadow-[0_0_40px_rgba(0,255,255,0.25)]",
+    gradient: "from-[#00ffff]/5 via-transparent to-transparent",
+    border: "hover:border-[#00ffff]/40",
+  },
+  purple: {
+    hover: "hover:shadow-[0_0_40px_rgba(138,43,226,0.25)]",
+    gradient: "from-[#8a2be2]/5 via-transparent to-transparent",
+    border: "hover:border-[#8a2be2]/40",
+  },
+  magenta: {
+    hover: "hover:shadow-[0_0_40px_rgba(255,0,255,0.25)]",
+    gradient: "from-[#ff00ff]/5 via-transparent to-transparent",
+    border: "hover:border-[#ff00ff]/40",
+  },
+  prismatic: {
+    hover:
+      "hover:shadow-[0_0_40px_rgba(0,255,255,0.2),0_0_80px_rgba(138,43,226,0.15)]",
+    gradient: "from-aqua/5 via-transparent to-transparent",
+    border: "hover:border-aqua/40",
+  },
 };
 
 /**
  * FeatureCard component.
- * Card with gradient border reveal on hover and lift effect.
+ * Fixed height card with centered icon, gradient background, and smooth hover effects.
  */
 export const FeatureCard: FC<FeatureCardProps> = ({
   href,
@@ -63,33 +75,25 @@ export const FeatureCard: FC<FeatureCardProps> = ({
   variant = "prismatic",
   className = "",
 }) => {
+  const config = variantConfig[variant];
+
   return (
     <Link
       href={href}
-      className={`group bg-slate-grey border-anthracite relative block rounded-2xl border p-6 transition-all duration-300 ease-out hover:translate-y-[-4px] ${variantStyles[variant]} ${className} `}
-      style={
-        {
-          "--border-gradient": variantBorderGradients[variant],
-        } as React.CSSProperties
-      }
+      className={`feature-card group from-slate-grey to-slate-grey/80 relative block h-full overflow-hidden rounded-2xl border-2 border-transparent bg-gradient-to-b p-8 text-center transition-all duration-500 ease-out hover:translate-y-[-6px] ${config.hover} ${config.border} ${className}`}
     >
-      {/* Gradient border overlay */}
+      {/* Gradient overlay */}
       <div
-        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{
-          padding: "1px",
-          background: variantBorderGradients[variant],
-          WebkitMask:
-            "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-          WebkitMaskComposite: "xor",
-          maskComposite: "exclude",
-        }}
+        className={`pointer-events-none absolute inset-0 bg-gradient-to-b ${config.gradient} opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
       />
 
+      {/* Shine effect on hover */}
+      <div className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/5 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+
       {/* Content */}
-      <div className="relative z-10">
-        {/* Icon */}
-        <div className="bg-anthracite/50 mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-2xl transition-transform duration-300 group-hover:scale-110">
+      <div className="relative z-10 flex flex-col items-center">
+        {/* Centered Icon */}
+        <div className="bg-aqua/10 mb-4 flex h-14 w-14 items-center justify-center rounded-xl text-4xl transition-transform duration-300 group-hover:scale-110">
           {icon}
         </div>
 
@@ -99,14 +103,9 @@ export const FeatureCard: FC<FeatureCardProps> = ({
         </h3>
 
         {/* Description */}
-        <p className="text-diamond-dust text-sm leading-relaxed">
+        <p className="text-diamond-dust/80 text-sm leading-relaxed">
           {description}
         </p>
-
-        {/* Arrow indicator */}
-        <div className="absolute right-6 bottom-6 translate-x-[-8px] opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
-          <span className="text-aqua text-xl">→</span>
-        </div>
       </div>
     </Link>
   );

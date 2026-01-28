@@ -8,7 +8,6 @@
 [![React](https://img.shields.io/badge/React-19.2.3-61DAFB?logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-4.x-06B6D4?logo=tailwindcss)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green)](#license)
 
 [Explore Tools](#-tools) • [Installation](#-installation) • [Documentation](#-documentation)
 
@@ -167,12 +166,6 @@ Contributions are welcome. To contribute:
 3. Commit changes (`git commit -m 'feat: add new feature'`)
 4. Push to the branch (`git push origin feature/new-feature`)
 5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is under the **GPL-3.0** license. See the [LICENSE](documentos/LICENSE) file for more details.
 
 ---
 
