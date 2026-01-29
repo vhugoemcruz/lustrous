@@ -752,7 +752,7 @@ body {
   font-size: 1.125rem;
   line-height: 1.6;
   color: var(--diamond-dust);
-  max-width: 640px;
+  max-width: 1000px;
 }
 
 @media (min-width: 768px) {

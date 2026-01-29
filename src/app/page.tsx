@@ -27,7 +27,7 @@ const tools = [
     href: "/perspective-grid",
     title: "Perspective Grid",
     description:
-      "Draw with confidence! Create grids with 1, 2, or 3 vanishing points to nail perspective every time.",
+      "Create grids with 1, 2, or 3 vanishing points to make working with perspective easier.",
     icon: "📐",
     variant: "cyan" as const,
   },
@@ -35,7 +35,7 @@ const tools = [
     href: "/obj-viewer",
     title: "3D Viewer",
     description:
-      "Spin, rotate, and study 3D models to understand how light and form work together.",
+      "Spin and rotate 3D models with lighting to study form, structure, and how light behaves.",
     icon: "🧊",
     variant: "purple" as const,
   },
@@ -43,7 +43,7 @@ const tools = [
     href: "/color-analysis",
     title: "Color Analysis",
     description:
-      "Drop in any image and discover the hidden color harmonies that make it work.",
+      "Drop in any image to explore and uncover the hidden color harmonies that make it work.",
     icon: "🎨",
     variant: "magenta" as const,
   },
@@ -55,21 +55,21 @@ const tools = [
 const features = [
   {
     icon: <BrowserIcon size={32.5} />,
-    title: "Works Anywhere",
+    title: "Works Easy",
     description:
       "No downloads, no installs. Just open your browser and start creating.",
   },
   {
     icon: <ShieldIcon size={32.5} />,
-    title: "Your Art, Your Privacy",
+    title: "Your art stays yours",
     description:
-      "Everything stays on your device. We never see, store, or share your work.",
+      "Everything runs locally on your device. Lustrous will never see, store, or touch your work.",
   },
   {
     icon: <SparklesIcon size={32.5} />,
-    title: "Made by Artists",
+    title: "Made for Artists",
     description:
-      "Every tool is built with your workflow in mind, because we're artists too.",
+      "Every tool was designed to support your learning and make your creative process smoother.",
   },
 ];
 
@@ -165,9 +165,8 @@ export default function Home() {
               Useful tools to help you create
             </h2>
             <p className="section-subtitle mx-auto">
-              We know the struggle of hunting for the right reference tool.
-              <br className="hidden md:block" />
-              So we made them all, in one place, just for you.
+              The idea is to provide you, as an artist, with a variety of tools
+              to support your creative process.
             </p>
           </ScrollReveal>
 
@@ -194,12 +193,15 @@ export default function Home() {
           <ScrollReveal className="mb-12 text-center md:mb-16">
             <span className="section-label">For the Community</span>
             <h2 className="section-title mx-auto">
-              Built with <span className="text-magenta font-medium">love</span>
+              Built with{" "}
+              <span className="text-magenta font-medium">dedication</span>
             </h2>
             <p className="section-subtitle mx-auto">
-              This isn&apos;t a product—it&apos;s a gift to the community.
+              The idea is to provide you, as an artist, with a variety of tools
+              to support your creative process.
               <br className="hidden md:block" />
-              No accounts, no paywalls, no strings attached.
+              And the best part: it's all free, as it's my way of supporting the
+              artistic community.
             </p>
           </ScrollReveal>
 
@@ -230,18 +232,18 @@ export default function Home() {
         {/* Support Section */}
         <section className="container pt-12 pb-24">
           <ScrollReveal className="mb-12 text-center md:mb-16">
-            <span className="section-label">Support Us</span>
+            <span className="section-label">Contribution</span>
             <h2 className="section-title mx-auto">
-              Help keep
-              <span className="font-medium text-yellow-400"> Lustrous </span>
-              alive
+              Support
+              <span className="font-medium text-yellow-400"> Lustrous</span>, if
+              you wish
             </h2>
             <p className="section-subtitle mx-auto">
               Lustrous is, and will always be,{" "}
               <span className="text-aqua font-medium">completely free</span>.
               <br className="hidden md:block" />
-              But if you'd like to help sustain this project—and only if you
-              can—your support means the world.
+              But donates will always be appreciated, with all the gratitude in
+              the world.
             </p>
           </ScrollReveal>
 
@@ -254,18 +256,13 @@ export default function Home() {
                 <div className="relative z-10">
                   <div className="mb-4 text-4xl">💛</div>
                   <p className="text-diamond-dust/80 mb-6 text-sm leading-relaxed">
-                    We don't run ads, we don't sell your data, and we never
-                    will.
+                    Lustrous will never run any type of ads.
                     <br />
-                    If Lustrous has helped you in any way and you're in a
-                    position to give back,
+                    The intention here is to be something useful and totally
+                    free to help.
                     <br className="hidden md:block" />
-                    your donation helps cover hosting costs and keeps
-                    development going.
-                  </p>
-                  <p className="text-diamond-dust/60 mb-6 text-xs italic">
-                    No pressure—seriously. This is only if you want to and can
-                    afford it. 💜
+                    If you'd like to support the project and help it to keep
+                    going, you can do it here:
                   </p>
                   <a
                     href="https://ko-fi.com/lustrous"
@@ -276,6 +273,9 @@ export default function Home() {
                     <span>☕</span>
                     Buy me a coffee
                   </a>
+                  <p className="text-diamond-dust/60 mt-6 mb-6 text-xs font-bold">
+                    Support, when freely given, carries the greatest meaning.
+                  </p>
                 </div>
               </div>
             </div>
