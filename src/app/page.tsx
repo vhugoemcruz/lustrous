@@ -273,7 +273,7 @@ export default function Home() {
                     <span>☕</span>
                     Buy me a coffee
                   </a>
-                  <p className="text-diamond-dust/60 mt-6 mb-6 text-xs font-bold">
+                  <p className="text-diamond-dust/60 mt-6 text-xs font-bold">
                     Support, when freely given, carries the greatest meaning.
                   </p>
                 </div>
@@ -285,16 +285,18 @@ export default function Home() {
         {/* Footer */}
         <footer className="relative mt-auto overflow-hidden">
           {/* Gradient background */}
-          <div className="via-slate-grey/50 to-slate-grey absolute inset-0 bg-gradient-to-b from-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0e] to-[#020203]" />
 
-          <div className="relative container py-12 md:py-16">
-            <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
+          {/* Top Separator Line */}
+          <div className="via-aqua/20 absolute top-0 right-0 left-0 h-px bg-gradient-to-r from-transparent to-transparent" />
+
+          <div className="relative container py-8 md:py-12">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
               {/* Brand Column */}
               <div className="md:col-span-2">
                 <LustrousLogo size={32} showText className="mb-4" />
                 <p className="text-diamond-dust/70 mb-4 max-w-sm text-sm leading-relaxed">
-                  Your creative companion, always by your side. Free tools for
-                  artists, by artists.
+                  To help you create, Lustrous was born.
                 </p>
               </div>
 
@@ -338,11 +340,9 @@ export default function Home() {
             </div>
 
             {/* Bottom Footer - closer to bottom */}
-            <div className="mt-16 flex flex-col items-center gap-2 pt-8">
-              <p className="text-diamond-dust/50 text-sm">
-                Made with 💜 for the creative community
-              </p>
-              <p className="text-diamond-dust/40 text-xs">
+            <div className="mt-18 flex flex-col items-center gap-2 pt-8">
+              <LustrousLogo size={24} showText />
+              <p className="text-diamond-dust/40 text-m">
                 © {new Date().getFullYear()} Lustrous. All tools run locally in
                 your browser.
               </p>
