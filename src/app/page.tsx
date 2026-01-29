@@ -8,7 +8,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ParticleBackground } from "@/components/ui/ParticleBackground";
 import { FeatureCard } from "@/components/ui/FeatureCard";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { ScrollIndicator } from "@/components/ui/ScrollIndicator";
@@ -111,13 +110,6 @@ export default function Home() {
   };
   return (
     <>
-      {/* Animated Particle Background */}
-      <ParticleBackground
-        particleCount={100}
-        connectionDistance={120}
-        interactive
-      />
-
       <div className="relative">
         {/* Hero Section - Content height with padding for scroll indicator */}
         <section className="relative flex min-h-[calc(100vh-var(--header-height))] flex-col items-center justify-start px-4 pt-[calc(15vh+30px)] pb-24 text-center">
@@ -170,7 +162,7 @@ export default function Home() {
           <ScrollReveal className="mb-12 text-center md:mb-16">
             <span className="section-label">The Toolbox</span>
             <h2 className="section-title mx-auto">
-              Everything you wish you had
+              Useful tools to help you create
             </h2>
             <p className="section-subtitle mx-auto">
               We know the struggle of hunting for the right reference tool.

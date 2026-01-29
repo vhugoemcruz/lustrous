@@ -8,6 +8,9 @@ import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 
+import { ParticleBackground } from "@/components/ui/ParticleBackground";
+import { MainScrollContainer } from "@/components/layout/MainScrollContainer";
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -53,11 +56,16 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${montserrat.variable} bg-background text-foreground min-h-screen antialiased`}
+        className={`${inter.variable} ${montserrat.variable} bg-background text-foreground bg-deep-obsidian h-screen w-screen overflow-hidden antialiased`}
         suppressHydrationWarning
       >
+        <ParticleBackground
+          particleCount={100}
+          connectionDistance={120}
+          interactive
+        />
         <Header />
-        <main className="pt-[var(--header-height)]">{children}</main>
+        <MainScrollContainer>{children}</MainScrollContainer>
       </body>
     </html>
   );

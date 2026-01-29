@@ -26,7 +26,10 @@ export function ScrollIndicator({ onVisibilityChange }: ScrollIndicatorProps) {
    * Handles scroll events to update visibility.
    */
   const handleScroll = useCallback(() => {
-    const scrollY = window.scrollY;
+    const mainContainer = document.getElementById("main-scroll-container");
+    if (!mainContainer) return;
+
+    const scrollY = mainContainer.scrollTop;
     const newVisible = scrollY < 100;
     setIsVisible(newVisible);
   }, []);
@@ -37,8 +40,11 @@ export function ScrollIndicator({ onVisibilityChange }: ScrollIndicatorProps) {
   }, [isVisible, onVisibilityChange]);
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const mainContainer = document.getElementById("main-scroll-container");
+    if (!mainContainer) return;
+
+    mainContainer.addEventListener("scroll", handleScroll, { passive: true });
+    return () => mainContainer.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
   return (
