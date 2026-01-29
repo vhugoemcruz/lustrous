@@ -43,18 +43,38 @@ export const PrismaticDots: FC = () => {
   }, []);
 
   return (
-    <div className="my-10 flex items-center justify-center gap-20">
-      {colors.map((c, index) => (
-        <span
-          key={c.name}
-          className="prismatic-dot"
-          style={{
-            backgroundColor: c.color,
-            boxShadow: `0 0 12px ${c.color}`,
-            animationDelay: `${index * 0.4}s`,
-          }}
-        />
-      ))}
-    </div>
+    <>
+      <style jsx global>{`
+        @keyframes prismatic-breathe {
+          0%,
+          100% {
+            opacity: 0.25;
+            transform: scale(0.9);
+            filter: blur(0.5px);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.1);
+            filter: blur(0);
+          }
+        }
+      `}</style>
+      <div className="my-10 flex items-center justify-center gap-20">
+        {colors.map((c, index) => (
+          <span
+            key={c.name}
+            className="h-2 w-2 rounded-full"
+            style={{
+              backgroundColor: c.color,
+              boxShadow: `0 0 12px ${c.color}`,
+              animation:
+                "prismatic-breathe 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+              animationDelay: `${index * 0.4}s`,
+              opacity: 0.25, // Fallback/Initial state matches animation 0%
+            }}
+          />
+        ))}
+      </div>
+    </>
   );
 };

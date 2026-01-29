@@ -265,7 +265,7 @@ export function ParticleBackground({
   return (
     <canvas
       ref={canvasRef}
-      className={`particle-container ${className}`}
+      className={`pointer-events-none fixed top-0 left-0 -z-10 h-full w-full ${className}`}
       aria-hidden="true"
     />
   );

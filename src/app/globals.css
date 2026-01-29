@@ -2,25 +2,25 @@
 
 /* ========================================
    LUSTROUS - Design System: The Mineral Spectrum
-   Inspirado em cristais, refração de luz e redes moleculares
+   Inspired by crystals, light refraction, and molecular networks
    ======================================== */
 
 :root {
   /* ====================================
-     PRIMÁRIAS (Base Escura - Obsidian/Basalt)
+     PRIMARY (Dark Base - Obsidian/Basalt)
      ==================================== */
   --deep-obsidian: #0d0d12;
   --slate-grey: #1e1e2a;
   --anthracite: #2f2f3d;
 
   /* ====================================
-     SECUNDÁRIAS (Neutras - Quartz/Diamond Dust)
+     SECONDARY (Neutrals - Quartz/Diamond Dust)
      ==================================== */
   --pure-quartz: #f0f0f0;
   --diamond-dust: #a0a0b0;
 
   /* ====================================
-     ACENTOS (Espectrais - Opal/Tourmaline/Bismuth)
+     ACCENTS (Spectral - Opal/Tourmaline/Bismuth)
      ==================================== */
   --amethyst-purple: #8a2be2;
   --aqua-cyan: #00ffff;
@@ -40,7 +40,7 @@
   --accent-hover: #00cccc;
 
   /* ====================================
-     GRADIENTES (Prismatic)
+     GRADIENTS (Prismatic)
      ==================================== */
   --gradient-prismatic: linear-gradient(
     135deg,
@@ -108,9 +108,6 @@
   /* ====================================
      GLOW EFFECTS
      ==================================== */
-  --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.4);
-  --glow-purple: 0 0 20px rgba(138, 43, 226, 0.4);
-  --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.4);
   --glow-prismatic:
     0 0 30px rgba(0, 255, 255, 0.3), 0 0 60px rgba(138, 43, 226, 0.2);
 }
@@ -201,61 +198,6 @@ body {
 }
 
 /* ========================================
-   CARD COMPONENT
-   ======================================== */
-
-.card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-lg);
-  transition: all var(--transition-normal);
-  position: relative;
-}
-
-.card:hover {
-  background: var(--card-hover);
-  transform: translateY(-4px);
-  box-shadow: var(--glow-prismatic);
-}
-
-/* Card with gradient border on hover */
-.card-glow {
-  position: relative;
-  background: var(--card-bg);
-  border: 1px solid transparent;
-  border-radius: var(--radius-lg);
-  transition: all var(--transition-normal);
-}
-
-.card-glow::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: calc(var(--radius-lg) + 1px);
-  padding: 1px;
-  background: var(--gradient-prismatic);
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity var(--transition-glow);
-}
-
-.card-glow:hover::before {
-  opacity: 1;
-}
-
-.card-glow:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--glow-prismatic);
-}
-
-/* ========================================
    GRADIENT TEXT
    ======================================== */
 
@@ -276,117 +218,11 @@ body {
 }
 
 /* ========================================
-   BUTTON COMPONENTS
-   ======================================== */
-
-/* Primary Button - Gradient */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: var(--gradient-prismatic);
-  background-size: 200% 100%;
-  color: white;
-  font-weight: 600;
-  border-radius: var(--radius-md);
-  border: none;
-  cursor: pointer;
-  transition: all var(--transition-normal);
-}
-
-.btn-primary:hover {
-  background-position: 100% 0;
-  transform: translateY(-2px);
-  box-shadow: var(--glow-prismatic);
-}
-
-/* Secondary Button - Ghost */
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: transparent;
-  color: var(--aqua-cyan);
-  font-weight: 600;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--aqua-cyan);
-  cursor: pointer;
-  transition: all var(--transition-normal);
-}
-
-.btn-secondary:hover {
-  background: rgba(0, 255, 255, 0.1);
-  transform: translateY(-2px);
-  box-shadow: var(--glow-cyan);
-}
-
-/* CTA Button - Solid Cyan */
-.btn-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  background: var(--aqua-cyan);
-  color: var(--deep-obsidian);
-  font-weight: 600;
-  border-radius: var(--radius-md);
-  border: none;
-  cursor: pointer;
-  transition: all var(--transition-normal);
-}
-
-.btn-cta:hover {
-  background: var(--accent-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--glow-cyan);
-}
-
-/* ========================================
    GLOW EFFECTS
    ======================================== */
 
 .glow {
   box-shadow: var(--glow-prismatic);
-}
-
-.glow-cyan {
-  box-shadow: var(--glow-cyan);
-}
-
-.glow-purple {
-  box-shadow: var(--glow-purple);
-}
-
-.glow-text {
-  text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-}
-
-/* ========================================
-   INPUT FIELDS
-   ======================================== */
-
-.input-field {
-  background: var(--slate-grey);
-  color: var(--pure-quartz);
-  border: 1px solid var(--anthracite);
-  border-radius: var(--radius-md);
-  padding: 0.75rem 1rem;
-  transition: all var(--transition-normal);
-  outline: none;
-}
-
-.input-field:focus {
-  border-color: var(--aqua-cyan);
-  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.15);
-}
-
-.input-field::placeholder {
-  color: var(--diamond-dust);
 }
 
 /* ========================================
@@ -407,7 +243,7 @@ body {
    ANIMATIONS (Crystalline Flow)
    ======================================== */
 
-/* Shimmer effect for gradient text */
+/* Shimmer effect for gradient text (Used in global gradient-text-animated) */
 @keyframes shimmer {
   0% {
     background-position: 0% 50%;
@@ -422,231 +258,12 @@ body {
   }
 }
 
-/* Particle pulse animation */
-@keyframes pulse-glow {
-  0%,
-  100% {
-    opacity: 0.5;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-}
-
-/* Prismatic flash for page transitions */
-@keyframes prismatic-flash {
-  0% {
-    opacity: 0;
-    transform: translateX(-100%);
-  }
-
-  50% {
-    opacity: 0.5;
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-}
-
-/* Float animation */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-/* Balloon animations (modals) */
-@keyframes balloon-enter {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes balloon-exit {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  to {
-    opacity: 0;
-    transform: scale(0.98);
-  }
-}
-
-@keyframes backdrop-fade {
-  from {
-    opacity: 0;
-    backdrop-filter: blur(0);
-  }
-
-  to {
-    opacity: 1;
-    backdrop-filter: blur(4px);
-  }
-}
-
-@keyframes backdrop-unfade {
-  from {
-    opacity: 1;
-    backdrop-filter: blur(4px);
-  }
-
-  to {
-    opacity: 0;
-    backdrop-filter: blur(0);
-  }
-}
-
-/* Crystal spin for loaders */
-@keyframes crystal-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes crystal-pulse {
-  0%,
-  100% {
-    filter: hue-rotate(0deg);
-  }
-
-  33% {
-    filter: hue-rotate(60deg);
-  }
-
-  66% {
-    filter: hue-rotate(-60deg);
-  }
-}
-
 /* ========================================
    ANIMATION UTILITIES
    ======================================== */
 
 .animate-shimmer {
   animation: shimmer 8s linear infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-balloon-enter {
-  animation: balloon-enter 350ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-.animate-balloon-exit {
-  animation: balloon-exit 350ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-.animate-backdrop-fade {
-  animation: backdrop-fade 350ms ease-out forwards;
-}
-
-.animate-backdrop-unfade {
-  animation: backdrop-unfade 350ms ease-out forwards;
-}
-
-.animate-crystal-spin {
-  animation: crystal-spin 2s linear infinite;
-}
-
-.animate-crystal-pulse {
-  animation: crystal-pulse 4s ease-in-out infinite;
-}
-
-/* ========================================
-   NAV LINK STYLES
-   ======================================== */
-
-.nav-link {
-  position: relative;
-  color: var(--diamond-dust);
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  transition: color var(--transition-normal);
-}
-
-.nav-link::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: var(--gradient-prismatic);
-  transition: all var(--transition-normal);
-  transform: translateX(-50%);
-}
-
-.nav-link:hover {
-  color: var(--pure-quartz);
-}
-
-.nav-link:hover::after {
-  width: 100%;
-}
-
-.nav-link.active {
-  color: var(--aqua-cyan);
-}
-
-.nav-link.active::after {
-  width: 100%;
-  background: var(--aqua-cyan);
-}
-
-/* ========================================
-   PARTICLE BACKGROUND CONTAINER
-   ======================================== */
-
-.particle-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* ========================================
-   LOADER COMPONENT
-   ======================================== */
-
-.loader {
-  width: 40px;
-  height: 40px;
-  background: var(--gradient-prismatic);
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  animation:
-    crystal-spin 2s linear infinite,
-    crystal-pulse 4s ease-in-out infinite;
 }
 
 /* ========================================
@@ -692,76 +309,6 @@ body {
 }
 
 /* ========================================
-   BADGE / PILL COMPONENT
-   ======================================== */
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: rgba(0, 255, 255, 0.1);
-  border: 1px solid rgba(0, 255, 255, 0.2);
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--aqua-cyan);
-  transition: all var(--transition-normal);
-}
-
-.badge:hover {
-  background: rgba(0, 255, 255, 0.15);
-  border-color: rgba(0, 255, 255, 0.3);
-}
-
-.badge-prismatic {
-  background: linear-gradient(
-    135deg,
-    rgba(138, 43, 226, 0.15),
-    rgba(0, 255, 255, 0.15),
-    rgba(255, 0, 255, 0.15)
-  );
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--pure-quartz);
-}
-
-/* ========================================
-   SECTION TYPOGRAPHY
-   ======================================== */
-
-.section-label {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--aqua-cyan);
-  margin-bottom: 1rem;
-}
-
-.section-title {
-  font-family: var(--font-headline);
-  font-size: 2.5rem;
-  font-weight: 700;
-  line-height: 1.1;
-  color: var(--pure-quartz);
-  margin-bottom: 1rem;
-}
-
-.section-subtitle {
-  font-size: 1.125rem;
-  line-height: 1.6;
-  color: var(--diamond-dust);
-  max-width: 1000px;
-}
-
-@media (min-width: 768px) {
-  .section-title {
-    font-size: 3rem;
-  }
-}
-
-/* ========================================
    FADE IN UP ANIMATION (Reveal on Scroll)
    ======================================== */
 
@@ -794,109 +341,4 @@ body {
 .animate-fade-in-up-delayed-3 {
   animation: fade-in-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
   opacity: 0;
-}
-
-/* ========================================
-   FEATURE HIGHLIGHT CARD
-   ======================================== */
-
-.feature-highlight {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: rgba(30, 30, 42, 0.5);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  transition: all var(--transition-normal);
-}
-
-.feature-highlight:hover {
-  background: rgba(30, 30, 42, 0.7);
-  border-color: rgba(255, 255, 255, 0.12);
-  transform: translateY(-2px);
-}
-
-.feature-highlight-icon {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  background: rgba(0, 255, 255, 0.1);
-  border-radius: var(--radius-md);
-}
-
-.feature-highlight-content h3 {
-  font-weight: 600;
-  color: var(--pure-quartz);
-  margin-bottom: 0.25rem;
-}
-
-.feature-highlight-content p {
-  font-size: 0.875rem;
-  color: var(--diamond-dust);
-  line-height: 1.5;
-}
-
-/* ========================================
-   DIVIDER
-   ======================================== */
-
-.divider {
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--anthracite),
-    transparent
-  );
-  margin: 4rem 0;
-}
-
-/* ========================================
-   SCROLL INDICATOR ARROW ANIMATION
-   ======================================== */
-
-@keyframes bounce-arrow {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(8px);
-  }
-}
-
-.animate-bounce-arrow {
-  animation: bounce-arrow 3s ease-in-out infinite;
-}
-
-/* ========================================
-   PRISMATIC DOTS (Sequential Breathing)
-   ======================================== */
-
-@keyframes prismatic-breathe {
-  0%,
-  100% {
-    opacity: 0.25;
-    transform: scale(0.9);
-    filter: blur(0.5px);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-    filter: blur(0);
-  }
-}
-
-.prismatic-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  opacity: 0.25;
-  animation: prismatic-breathe 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

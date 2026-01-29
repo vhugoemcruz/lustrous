@@ -11,6 +11,8 @@ import { usePathname } from "next/navigation";
 import { BurgerMenu } from "./BurgerMenu";
 import { LustrousLogo } from "@/components/ui/LustrousLogo";
 
+import { NavLink } from "@/components/ui/NavLink";
+
 const navLinks = [
   { href: "/perspective-grid", label: "Perspective" },
   { href: "/obj-viewer", label: "3D Viewer" },
@@ -67,13 +69,13 @@ export function Header() {
           aria-label="Main navigation"
         >
           {navLinks.map((link) => (
-            <Link
+            <NavLink
               key={link.href}
               href={link.href}
-              className={`nav-link ${pathname === link.href ? "active" : ""}`}
+              isActive={pathname === link.href}
             >
               {link.label}
-            </Link>
+            </NavLink>
           ))}
         </nav>
 

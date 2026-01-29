@@ -7,90 +7,24 @@
  */
 
 import { useState } from "react";
-import Link from "next/link";
-import { FeatureCard } from "@/components/ui/FeatureCard";
+
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { ScrollIndicator } from "@/components/ui/ScrollIndicator";
 import { PrismaticDots } from "@/components/ui/PrismaticDots";
-import { LustrousLogo } from "@/components/ui/LustrousLogo";
+
 import {
   ShieldIcon,
   BrowserIcon,
   SparklesIcon,
 } from "@/components/ui/ToolIcons";
-
-/**
- * Tool definitions with emoji icons.
- */
-const tools = [
-  {
-    href: "/perspective-grid",
-    title: "Perspective Grid",
-    description:
-      "Create grids with 1, 2, or 3 vanishing points to make working with perspective easier.",
-    icon: "📐",
-    variant: "cyan" as const,
-  },
-  {
-    href: "/obj-viewer",
-    title: "3D Viewer",
-    description:
-      "Spin and rotate 3D models with lighting to study form, structure, and how light behaves.",
-    icon: "🧊",
-    variant: "purple" as const,
-  },
-  {
-    href: "/color-analysis",
-    title: "Color Analysis",
-    description:
-      "Drop in any image to explore and uncover the hidden color harmonies that make it work.",
-    icon: "🎨",
-    variant: "magenta" as const,
-  },
-];
-
-/**
- * Feature highlights for the community section.
- */
-const features = [
-  {
-    icon: <BrowserIcon size={32.5} />,
-    title: "Works Easy",
-    description:
-      "No downloads, no installs. Just open your browser and start creating.",
-  },
-  {
-    icon: <ShieldIcon size={32.5} />,
-    title: "Your art stays yours",
-    description:
-      "Everything runs locally on your device. Lustrous will never see, store, or touch your work.",
-  },
-  {
-    icon: <SparklesIcon size={32.5} />,
-    title: "Made for Artists",
-    description:
-      "Every tool was designed to support your learning and make your creative process smoother.",
-  },
-];
-
-/**
- * Footer links configuration.
- */
-const footerLinks = {
-  community: [
-    { label: "Discord", href: "https://discord.gg/lustrous", external: true },
-    {
-      label: "GitHub",
-      href: "https://github.com/victorgreca/lustrous",
-      external: true,
-    },
-  ],
-  resources: [
-    { label: "Perspective Grid", href: "/perspective-grid" },
-    { label: "3D Viewer", href: "/obj-viewer" },
-    { label: "Color Analysis", href: "/color-analysis" },
-  ],
-};
+import {
+  SectionLabel,
+  SectionTitle,
+  SectionSubtitle,
+} from "@/components/ui/Typography";
+import { ExploreButton } from "@/components/ui/ExploreButton";
+import { FeatureCard } from "@/components/ui/FeatureCard";
+import { Footer } from "@/components/layout/Footer";
 
 /**
  * Home Page Component.
@@ -99,15 +33,6 @@ const footerLinks = {
 export default function Home() {
   const [indicatorVisible, setIndicatorVisible] = useState(true);
 
-  /**
-   * Scroll smoothly to the tools section, centering it on the viewport
-   */
-  const scrollToTools = () => {
-    const toolsSection = document.getElementById("tools");
-    if (toolsSection) {
-      toolsSection.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  };
   return (
     <>
       <div className="relative">
@@ -135,16 +60,7 @@ export default function Home() {
           </p>
 
           {/* Explore Tools Button */}
-          <button
-            onClick={scrollToTools}
-            className="animate-fade-in-up-delayed-3 group from-amethyst via-aqua to-magenta animate-shimmer relative mt-12 rounded-full bg-gradient-to-r via-50% bg-[length:300%_100%] p-[2px] transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,255,255,0.4)]"
-          >
-            <span className="bg-deep-obsidian group-hover:bg-deep-obsidian/80 flex rounded-full px-8 py-3 transition-all duration-300">
-              <span className="from-amethyst via-aqua to-magenta animate-shimmer bg-gradient-to-r via-50% bg-[length:300%_100%] bg-clip-text text-base font-semibold text-transparent">
-                Explore Tools
-              </span>
-            </span>
-          </button>
+          <ExploreButton />
 
           {/* Scroll Indicator - Notifies when visibility changes */}
           <ScrollIndicator onVisibilityChange={setIndicatorVisible} />
@@ -160,102 +76,128 @@ export default function Home() {
           }}
         >
           <ScrollReveal className="mb-12 text-center md:mb-16">
-            <span className="section-label">The Toolbox</span>
-            <h2 className="section-title mx-auto">
+            <SectionLabel>The Toolbox</SectionLabel>
+            <SectionTitle className="mx-auto">
               Useful tools to help you create
-            </h2>
-            <p className="section-subtitle mx-auto">
+            </SectionTitle>
+            <SectionSubtitle className="mx-auto">
               The idea is to provide you, as an artist, with a variety of tools
               to support your creative process.
-            </p>
+            </SectionSubtitle>
           </ScrollReveal>
 
           <div
             id="tools-cards"
             className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-3"
           >
-            {tools.map((tool, index) => (
-              <ScrollReveal key={tool.href} delay={index * 100}>
-                <FeatureCard
-                  href={tool.href}
-                  title={tool.title}
-                  description={tool.description}
-                  icon={tool.icon}
-                  variant={tool.variant}
-                />
-              </ScrollReveal>
-            ))}
+            <ScrollReveal delay={0}>
+              <FeatureCard
+                href="/perspective-grid"
+                title="Perspective Grid"
+                description="Create grids with 1, 2, or 3 vanishing points to make working with perspective easier."
+                icon="📐"
+                variant="aqua"
+              />
+            </ScrollReveal>
+
+            <ScrollReveal delay={100}>
+              <FeatureCard
+                href="/obj-viewer"
+                title="3D Viewer"
+                description="Spin and rotate 3D models with lighting to study form, structure, and how light behaves."
+                icon="🧊"
+                variant="amethyst"
+              />
+            </ScrollReveal>
+
+            <ScrollReveal delay={200}>
+              <FeatureCard
+                href="/color-analysis"
+                title="Color Analysis"
+                description="Drop in any image to explore and uncover the hidden color harmonies that make it work."
+                icon="🎨"
+                variant="magenta"
+              />
+            </ScrollReveal>
           </div>
         </section>
 
         {/* Built with Love Section */}
         <section className="container pt-12 pb-12">
           <ScrollReveal className="mb-12 text-center md:mb-16">
-            <span className="section-label">For the Community</span>
-            <h2 className="section-title mx-auto">
+            <SectionLabel>For the Community</SectionLabel>
+            <SectionTitle className="mx-auto">
               Built with{" "}
               <span className="text-magenta font-medium">dedication</span>
-            </h2>
-            <p className="section-subtitle mx-auto">
+            </SectionTitle>
+            <SectionSubtitle className="mx-auto">
               The idea is to provide you, as an artist, with a variety of tools
               to support your creative process.
               <br className="hidden md:block" />
               And the best part: it's all free, as it's my way of supporting the
               artistic community.
-            </p>
+            </SectionSubtitle>
           </ScrollReveal>
 
           <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-3">
-            {features.map((feature, index) => (
-              <ScrollReveal key={index} delay={index * 100}>
-                <div className="feature-card group from-slate-grey to-slate-grey/80 hover:border-aqua/30 relative overflow-hidden rounded-2xl border-2 border-transparent bg-gradient-to-b p-8 text-center transition-all duration-500 hover:translate-y-[-6px] hover:shadow-[0_0_40px_rgba(0,255,255,0.15)]">
-                  {/* Shine effect */}
-                  <div className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/5 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+            <ScrollReveal delay={0}>
+              <FeatureCard
+                icon={<BrowserIcon size={32.5} />}
+                title="Works Easy"
+                variant="aqua"
+              >
+                No downloads, no installs. Just open your browser and start
+                creating.
+              </FeatureCard>
+            </ScrollReveal>
 
-                  <div className="relative z-10 flex flex-col items-center">
-                    <div className="bg-aqua/10 mb-4 flex h-14 w-14 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110">
-                      {feature.icon}
-                    </div>
-                    <h3 className="text-pure-quartz group-hover:text-aqua mb-2 text-lg font-semibold transition-colors duration-300">
-                      {feature.title}
-                    </h3>
-                    <p className="text-diamond-dust/80 text-sm leading-relaxed">
-                      {feature.description}
-                    </p>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))}
+            <ScrollReveal delay={100}>
+              <FeatureCard
+                icon={<ShieldIcon size={32.5} />}
+                title="Your art stays yours"
+                variant="emerald"
+              >
+                Everything runs locally on your device. Lustrous will never see,
+                store, or touch your work.
+              </FeatureCard>
+            </ScrollReveal>
+
+            <ScrollReveal delay={200}>
+              <FeatureCard
+                icon={<SparklesIcon size={32.5} />}
+                title="Made for Artists"
+                variant="amethyst"
+              >
+                Every tool was designed to support your learning and make your
+                creative process smoother.
+              </FeatureCard>
+            </ScrollReveal>
           </div>
         </section>
 
         {/* Support Section */}
         <section className="container pt-12 pb-24">
           <ScrollReveal className="mb-12 text-center md:mb-16">
-            <span className="section-label">Contribution</span>
-            <h2 className="section-title mx-auto">
+            <SectionLabel>Contribution</SectionLabel>
+            <SectionTitle className="mx-auto">
               Support
               <span className="font-medium text-yellow-400"> Lustrous</span>, if
               you wish
-            </h2>
-            <p className="section-subtitle mx-auto">
+            </SectionTitle>
+            <SectionSubtitle className="mx-auto">
               Lustrous is, and will always be,{" "}
               <span className="text-aqua font-medium">completely free</span>.
               <br className="hidden md:block" />
               But donates will always be appreciated, with all the gratitude in
               the world.
-            </p>
+            </SectionSubtitle>
           </ScrollReveal>
 
           <ScrollReveal delay={100}>
             <div className="mx-auto max-w-2xl text-center">
-              <div className="feature-card group from-slate-grey to-slate-grey/80 relative overflow-hidden rounded-2xl border-2 border-transparent bg-gradient-to-b p-8 transition-all duration-500 hover:border-yellow-400/30 hover:shadow-[0_0_40px_rgba(250,204,21,0.15)]">
-                {/* Shine effect */}
-                <div className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/5 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-
-                <div className="relative z-10">
-                  <div className="mb-4 text-4xl">💛</div>
-                  <p className="text-diamond-dust/80 mb-6 text-sm leading-relaxed">
+              <div className="mx-auto max-w-2xl text-center">
+                <FeatureCard variant="gold" icon="💛">
+                  <p className="mb-6">
                     Lustrous will never run any type of ads.
                     <br />
                     The intention here is to be something useful and totally
@@ -276,79 +218,14 @@ export default function Home() {
                   <p className="text-diamond-dust/60 mt-6 text-xs font-bold">
                     Support, when freely given, carries the greatest meaning.
                   </p>
-                </div>
+                </FeatureCard>
               </div>
             </div>
           </ScrollReveal>
         </section>
 
         {/* Footer */}
-        <footer className="relative mt-auto overflow-hidden">
-          {/* Gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0e] to-[#020203]" />
-
-          {/* Top Separator Line */}
-          <div className="via-aqua/20 absolute top-0 right-0 left-0 h-px bg-gradient-to-r from-transparent to-transparent" />
-
-          <div className="relative container py-8 md:py-12">
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-              {/* Brand Column */}
-              <div className="md:col-span-2">
-                <LustrousLogo size={32} showText className="mb-4" />
-                <p className="text-diamond-dust/70 mb-4 max-w-sm text-sm leading-relaxed">
-                  To help you create, Lustrous was born.
-                </p>
-              </div>
-
-              {/* Community Links */}
-              <div>
-                <h4 className="text-pure-quartz mb-4 font-semibold">
-                  Community
-                </h4>
-                <ul className="space-y-3">
-                  {footerLinks.community.map((link) => (
-                    <li key={link.label}>
-                      <a
-                        href={link.href}
-                        target={link.external ? "_blank" : undefined}
-                        rel={link.external ? "noopener noreferrer" : undefined}
-                        className="text-diamond-dust/70 hover:text-aqua text-sm transition-colors"
-                      >
-                        {link.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Tools Links */}
-              <div>
-                <h4 className="text-pure-quartz mb-4 font-semibold">Tools</h4>
-                <ul className="space-y-3">
-                  {footerLinks.resources.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        href={link.href}
-                        className="text-diamond-dust/70 hover:text-aqua text-sm transition-colors"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Bottom Footer - closer to bottom */}
-            <div className="mt-18 flex flex-col items-center gap-2 pt-8">
-              <LustrousLogo size={24} showText />
-              <p className="text-diamond-dust/40 text-m">
-                © {new Date().getFullYear()} Lustrous. All tools run locally in
-                your browser.
-              </p>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </>
   );

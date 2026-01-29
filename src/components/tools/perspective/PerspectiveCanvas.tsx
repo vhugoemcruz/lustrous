@@ -1395,6 +1395,63 @@ export function PerspectiveCanvas() {
         className="hidden"
         onChange={handleFileChange}
       />
+
+      {/* Local styles for PerspectiveCanvas specific animations */}
+      <style jsx>{`
+        @keyframes balloon-enter {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        @keyframes balloon-exit {
+          from {
+            opacity: 1;
+            transform: scale(1);
+          }
+          to {
+            opacity: 0;
+            transform: scale(0.98);
+          }
+        }
+        @keyframes backdrop-fade {
+          from {
+            opacity: 0;
+            backdrop-filter: blur(0);
+          }
+          to {
+            opacity: 1;
+            backdrop-filter: blur(4px);
+          }
+        }
+        @keyframes backdrop-unfade {
+          from {
+            opacity: 1;
+            backdrop-filter: blur(4px);
+          }
+          to {
+            opacity: 0;
+            backdrop-filter: blur(0);
+          }
+        }
+        /* Utility classes used in the component */
+        .animate-balloon-enter {
+          animation: balloon-enter 350ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        .animate-balloon-exit {
+          animation: balloon-exit 350ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        .animate-backdrop-fade {
+          animation: backdrop-fade 350ms ease-out forwards;
+        }
+        .animate-backdrop-unfade {
+          animation: backdrop-unfade 350ms ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 }

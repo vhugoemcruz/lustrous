@@ -1,112 +1,152 @@
 /**
  * @module FeatureCard
- * @description Card component for tool showcase with centered icon, fixed height, and gradient background.
+ * @description A generic card component with glass/gradient effect, used for all card sections (Tools, Community, Support).
+ * Supports navigation (href) and the 5 mineral spectrum colors.
  */
 
-import type { FC, ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import Link from "next/link";
 
-type GradientVariant = "cyan" | "purple" | "magenta" | "prismatic";
+export type FeatureCardVariant =
+  | "amethyst"
+  | "aqua"
+  | "magenta"
+  | "gold"
+  | "emerald";
 
 interface FeatureCardProps {
   /**
-   * Navigation link for the card
+   * Optional icon or content to display at the top
    */
-  href: string;
+  icon?: ReactNode;
   /**
-   * Card title
+   * Optional title string or element
    */
-  title: string;
+  title?: ReactNode;
   /**
-   * Card description
+   * Main content/description
    */
-  description: string;
+  children?: ReactNode;
   /**
-   * Icon element to display (centered)
-   */
-  icon: ReactNode;
-  /**
-   * Gradient color variant for the border and effects
-   * @default "prismatic"
-   */
-  variant?: GradientVariant;
-  /**
-   * Additional CSS class names
+   * Optional custom classes
    */
   className?: string;
+  /**
+   * Optional accent color for hover effects (default: aqua)
+   * Corresponds to the 5 particle colors.
+   */
+  variant?: FeatureCardVariant;
+  /**
+   * Optional link destination. If provided, card becomes a clickable Link.
+   */
+  href?: string;
+  /**
+   * Optional description text (alternative to children)
+   */
+  description?: string;
+  /**
+   * External link target
+   */
+  target?: string;
 }
 
-const variantConfig: Record<
-  GradientVariant,
-  { hover: string; gradient: string; border: string }
-> = {
-  cyan: {
-    hover: "hover:shadow-[0_0_40px_rgba(0,255,255,0.25)]",
-    gradient: "from-[#00ffff]/5 via-transparent to-transparent",
-    border: "hover:border-[#00ffff]/40",
-  },
-  purple: {
-    hover: "hover:shadow-[0_0_40px_rgba(138,43,226,0.25)]",
-    gradient: "from-[#8a2be2]/5 via-transparent to-transparent",
-    border: "hover:border-[#8a2be2]/40",
-  },
-  magenta: {
-    hover: "hover:shadow-[0_0_40px_rgba(255,0,255,0.25)]",
-    gradient: "from-[#ff00ff]/5 via-transparent to-transparent",
-    border: "hover:border-[#ff00ff]/40",
-  },
-  prismatic: {
-    hover:
-      "hover:shadow-[0_0_40px_rgba(0,255,255,0.2),0_0_80px_rgba(138,43,226,0.15)]",
-    gradient: "from-aqua/5 via-transparent to-transparent",
-    border: "hover:border-aqua/40",
-  },
-};
-
-/**
- * FeatureCard component.
- * Fixed height card with centered icon, gradient background, and smooth hover effects.
- */
 export const FeatureCard: FC<FeatureCardProps> = ({
-  href,
-  title,
-  description,
   icon,
-  variant = "prismatic",
+  title,
+  children,
+  description,
   className = "",
+  variant = "aqua",
+  href,
+  target,
 }) => {
-  const config = variantConfig[variant];
+  const variantStyles: Record<
+    FeatureCardVariant,
+    {
+      hoverBorder: string;
+      hoverShadow: string;
+      iconBg: string;
+      titleHover: string;
+    }
+  > = {
+    aqua: {
+      hoverBorder: "hover:border-[var(--aqua-cyan)]/30",
+      hoverShadow: "hover:shadow-[0_0_40px_rgba(0,255,255,0.15)]",
+      iconBg: "bg-[var(--aqua-cyan)]/10",
+      titleHover: "group-hover:text-[var(--aqua-cyan)]",
+    },
+    amethyst: {
+      hoverBorder: "hover:border-[var(--amethyst-purple)]/30",
+      hoverShadow: "hover:shadow-[0_0_40px_rgba(138,43,226,0.15)]",
+      iconBg: "bg-[var(--amethyst-purple)]/10",
+      titleHover: "group-hover:text-[var(--amethyst-purple)]",
+    },
+    magenta: {
+      hoverBorder: "hover:border-[var(--magenta-fusion)]/30",
+      hoverShadow: "hover:shadow-[0_0_40px_rgba(255,0,255,0.15)]",
+      iconBg: "bg-[var(--magenta-fusion)]/10",
+      titleHover: "group-hover:text-[var(--magenta-fusion)]",
+    },
+    gold: {
+      hoverBorder: "hover:border-[var(--pyrite-gold)]/30",
+      hoverShadow: "hover:shadow-[0_0_40px_rgba(255,215,0,0.15)]",
+      iconBg: "bg-[var(--pyrite-gold)]/10",
+      titleHover: "group-hover:text-[var(--pyrite-gold)]",
+    },
+    emerald: {
+      hoverBorder: "hover:border-[var(--emerald-green)]/30",
+      hoverShadow: "hover:shadow-[0_0_40px_rgba(52,211,153,0.15)]",
+      iconBg: "bg-[var(--emerald-green)]/10",
+      titleHover: "group-hover:text-[var(--emerald-green)]",
+    },
+  };
 
-  return (
-    <Link
-      href={href}
-      className={`feature-card group from-slate-grey to-slate-grey/80 relative block h-full overflow-hidden rounded-2xl border-2 border-transparent bg-gradient-to-b p-8 text-center transition-all duration-500 ease-out hover:translate-y-[-6px] ${config.hover} ${config.border} ${className}`}
-    >
-      {/* Gradient overlay */}
-      <div
-        className={`pointer-events-none absolute inset-0 bg-gradient-to-b ${config.gradient} opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
-      />
+  const styles = variantStyles[variant];
 
-      {/* Shine effect on hover */}
+  const content = (
+    <>
+      {/* Shine effect */}
       <div className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/5 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center">
-        {/* Centered Icon */}
-        <div className="bg-aqua/10 mb-4 flex h-14 w-14 items-center justify-center rounded-xl text-4xl transition-transform duration-300 group-hover:scale-110">
-          {icon}
+      <div className="relative z-10 flex h-full flex-col items-center text-center">
+        {icon && (
+          <div
+            className={`${styles.iconBg} mb-4 flex items-center justify-center rounded-xl transition-transform duration-300 ${
+              typeof icon === "string"
+                ? "h-auto w-auto bg-transparent text-4xl"
+                : "h-14 w-14"
+            }`}
+          >
+            {icon}
+          </div>
+        )}
+        {title && (
+          <h3
+            className={`text-pure-quartz mb-2 text-lg font-semibold transition-colors duration-300 ${styles.titleHover}`}
+          >
+            {title}
+          </h3>
+        )}
+        <div className="text-diamond-dust/80 w-full text-sm leading-relaxed">
+          {description || children}
         </div>
-
-        {/* Title */}
-        <h3 className="text-pure-quartz group-hover:text-aqua mb-2 text-lg font-semibold transition-colors duration-300">
-          {title}
-        </h3>
-
-        {/* Description */}
-        <p className="text-diamond-dust/80 text-sm leading-relaxed">
-          {description}
-        </p>
       </div>
-    </Link>
+    </>
   );
+
+  const containerClasses = `feature-card group from-slate-grey to-slate-grey/80 relative overflow-hidden rounded-2xl border-2 border-transparent bg-gradient-to-b p-8 transition-all duration-500 hover:translate-y-[-6px] ${styles.hoverBorder} ${styles.hoverShadow} ${className}`;
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        target={target}
+        className={`${containerClasses} block h-full`}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return <div className={containerClasses}>{content}</div>;
 };

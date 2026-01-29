@@ -110,6 +110,20 @@ export function ScrollIndicator({ onVisibilityChange }: ScrollIndicatorProps) {
           strokeLinejoin="round"
         />
       </svg>
+      <style jsx>{`
+        @keyframes bounce-arrow {
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(8px);
+          }
+        }
+        .animate-bounce-arrow {
+          animation: bounce-arrow 3s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 }

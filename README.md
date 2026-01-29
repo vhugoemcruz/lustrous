@@ -36,14 +36,13 @@ A common problem is addressed: artists, especially beginners, often find technic
 
 An interactive tool for building and studying perspective. The interface allows artists to construct customizable perspective grids to assist in illustration work.
 
-| Feature                 | Description                                            |
-| ----------------------- | ------------------------------------------------------ |
-| **Vanishing Points**    | Support for 1, 2, or 3 configurable vanishing points   |
-| **Direct Manipulation** | Vanishing points can be dragged directly on the canvas |
-| **Eye-level Control**   | The eye level is adjusted via camera movement          |
-| **Horizon Rotation**    | The horizon line inclination can be customized         |
-| **Grid Density**        | Options include Low, Medium, and High density          |
-| **Export**              | Scenes are exported in Full HD (1920×1080)             |
+| Feature                 | Description                                              |
+| ----------------------- | -------------------------------------------------------- |
+| **Vanishing Points**    | Support for 1, 2, or 3 configurable vanishing points     |
+| **Eye-level Control**   | The eye level is adjusted via camera movement            |
+| **Horizon Rotation**    | The horizon line inclination can be customized           |
+| **Grid Lines Options**  | Options includes density, opacity and color of grid lines|
+| **Export**              | Scenes are exported in Full HD (1920×1080)               |
 
 ---
 
@@ -87,7 +86,7 @@ A tool for studying color theory through automated image analysis. The analyzer 
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/lustrous.git
+git clone https://github.com/vhugoemcruz/lustrous
 
 # Navigate to the directory
 cd lustrous
