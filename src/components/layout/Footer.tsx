@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LustrousLogo } from "@/components/ui/LustrousLogo";
+import { DiscordStatus } from "./DiscordStatus";
 
 /**
  * Footer links configuration.
@@ -33,7 +34,7 @@ export function Footer() {
       {/* Top Separator Line */}
       <div className="via-aqua/20 absolute top-0 right-0 left-0 h-px bg-gradient-to-r from-transparent to-transparent" />
 
-      <div className="relative container py-8 md:py-12">
+      <div className="relative container pt-8 pb-2 md:pt-12">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* Brand Column */}
           <div className="md:col-span-2">
@@ -41,6 +42,9 @@ export function Footer() {
             <p className="text-diamond-dust/70 mb-4 max-w-sm text-sm leading-relaxed">
               To help you create, Lustrous was born.
             </p>
+            <div className="mt-6">
+              <DiscordStatus />
+            </div>
           </div>
 
           {/* Community Links */}
@@ -81,7 +85,7 @@ export function Footer() {
         </div>
 
         {/* Bottom Footer - closer to bottom */}
-        <div className="mt-18 flex flex-col items-center gap-2 pt-8">
+        <div className="mt-18 mb-2 flex flex-col items-center gap-2 pt-8">
           <LustrousLogo size={24} showText />
           <p className="text-diamond-dust/40 text-m">
             © {new Date().getFullYear()} Lustrous. All tools run locally in your
