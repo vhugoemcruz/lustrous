@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LustrousLogo } from "@/components/ui/LustrousLogo";
 import { DiscordStatus } from "./DiscordStatus";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 /**
  * Footer links configuration.
@@ -38,60 +39,68 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* Brand Column */}
           <div className="md:col-span-2">
-            <LustrousLogo size={32} showText className="mb-4" />
-            <p className="text-diamond-dust/70 mb-4 max-w-sm text-sm leading-relaxed">
-              To help you create, Lustrous was born.
-            </p>
-            <div className="mt-6">
-              <DiscordStatus />
-            </div>
+            <ScrollReveal>
+              <LustrousLogo size={32} showText className="mb-4" />
+              <p className="text-diamond-dust/70 mb-4 max-w-sm text-sm leading-relaxed">
+                To help you create, Lustrous was born.
+              </p>
+              <div className="mt-6">
+                <DiscordStatus />
+              </div>
+            </ScrollReveal>
           </div>
 
           {/* Community Links */}
           <div>
-            <h4 className="text-pure-quartz mb-4 font-semibold">Community</h4>
-            <ul className="space-y-3">
-              {footerLinks.community.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    target={link.external ? "_blank" : undefined}
-                    rel={link.external ? "noopener noreferrer" : undefined}
-                    className="text-diamond-dust/70 hover:text-aqua text-sm transition-colors"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <ScrollReveal delay={100}>
+              <h4 className="text-pure-quartz mb-4 font-semibold">Community</h4>
+              <ul className="space-y-3">
+                {footerLinks.community.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      target={link.external ? "_blank" : undefined}
+                      rel={link.external ? "noopener noreferrer" : undefined}
+                      className="text-diamond-dust/70 hover:text-aqua text-sm transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </ScrollReveal>
           </div>
 
           {/* Tools Links */}
           <div>
-            <h4 className="text-pure-quartz mb-4 font-semibold">Tools</h4>
-            <ul className="space-y-3">
-              {footerLinks.resources.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-diamond-dust/70 hover:text-aqua text-sm transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <ScrollReveal delay={200}>
+              <h4 className="text-pure-quartz mb-4 font-semibold">Tools</h4>
+              <ul className="space-y-3">
+                {footerLinks.resources.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-diamond-dust/70 hover:text-aqua text-sm transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </ScrollReveal>
           </div>
         </div>
 
         {/* Bottom Footer - closer to bottom */}
-        <div className="mt-18 mb-2 flex flex-col items-center gap-2 pt-8">
-          <LustrousLogo size={24} showText />
-          <p className="text-diamond-dust/40 text-m">
-            © {new Date().getFullYear()} Lustrous. All tools run locally in your
-            browser.
-          </p>
-        </div>
+        <ScrollReveal delay={300}>
+          <div className="mt-18 mb-2 flex flex-col items-center gap-2 pt-8">
+            <LustrousLogo size={24} showText />
+            <p className="text-diamond-dust/40 text-m">
+              © {new Date().getFullYear()} Lustrous. All tools run locally in
+              your browser.
+            </p>
+          </div>
+        </ScrollReveal>
       </div>
     </footer>
   );
