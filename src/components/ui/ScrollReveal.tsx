@@ -21,6 +21,7 @@ interface ScrollRevealProps {
   /**
    * Additional CSS classes
    */
+  rootMargin?: string;
   className?: string;
 }
 
@@ -32,6 +33,7 @@ interface ScrollRevealProps {
 export const ScrollReveal: FC<ScrollRevealProps> = ({
   children,
   delay = 0,
+  rootMargin = "0px 0px -80px 0px",
   className = "",
 }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -55,7 +57,7 @@ export const ScrollReveal: FC<ScrollRevealProps> = ({
       },
       {
         threshold: 0.15,
-        rootMargin: "0px 0px -80px 0px",
+        rootMargin,
       }
     );
 

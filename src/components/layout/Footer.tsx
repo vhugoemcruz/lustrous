@@ -11,7 +11,7 @@ const footerLinks = {
     { label: "Discord", href: "https://discord.gg/lustrous", external: true },
     {
       label: "GitHub",
-      href: "https://github.com/victorgreca/lustrous",
+      href: "https://github.com/vhugoemcruz/lustrous",
       external: true,
     },
   ],
@@ -28,17 +28,17 @@ const footerLinks = {
  */
 export function Footer() {
   return (
-    <footer className="relative mt-auto overflow-hidden">
+    <footer className="relative mt-auto">
       {/* Gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0e] to-[#020203]" />
 
       {/* Top Separator Line */}
       <div className="via-aqua/20 absolute top-0 right-0 left-0 h-px bg-gradient-to-r from-transparent to-transparent" />
 
-      <div className="relative container pt-8 pb-2 md:pt-12">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+      <div className="relative mx-auto max-w-5xl px-8 pt-8 pb-8 md:pt-12">
+        <div className="flex flex-col gap-10 md:flex-row md:justify-between">
           {/* Brand Column */}
-          <div className="md:col-span-2">
+          <div className="max-w-sm">
             <ScrollReveal>
               <LustrousLogo size={32} showText className="mb-4" />
               <p className="text-diamond-dust/70 mb-4 max-w-sm text-sm leading-relaxed">
@@ -50,54 +50,57 @@ export function Footer() {
             </ScrollReveal>
           </div>
 
-          {/* Community Links */}
-          <div>
-            <ScrollReveal delay={100}>
-              <h4 className="text-pure-quartz mb-4 font-semibold">Community</h4>
-              <ul className="space-y-3">
-                {footerLinks.community.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      target={link.external ? "_blank" : undefined}
-                      rel={link.external ? "noopener noreferrer" : undefined}
-                      className="text-diamond-dust/70 hover:text-aqua text-sm transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </ScrollReveal>
-          </div>
+          {/* Links Container */}
+          <div className="flex gap-12 md:gap-24">
+            {/* Community Links */}
+            <div>
+              <ScrollReveal delay={100}>
+                <h4 className="text-pure-quartz mb-4 font-semibold">
+                  Community
+                </h4>
+                <ul className="space-y-3">
+                  {footerLinks.community.map((link) => (
+                    <li key={link.label}>
+                      <a
+                        href={link.href}
+                        target={link.external ? "_blank" : undefined}
+                        rel={link.external ? "noopener noreferrer" : undefined}
+                        className="text-diamond-dust/70 hover:text-aqua text-sm transition-colors"
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </ScrollReveal>
+            </div>
 
-          {/* Tools Links */}
-          <div>
-            <ScrollReveal delay={200}>
-              <h4 className="text-pure-quartz mb-4 font-semibold">Tools</h4>
-              <ul className="space-y-3">
-                {footerLinks.resources.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-diamond-dust/70 hover:text-aqua text-sm transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </ScrollReveal>
+            {/* Tools Links */}
+            <div>
+              <ScrollReveal delay={200}>
+                <h4 className="text-pure-quartz mb-4 font-semibold">Tools</h4>
+                <ul className="space-y-3">
+                  {footerLinks.resources.map((link) => (
+                    <li key={link.label}>
+                      <Link
+                        href={link.href}
+                        className="text-diamond-dust/70 hover:text-aqua text-sm transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </ScrollReveal>
+            </div>
           </div>
         </div>
 
         {/* Bottom Footer - closer to bottom */}
-        <ScrollReveal delay={300}>
-          <div className="mt-18 mb-2 flex flex-col items-center gap-2 pt-8">
-            <LustrousLogo size={24} showText />
-            <p className="text-diamond-dust/40 text-m">
-              © {new Date().getFullYear()} Lustrous. All tools run locally in
-              your browser.
+        <ScrollReveal delay={300} rootMargin="0px">
+          <div className="mt-10 flex flex-col items-center gap-2 pt-8">
+            <p className="text-diamond-dust/30 text-xs">
+              © {new Date().getFullYear()} Lustrous
             </p>
           </div>
         </ScrollReveal>

@@ -81,7 +81,7 @@ export function DiscordStatus() {
 
   // Final Design: Variation A (Minimalist) with larger avatar
   return (
-    <div className="flex items-center gap-2 text-sm">
+    <div className="flex items-center gap-4 text-sm">
       <span className="text-diamond-dust/40 font-medium">Created by</span>
       <a
         href={DISCORD_PROFILE_URL}
@@ -93,7 +93,7 @@ export function DiscordStatus() {
           <img
             src={data.avatar}
             alt={data.name}
-            className="h-8 w-8 rounded-full shadow-sm"
+            className="h-10 w-10 rounded-full shadow-sm"
           />
         ) : (
           <div className="h-8 w-8 rounded-full bg-[#5865F2]" />

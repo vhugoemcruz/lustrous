@@ -23,7 +23,7 @@ export function MainScrollContainer({ children }: MainScrollContainerProps) {
   return (
     <main
       id="main-scroll-container"
-      className="relative h-screen w-full overflow-x-hidden overflow-y-auto pt-[var(--header-height)]"
+      className="relative h-[100dvh] w-full overflow-x-hidden overflow-y-auto pt-[var(--header-height)]"
       style={{
         maskImage: shouldDisableMask
           ? "none"
