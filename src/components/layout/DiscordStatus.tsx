@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { DiscordIcon } from "@/components/ui/ToolIcons";
 
 interface DiscordData {
   name: string;
@@ -79,29 +80,46 @@ export function DiscordStatus() {
   // Safety guard (should not happen, but keeps component resilient)
   if (!data) return null;
 
-  // Final Design: Variation A (Minimalist) with larger avatar
+  // Final Design: Variation A (Minimalist) with larger avatar + Discord Icon + Tooltip
   return (
     <div className="flex items-center gap-4 text-sm">
       <span className="text-diamond-dust/40 font-medium">Created by</span>
-      <a
-        href={DISCORD_PROFILE_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group flex items-center gap-2 transition-transform hover:scale-105"
-      >
-        {data.avatar ? (
-          <img
-            src={data.avatar}
-            alt={data.name}
-            className="h-10 w-10 rounded-full shadow-sm"
-          />
-        ) : (
-          <div className="h-8 w-8 rounded-full bg-[#5865F2]" />
-        )}
-        <span className="text-diamond-dust group-hover:text-aqua font-medium transition-colors">
-          {data.name}
-        </span>
-      </a>
+      <div className="group relative w-fit">
+        <a
+          href={DISCORD_PROFILE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2"
+          aria-label="View Discord profile"
+        >
+          {data.avatar ? (
+            <img
+              src={data.avatar}
+              alt={data.name}
+              className="h-10 w-10 rounded-full shadow-sm transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <div className="h-8 w-8 rounded-full bg-[#5865F2]" />
+          )}
+
+          <div className="flex items-center gap-1.5 transition-colors duration-300">
+            <span className="text-diamond-dust font-medium transition-colors duration-300">
+              {data.name}
+            </span>
+            <DiscordIcon
+              size={14}
+              className="text-diamond-dust/40 transition-colors duration-300"
+            />
+          </div>
+        </a>
+
+        {/* Custom Tooltip */}
+        <div className="pointer-events-none absolute top-full left-5 mt-2 -translate-x-1/2 -translate-y-1 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-80">
+          <div className="text-diamond-dust rounded-md border border-white/5 bg-white/5 px-2 py-1 text-[10px] whitespace-nowrap backdrop-blur-md">
+            View Discord profile
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

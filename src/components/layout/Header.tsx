@@ -85,7 +85,7 @@ export function Header() {
           <button
             id="burger-toggle-btn"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="bg-pure-quartz/5 hover:bg-pure-quartz/10 relative z-[110] flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg transition-colors"
+            className="relative z-[110] flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg transition-colors"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
           >
