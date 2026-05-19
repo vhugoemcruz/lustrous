@@ -113,7 +113,7 @@ export const FeatureCard: FC<FeatureCardProps> = ({
             {title}
           </h3>
         )}
-        <div className="text-ink-charcoal/80 w-full text-sm leading-relaxed">
+        <div className="text-ink-charcoal w-full text-sm leading-relaxed">
           {description || children}
         </div>
       </div>

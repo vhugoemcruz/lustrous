@@ -235,7 +235,7 @@ export default function Home() {
                     </svg>
                     Buy me a coffee
                   </a>
-                  <p className="text-ink-light/60 mt-6 text-xs font-bold">
+                  <p className="text-ink-light mt-6 text-sm font-bold">
                     Support, when freely given, carries the greatest meaning.
                   </p>
                 </FeatureCard>

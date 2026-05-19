@@ -77,8 +77,8 @@
   /* ====================================
      TYPOGRAPHY
      ==================================== */
-  --font-headline: "Caveat", cursive;
-  --font-body: "Nunito", sans-serif;
+  --font-headline: var(--font-caveat), "Caveat", cursive;
+  --font-body: var(--font-caveat), "Caveat", cursive;
 
   /* ====================================
      SPACING
@@ -135,6 +135,11 @@
   --color-card-hover: var(--card-hover);
   --font-sans: var(--font-body);
   --font-display: var(--font-headline);
+  --font-size-xs: 1.05rem;
+  --font-size-sm: 1.2rem;
+  --font-size-base: 1.35rem;
+  --font-size-lg: 1.5rem;
+  --font-size-xl: 1.75rem;
 }
 
 /* ========================================
@@ -150,9 +155,14 @@ html {
 }
 
 body {
+  --font-body: var(--font-caveat), "Caveat", cursive;
+  --font-headline: var(--font-caveat), "Caveat", cursive;
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body);
+  font-size: 1.15rem; /* Cursive fonts are visually smaller, this offset improves readability */
+  font-weight: 500; /* Medium weight gives cursive ink lines a much more legible brush/gel pen appearance */
+  letter-spacing: 0.015em; /* Add slight tracking to prevent handwriting collisions */
   min-height: 100vh;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
