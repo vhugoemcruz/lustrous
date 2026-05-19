@@ -112,10 +112,6 @@ export function DiscordStatus() {
             <span className="text-ink-charcoal font-medium transition-colors duration-300">
               {data.name}
             </span>
-            <DiscordIcon
-              size={14}
-              className="text-ink-light/50 transition-colors duration-300"
-            />
           </div>
         </a>
 

@@ -8,6 +8,7 @@ import Link from "next/link";
 import { LustrousLogo } from "@/components/ui/LustrousLogo";
 import { DiscordStatus } from "./DiscordStatus";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { DiscordIcon, GithubIcon } from "@/components/ui/ToolIcons";
 
 /**
  * Footer links configuration.
@@ -71,19 +72,28 @@ export function Footer() {
                 <h4 className="text-ink-black mb-4 text-sm font-bold tracking-wide uppercase">
                   Community
                 </h4>
-                <ul className="space-y-3">
-                  {footerLinks.community.map((link) => (
-                    <li key={link.label}>
-                      <a
-                        href={link.href}
-                        target={link.external ? "_blank" : undefined}
-                        rel={link.external ? "noopener noreferrer" : undefined}
-                        className="text-ink-charcoal hover:text-wc-blue text-sm transition-colors"
-                      >
-                        {link.label}
-                      </a>
-                    </li>
-                  ))}
+                <ul className="space-y-3 flex flex-col items-start">
+                  {footerLinks.community.map((link) => {
+                    const isDiscord = link.label === "Discord";
+                    const isGithub = link.label === "GitHub";
+                    
+                    return (
+                      <li key={link.label}>
+                        <a
+                          href={link.href}
+                          target={link.external ? "_blank" : undefined}
+                          rel={link.external ? "noopener noreferrer" : undefined}
+                          className="group flex items-center gap-2 text-ink-charcoal hover:text-wc-blue text-sm transition-colors py-1"
+                        >
+                          <span className="text-ink-charcoal/50 transition-colors group-hover:text-wc-blue">
+                            {isDiscord && <DiscordIcon size={18} />}
+                            {isGithub && <GithubIcon size={18} />}
+                          </span>
+                          <span>{link.label}</span>
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
               </ScrollReveal>
             </div>
