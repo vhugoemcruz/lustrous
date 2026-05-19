@@ -1,20 +1,32 @@
+/**
+ * @module Typography
+ * @description Typographic components for the Artist's Studio theme.
+ * Uses handwritten headline font and warm ink colors.
+ */
+
 import { ElementType, HTMLAttributes, FC } from "react";
 
-// Section Label
+/**
+ * Section Label — small uppercase accent text.
+ * Styled with watercolor accent color and handwritten font.
+ */
 export const SectionLabel: FC<HTMLAttributes<HTMLSpanElement>> = ({
   className = "",
   children,
   ...props
 }) => (
   <span
-    className={`text-aqua mb-4 inline-block text-xs font-semibold tracking-widest uppercase ${className}`}
+    className={`text-wc-coral mb-4 inline-block font-[family-name:var(--font-headline)] text-sm font-semibold tracking-widest uppercase ${className}`}
     {...props}
   >
     {children}
   </span>
 );
 
-// Section Title
+/**
+ * Section Title — large heading with ink-black color.
+ * Uses handwritten headline font for artistic feel.
+ */
 interface SectionTitleProps extends HTMLAttributes<HTMLHeadingElement> {
   as?: ElementType;
 }
@@ -26,21 +38,24 @@ export const SectionTitle: FC<SectionTitleProps> = ({
   ...props
 }) => (
   <Component
-    className={`text-pure-quartz mb-4 font-[family-name:var(--font-headline)] text-4xl leading-[1.1] font-bold md:text-5xl ${className}`}
+    className={`text-ink-black mb-4 font-[family-name:var(--font-headline)] text-5xl leading-[1.1] font-bold md:text-6xl ${className}`}
     {...props}
   >
     {children}
   </Component>
 );
 
-// Section Subtitle
+/**
+ * Section Subtitle — descriptive paragraph with charcoal ink.
+ * Uses body font for readability, warm secondary color.
+ */
 export const SectionSubtitle: FC<HTMLAttributes<HTMLParagraphElement>> = ({
   className = "",
   children,
   ...props
 }) => (
   <p
-    className={`text-diamond-dust max-w-[1000px] text-lg leading-relaxed ${className}`}
+    className={`text-ink-charcoal max-w-[1000px] text-lg leading-relaxed ${className}`}
     {...props}
   >
     {children}

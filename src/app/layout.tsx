@@ -1,27 +1,27 @@
 /**
  * @module layout
- * @description Lustrous root layout with dark theme and base structure
+ * @description Lustrous root layout — Artist's Studio theme with warm paper aesthetics
  */
 
 import type { Metadata } from "next";
-import { Inter, Montserrat } from "next/font/google";
+import { Nunito, Caveat } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
-
-import { ParticleBackground } from "@/components/ui/ParticleBackground";
+import { ArtisticBackground } from "@/components/ui/ArtisticBackground";
 import { MainScrollContainer } from "@/components/layout/MainScrollContainer";
 
-const inter = Inter({
-  variable: "--font-inter",
+const nunito = Nunito({
+  variable: "--font-nunito",
   subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
+const caveat = Caveat({
+  variable: "--font-caveat",
   subsets: ["latin"],
   display: "swap",
-  weight: ["600", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -54,16 +54,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${montserrat.variable} bg-background text-foreground bg-deep-obsidian h-screen w-screen overflow-hidden antialiased`}
+        className={`${nunito.variable} ${caveat.variable} bg-background text-foreground h-screen w-screen overflow-hidden antialiased`}
         suppressHydrationWarning
       >
-        <ParticleBackground
-          particleCount={100}
-          connectionDistance={120}
-          interactive
-        />
+        <ArtisticBackground />
         <Header />
         <MainScrollContainer>{children}</MainScrollContainer>
       </body>

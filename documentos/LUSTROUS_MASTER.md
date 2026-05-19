@@ -77,7 +77,7 @@ graph TD
 - **Client-side first**: Processamento no navegador para reduzir custos
 - **Fullscreen tools**: Ferramentas ocupam 100% da viewport
 - **Export ready**: Todas as ferramentas exportam em Full HD
-- **Estética prismática**: Identidade visual inspirada em minerais e refração de luz
+- **Estética artística**: Identidade visual inspirada em ateliês, aquarelas e sketchbooks
 
 ---
 

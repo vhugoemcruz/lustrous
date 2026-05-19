@@ -53,7 +53,9 @@ Definições de termos técnicos utilizados na documentação do projeto.
 | Termo                 | Definição                                                                        |
 | --------------------- | -------------------------------------------------------------------------------- |
 | **Burger Menu**       | Menu hambúrguer — ícone de três linhas horizontais que expande menu de navegação |
-| **Glassmorphism**     | Estilo de design com fundo translúcido e efeito de vidro fosco                   |
+| **Sketch Card**       | Estilo de card com borda hand-drawn e sombra sutil, inspirado em sketchbooks     |
+| **Brush Underline**   | Efeito decorativo de sublinhado com estilo de pincelada de aquarela              |
+| **Watercolor Wash**   | Gradiente suave que imita a mistura de cores em aquarela                         |
 | **Microinteractions** | Pequenas animações de feedback para ações do usuário                             |
 | **Viewport**          | Área visível do navegador onde o conteúdo é renderizado                          |
 | **Client-side**       | Processamento executado no navegador do usuário                                  |

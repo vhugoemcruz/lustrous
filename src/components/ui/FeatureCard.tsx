@@ -1,62 +1,50 @@
 /**
  * @module FeatureCard
- * @description A generic card component with glass/gradient effect, used for all card sections (Tools, Community, Support).
- * Supports navigation (href) and the 5 mineral spectrum colors.
+ * @description Sketchbook-style card component for displaying tools and features.
+ * Cards look like paper notes with hand-drawn aesthetic borders,
+ * warm shadows, and watercolor accent hover effects.
  */
 
 import { FC, ReactNode } from "react";
 import Link from "next/link";
 
 export type FeatureCardVariant =
-  | "amethyst"
-  | "aqua"
-  | "magenta"
-  | "gold"
-  | "emerald";
+  | "blue"
+  | "coral"
+  | "violet"
+  | "sage"
+  | "amber";
 
 interface FeatureCardProps {
-  /**
-   * Optional icon or content to display at the top
-   */
+  /** Optional icon or content to display at the top */
   icon?: ReactNode;
-  /**
-   * Optional title string or element
-   */
+  /** Optional title string or element */
   title?: ReactNode;
-  /**
-   * Main content/description
-   */
+  /** Main content/description */
   children?: ReactNode;
-  /**
-   * Optional custom classes
-   */
+  /** Optional custom classes */
   className?: string;
-  /**
-   * Optional accent color for hover effects (default: aqua)
-   * Corresponds to the 5 particle colors.
-   */
+  /** Accent color variant for hover effects */
   variant?: FeatureCardVariant;
-  /**
-   * Optional link destination. If provided, card becomes a clickable Link.
-   */
+  /** Optional link destination. If provided, card becomes a clickable Link. */
   href?: string;
-  /**
-   * Optional description text (alternative to children)
-   */
+  /** Optional description text (alternative to children) */
   description?: string;
-  /**
-   * External link target
-   */
+  /** External link target */
   target?: string;
 }
 
+/**
+ * FeatureCard component — Sketchbook style.
+ * Paper-like card with watercolor accent hover effects.
+ */
 export const FeatureCard: FC<FeatureCardProps> = ({
   icon,
   title,
   children,
   description,
   className = "",
-  variant = "aqua",
+  variant = "blue",
   href,
   target,
 }) => {
@@ -65,39 +53,45 @@ export const FeatureCard: FC<FeatureCardProps> = ({
     {
       hoverBorder: string;
       hoverShadow: string;
-      iconBg: string;
+      iconColor: string;
+      accentBg: string;
       titleHover: string;
     }
   > = {
-    aqua: {
-      hoverBorder: "hover:border-[var(--aqua-cyan)]/30",
-      hoverShadow: "hover:shadow-[0_0_40px_rgba(0,255,255,0.15)]",
-      iconBg: "bg-[var(--aqua-cyan)]/10",
-      titleHover: "group-hover:text-[var(--aqua-cyan)]",
+    blue: {
+      hoverBorder: "hover:border-[var(--watercolor-blue)]/40",
+      hoverShadow: "hover:shadow-[3px_5px_20px_rgba(91,143,185,0.15)]",
+      iconColor: "text-wc-blue",
+      accentBg: "bg-[var(--watercolor-blue)]/8",
+      titleHover: "group-hover:text-[var(--watercolor-blue)]",
     },
-    amethyst: {
-      hoverBorder: "hover:border-[var(--amethyst-purple)]/30",
-      hoverShadow: "hover:shadow-[0_0_40px_rgba(138,43,226,0.15)]",
-      iconBg: "bg-[var(--amethyst-purple)]/10",
-      titleHover: "group-hover:text-[var(--amethyst-purple)]",
+    coral: {
+      hoverBorder: "hover:border-[var(--watercolor-coral)]/40",
+      hoverShadow: "hover:shadow-[3px_5px_20px_rgba(224,122,95,0.15)]",
+      iconColor: "text-wc-coral",
+      accentBg: "bg-[var(--watercolor-coral)]/8",
+      titleHover: "group-hover:text-[var(--watercolor-coral)]",
     },
-    magenta: {
-      hoverBorder: "hover:border-[var(--magenta-fusion)]/30",
-      hoverShadow: "hover:shadow-[0_0_40px_rgba(255,0,255,0.15)]",
-      iconBg: "bg-[var(--magenta-fusion)]/10",
-      titleHover: "group-hover:text-[var(--magenta-fusion)]",
+    violet: {
+      hoverBorder: "hover:border-[var(--watercolor-violet)]/40",
+      hoverShadow: "hover:shadow-[3px_5px_20px_rgba(139,107,181,0.15)]",
+      iconColor: "text-wc-violet",
+      accentBg: "bg-[var(--watercolor-violet)]/8",
+      titleHover: "group-hover:text-[var(--watercolor-violet)]",
     },
-    gold: {
-      hoverBorder: "hover:border-[var(--pyrite-gold)]/30",
-      hoverShadow: "hover:shadow-[0_0_40px_rgba(255,215,0,0.15)]",
-      iconBg: "bg-[var(--pyrite-gold)]/10",
-      titleHover: "group-hover:text-[var(--pyrite-gold)]",
+    sage: {
+      hoverBorder: "hover:border-[var(--watercolor-sage)]/40",
+      hoverShadow: "hover:shadow-[3px_5px_20px_rgba(129,178,154,0.15)]",
+      iconColor: "text-wc-sage",
+      accentBg: "bg-[var(--watercolor-sage)]/8",
+      titleHover: "group-hover:text-[var(--watercolor-sage)]",
     },
-    emerald: {
-      hoverBorder: "hover:border-[var(--emerald-green)]/30",
-      hoverShadow: "hover:shadow-[0_0_40px_rgba(52,211,153,0.15)]",
-      iconBg: "bg-[var(--emerald-green)]/10",
-      titleHover: "group-hover:text-[var(--emerald-green)]",
+    amber: {
+      hoverBorder: "hover:border-[var(--watercolor-amber)]/40",
+      hoverShadow: "hover:shadow-[3px_5px_20px_rgba(242,204,143,0.15)]",
+      iconColor: "text-wc-amber",
+      accentBg: "bg-[var(--watercolor-amber)]/8",
+      titleHover: "group-hover:text-[var(--watercolor-amber)]",
     },
   };
 
@@ -105,13 +99,10 @@ export const FeatureCard: FC<FeatureCardProps> = ({
 
   const content = (
     <>
-      {/* Shine effect */}
-      <div className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/5 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-
       <div className="relative z-10 flex h-full flex-col items-center text-center">
         {icon && (
           <div
-            className={`${styles.iconBg} mb-4 flex items-center justify-center rounded-xl transition-transform duration-300 ${
+            className={`${styles.accentBg} mb-4 flex items-center justify-center rounded-2xl transition-transform duration-300 ${
               typeof icon === "string"
                 ? "h-auto w-auto bg-transparent text-4xl"
                 : "h-14 w-14"
@@ -122,19 +113,19 @@ export const FeatureCard: FC<FeatureCardProps> = ({
         )}
         {title && (
           <h3
-            className={`text-pure-quartz mb-2 text-lg font-semibold transition-colors duration-300 ${styles.titleHover}`}
+            className={`text-ink-black mb-2 text-lg font-semibold transition-colors duration-300 ${styles.titleHover}`}
           >
             {title}
           </h3>
         )}
-        <div className="text-diamond-dust/80 w-full text-sm leading-relaxed">
+        <div className="text-ink-charcoal/80 w-full text-sm leading-relaxed">
           {description || children}
         </div>
       </div>
     </>
   );
 
-  const containerClasses = `feature-card group from-slate-grey to-slate-grey/80 relative overflow-hidden rounded-2xl border-2 border-transparent bg-gradient-to-b p-8 transition-all duration-500 hover:translate-y-[-6px] ${styles.hoverBorder} ${styles.hoverShadow} ${className}`;
+  const containerClasses = `feature-card group relative overflow-hidden rounded-2xl border-2 border-[var(--sketchbook-grey)] bg-[var(--paper-warm)] p-8 transition-all duration-400 hover:translate-y-[-4px] hover:rotate-[-0.5deg] ${styles.hoverBorder} ${styles.hoverShadow} ${className}`;
 
   if (href) {
     return (
@@ -142,11 +133,16 @@ export const FeatureCard: FC<FeatureCardProps> = ({
         href={href}
         target={target}
         className={`${containerClasses} block h-full`}
+        style={{ boxShadow: "var(--card-shadow)" }}
       >
         {content}
       </Link>
     );
   }
 
-  return <div className={containerClasses}>{content}</div>;
+  return (
+    <div className={containerClasses} style={{ boxShadow: "var(--card-shadow)" }}>
+      {content}
+    </div>
+  );
 };

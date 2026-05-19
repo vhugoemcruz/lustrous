@@ -1,6 +1,7 @@
 /**
  * @module Header
- * @description Fixed header with frosted glass effect, logo, nav links, and CTA button.
+ * @description Fixed header with paper-strip aesthetic, paintbrush logo, and hand-drawn nav.
+ * Replaces glass/frosted header with warm, artistic styling.
  */
 
 "use client";
@@ -10,7 +11,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BurgerMenu } from "./BurgerMenu";
 import { LustrousLogo } from "@/components/ui/LustrousLogo";
-
 import { NavLink } from "@/components/ui/NavLink";
 
 const navLinks = [
@@ -19,41 +19,49 @@ const navLinks = [
   { href: "/color-analysis", label: "Colors" },
 ];
 
-const PARTICLE_COLORS = [
-  "#8a2be2", // Amethyst Purple
-  "#00ffff", // Aqua Cyan
-  "#ff00ff", // Magenta Fusion
-  "#ffd700", // Pyrite Gold
-  "#34d399", // Emerald Green
+/** Watercolor palette for burger menu lines */
+const WATERCOLORS = [
+  "#5B8FB9", // blue
+  "#E07A5F", // coral
+  "#8B6BB5", // violet
+  "#81B29A", // sage
+  "#F2CC8F", // amber
 ];
 
 /**
- * Header component.
- * Contains the logo, navigation links (desktop), CTA button, and burger menu.
+ * Header component — Artist's Studio style.
+ * Paper-strip aesthetic with paintbrush logo and hand-drawn navigation.
  */
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [lineColors, setLineColors] = useState<string[]>([
-    "#fff",
-    "#fff",
-    "#fff",
+    "#4A4A4A",
+    "#4A4A4A",
+    "#4A4A4A",
   ]);
   const pathname = usePathname();
 
   useEffect(() => {
-    // Generate 3 random colors from the palette
     const randomColors = Array(3)
       .fill(null)
       .map(
-        () =>
-          PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)]
+        () => WATERCOLORS[Math.floor(Math.random() * WATERCOLORS.length)]
       );
     setLineColors(randomColors);
   }, []);
 
   return (
     <header className="fixed top-0 right-0 left-0 z-50 h-[var(--header-height)]">
-      <div className="flex h-full items-center justify-between px-20">
+      {/* Subtle bottom border — like a pencil line */}
+      <div
+        className="absolute right-0 bottom-0 left-0 h-px"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent 5%, var(--sketchbook-grey) 20%, var(--sketchbook-grey) 80%, transparent 95%)",
+        }}
+      />
+
+      <div className="flex h-full items-center justify-between px-8 md:px-20">
         {/* Logo - Left Corner */}
         <Link
           href="/"
@@ -79,9 +87,8 @@ export function Header() {
           ))}
         </nav>
 
-        {/* Right side: Burger Menu - Right Corner */}
+        {/* Right side: Burger Menu */}
         <div className="flex items-center">
-          {/* Burger Button - All screens */}
           <button
             id="burger-toggle-btn"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -93,28 +100,19 @@ export function Header() {
               className={`h-0.5 w-5 rounded-full transition-all duration-300 ${
                 isMenuOpen ? "translate-y-2 rotate-45" : ""
               }`}
-              style={{
-                backgroundColor: lineColors[0],
-                boxShadow: `0 0 8px ${lineColors[0]}`,
-              }}
+              style={{ backgroundColor: lineColors[0] }}
             />
             <span
               className={`h-0.5 w-5 rounded-full transition-all duration-300 ${
                 isMenuOpen ? "scale-0 opacity-0" : ""
               }`}
-              style={{
-                backgroundColor: lineColors[1],
-                boxShadow: `0 0 8px ${lineColors[1]}`,
-              }}
+              style={{ backgroundColor: lineColors[1] }}
             />
             <span
               className={`h-0.5 w-5 rounded-full transition-all duration-300 ${
                 isMenuOpen ? "-translate-y-2 -rotate-45" : ""
               }`}
-              style={{
-                backgroundColor: lineColors[2],
-                boxShadow: `0 0 8px ${lineColors[2]}`,
-              }}
+              style={{ backgroundColor: lineColors[2] }}
             />
           </button>
         </div>

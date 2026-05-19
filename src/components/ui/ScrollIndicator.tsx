@@ -1,7 +1,7 @@
 /**
  * @module ScrollIndicator
- * @description Simple scroll indicator with "Explore" text and animated arrow.
- * Fades out as user scrolls down.
+ * @description Artistic scroll indicator with a hand-drawn pencil icon
+ * and handwritten "Explore" text. Fades out as user scrolls down.
  */
 
 "use client";
@@ -14,27 +14,21 @@ interface ScrollIndicatorProps {
 }
 
 /**
- * ScrollIndicator component.
- * Displays "Explore" text with gradient animation and a bouncing arrow.
+ * ScrollIndicator component — Artist's Studio style.
+ * Displays handwritten "Explore" text with a bouncing hand-drawn pencil icon.
  * Fades out when user scrolls down.
- * @param props.onVisibilityChange - Optional callback when visibility changes
  */
 export function ScrollIndicator({ onVisibilityChange }: ScrollIndicatorProps) {
   const [isVisible, setIsVisible] = useState(true);
 
-  /**
-   * Handles scroll events to update visibility.
-   */
   const handleScroll = useCallback(() => {
     const mainContainer = document.getElementById("main-scroll-container");
     if (!mainContainer) return;
-
     const scrollY = mainContainer.scrollTop;
     const newVisible = scrollY < 100;
     setIsVisible(newVisible);
   }, []);
 
-  // Notify parent when visibility changes
   useEffect(() => {
     onVisibilityChange?.(isVisible);
   }, [isVisible, onVisibilityChange]);
@@ -42,7 +36,6 @@ export function ScrollIndicator({ onVisibilityChange }: ScrollIndicatorProps) {
   useEffect(() => {
     const mainContainer = document.getElementById("main-scroll-container");
     if (!mainContainer) return;
-
     mainContainer.addEventListener("scroll", handleScroll, { passive: true });
     return () => mainContainer.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
@@ -55,61 +48,28 @@ export function ScrollIndicator({ onVisibilityChange }: ScrollIndicatorProps) {
         pointerEvents: isVisible ? "auto" : "none",
       }}
     >
-      {/* Explore text with gradient */}
-      <span className="gradient-text-animated mb-2 text-sm font-semibold tracking-widest uppercase">
-        Explore
+      {/* Handwritten explore text */}
+      <span className="text-ink-light mb-2 font-[family-name:var(--font-headline)] text-base font-semibold tracking-widest">
+        explore
       </span>
 
-      {/* Animated arrow with animated gradient */}
+      {/* Hand-drawn down arrow/pencil */}
       <svg
         className="animate-bounce-arrow h-6 w-6"
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
       >
-        <defs>
-          <linearGradient
-            id="arrowGradientAnimated"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop offset="0%" stopColor="#8a2be2">
-              <animate
-                attributeName="stop-color"
-                values="#8a2be2; #00ffff; #ff00ff; #8a2be2"
-                dur="4s"
-                repeatCount="indefinite"
-              />
-            </stop>
-            <stop offset="50%" stopColor="#00ffff">
-              <animate
-                attributeName="stop-color"
-                values="#00ffff; #ff00ff; #8a2be2; #00ffff"
-                dur="4s"
-                repeatCount="indefinite"
-              />
-            </stop>
-            <stop offset="100%" stopColor="#ff00ff">
-              <animate
-                attributeName="stop-color"
-                values="#ff00ff; #8a2be2; #00ffff; #ff00ff"
-                dur="4s"
-                repeatCount="indefinite"
-              />
-            </stop>
-          </linearGradient>
-        </defs>
         <path
           d="M12 4v16m0 0l-6-6m6 6l6-6"
-          stroke="url(#arrowGradientAnimated)"
+          stroke="var(--ink-light)"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
       </svg>
+
       <style jsx>{`
         @keyframes bounce-arrow {
           0%,

@@ -1,6 +1,7 @@
 /**
  * @module LustrousLogo
- * @description SVG logo component featuring a polyhedral crystal with prismatic gradient.
+ * @description SVG logo component featuring a hand-drawn paintbrush with watercolor gradient.
+ * Replaces the crystal/mineral logo with an artistic brush icon.
  */
 
 import type { FC } from "react";
@@ -24,7 +25,7 @@ interface LustrousLogoProps {
 
 /**
  * LustrousLogo component.
- * Polyhedral crystal icon with optional text.
+ * Paintbrush icon with optional handwritten-style text.
  */
 export const LustrousLogo: FC<LustrousLogoProps> = ({
   size = 32,
@@ -32,8 +33,8 @@ export const LustrousLogo: FC<LustrousLogoProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      {/* Crystal Icon SVG */}
+    <div className={`flex items-center gap-2.5 ${className}`}>
+      {/* Paintbrush Icon SVG */}
       <svg
         width={size}
         height={size}
@@ -44,84 +45,53 @@ export const LustrousLogo: FC<LustrousLogoProps> = ({
       >
         <defs>
           <linearGradient
-            id="crystal-gradient"
+            id="brush-gradient"
             x1="0%"
             y1="0%"
             x2="100%"
             y2="100%"
           >
-            <stop offset="0%" stopColor="#8a2be2" />
-            <stop offset="50%" stopColor="#00ffff" />
-            <stop offset="100%" stopColor="#ff00ff" />
-          </linearGradient>
-          <linearGradient
-            id="crystal-face-light"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-          >
-            <stop offset="0%" stopColor="#00ffff" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#8a2be2" stopOpacity="0.4" />
-          </linearGradient>
-          <linearGradient
-            id="crystal-face-dark"
-            x1="0%"
-            y1="100%"
-            x2="100%"
-            y2="0%"
-          >
-            <stop offset="0%" stopColor="#ff00ff" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="#8a2be2" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="#5B8FB9" />
+            <stop offset="50%" stopColor="#8B6BB5" />
+            <stop offset="100%" stopColor="#E07A5F" />
           </linearGradient>
         </defs>
 
-        {/* Main hexagonal prism shape */}
-        <g>
-          {/* Top face */}
-          <polygon
-            points="16,2 26,8 26,14 16,10 6,14 6,8"
-            fill="url(#crystal-face-light)"
-            stroke="url(#crystal-gradient)"
-            strokeWidth="0.5"
-          />
-          {/* Left face */}
-          <polygon
-            points="6,8 16,10 16,24 6,18"
-            fill="url(#crystal-face-dark)"
-            stroke="url(#crystal-gradient)"
-            strokeWidth="0.5"
-          />
-          {/* Right face */}
-          <polygon
-            points="26,8 16,10 16,24 26,18"
-            fill="url(#crystal-face-light)"
-            stroke="url(#crystal-gradient)"
-            strokeWidth="0.5"
-          />
-          {/* Bottom point */}
-          <polygon
-            points="16,24 6,18 16,30 26,18"
-            fill="url(#crystal-face-dark)"
-            stroke="url(#crystal-gradient)"
-            strokeWidth="0.5"
-          />
-          {/* Center highlight line */}
-          <line
-            x1="16"
-            y1="2"
-            x2="16"
-            y2="30"
-            stroke="url(#crystal-gradient)"
-            strokeWidth="0.5"
-            opacity="0.5"
-          />
-        </g>
+        {/* Brush bristles — colorful tip */}
+        <path
+          d="M6,4 Q8,2 12,3 Q16,5 18,9 Q19,12 17,14 Q14,16 10,15 Q6,14 4,10 Q3,7 6,4Z"
+          fill="url(#brush-gradient)"
+          opacity="0.9"
+        />
+
+        {/* Ferrule (metal band) */}
+        <rect
+          x="14"
+          y="13"
+          width="6"
+          height="3"
+          rx="1"
+          fill="#8A8478"
+          opacity="0.7"
+          transform="rotate(40, 17, 14.5)"
+        />
+
+        {/* Brush handle */}
+        <path
+          d="M18,16 L28,27 Q29,28 28,29 Q27,30 26,29 L16,18"
+          stroke="#4A4A4A"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          fill="none"
+        />
+
+        {/* Small paint drip from brush tip */}
+        <circle cx="7" cy="6" r="1.5" fill="#E07A5F" opacity="0.6" />
       </svg>
 
-      {/* Logo Text */}
+      {/* Logo Text — handwritten style */}
       {showText && (
-        <span className="gradient-text font-[family-name:var(--font-montserrat)] text-xl font-bold tracking-tight">
+        <span className="gradient-text font-[family-name:var(--font-headline)] text-2xl font-bold tracking-tight">
           Lustrous
         </span>
       )}

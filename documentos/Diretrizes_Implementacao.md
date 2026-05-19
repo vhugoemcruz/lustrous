@@ -63,7 +63,7 @@ lustrous/
 │
 ├── public/
 │   ├── models/                   # Modelos .obj padrão
-│   └── fonts/                    # Fontes (Montserrat, Inter)
+│   └── fonts/                    # Fontes (Caveat, Nunito)
 │
 ├── documentos/                   # Documentação do projeto
 └── tests/                        # Testes
@@ -82,7 +82,7 @@ lustrous/
 | **Hooks**         | camelCase + use prefix | `usePerspectiveState.ts` |
 | **Engines/Utils** | kebab-case             | `perspective-engine.ts`  |
 | **Constantes**    | SCREAMING_SNAKE_CASE   | `MAX_FILE_SIZE`          |
-| **CSS Classes**   | kebab-case (Tailwind)  | `bg-deep-obsidian`       |
+| **CSS Classes**   | kebab-case (Tailwind)  | `bg-canvas-cream`        |
 | **Rotas**         | kebab-case             | `/perspective-grid`      |
 
 ---
@@ -140,31 +140,35 @@ export function calculatePerspectiveLines(
 ## Design Tokens
 
 ```css
-/* tokens.css */
+/* globals.css — Artist's Studio Theme */
 :root {
-  /* Cores principais */
-  --deep-obsidian: #0a0a0f;
-  --slate-grey: #2a2a3d;
-  --anthracite: #1a1a2e;
-  --quartz: #e8e8f0;
-  --diamond-dust: #ffffff;
+  /* Base — Canvas/Paper */
+  --canvas-cream: #f5f0e8;
+  --paper-warm: #ede7db;
+  --sketchbook-grey: #d4cfc5;
 
-  /* Cores de destaque */
-  --amethyst-purple: #9b59b6;
-  --aqua-cyan: #00d9ff;
-  --magenta-fusion: #ff006e;
-  --pyrite-gold: #ffd700;
+  /* Inks — Text Colors */
+  --ink-black: #2c2c2c;
+  --ink-charcoal: #4a4a4a;
+  --ink-light: #8a8478;
+
+  /* Watercolors — Accent Colors */
+  --watercolor-blue: #5b8fb9;
+  --watercolor-coral: #e07a5f;
+  --watercolor-violet: #8b6bb5;
+  --watercolor-sage: #81b29a;
+  --watercolor-amber: #f2cc8f;
 
   /* Tipografia */
-  --font-headline: "Montserrat", sans-serif;
-  --font-body: "Inter", sans-serif;
+  --font-headline: "Caveat", cursive;
+  --font-body: "Nunito", sans-serif;
 
-  /* Gradientes */
-  --gradient-prismatic: linear-gradient(
+  /* Gradientes — Watercolor Washes */
+  --gradient-watercolor: linear-gradient(
     135deg,
-    var(--amethyst-purple),
-    var(--aqua-cyan),
-    var(--magenta-fusion)
+    var(--watercolor-blue),
+    var(--watercolor-violet),
+    var(--watercolor-coral)
   );
 }
 ```

@@ -157,37 +157,38 @@ Lustrous será uma aplicação web moderna, focada em renderização client-side
 
 ### Conceito Visual
 
-Identidade inspirada em minerais, prismas e refração da luz.
+Identidade inspirada em ateliês de artistas, aquarelas e sketchbooks — uma estética quente, acolhedora e artesanal.
 
 ### Princípios
 
-- Precisão geométrica
-- Luminosidade espectral
-- Textura sutil
-- Fluxo contínuo
+- Estética de ateliê artístico
+- Texturas sutis de papel e canvas
+- Cores quentes e naturais (watercolors)
+- Animações orgânicas e fluidas
 
 ### Paleta de Cores
 
-(Deep Obsidian, Slate Grey, Anthracite, Quartz, Diamond Dust, Amethyst Purple, Aqua Cyan, Magenta Fusion, Pyrite Gold)
+(Canvas Cream, Paper Warm, Sketchbook Grey, Ink Black, Ink Charcoal, Ink Light, Watercolor Blue, Watercolor Coral, Watercolor Violet, Watercolor Sage, Watercolor Amber)
 
 ### Tipografia
 
-- Headline: Montserrat (Bold / SemiBold)
-- Body: Inter (Regular / Medium)
+- Headline: Caveat (cursive, hand-drawn)
+- Body: Nunito (sans-serif)
 
 ### Componentes
 
-- Botões com gradiente prismático
-- Cards com profundidade sutil
-- Inputs com foco luminoso
-- Navbar com efeito glassmorphism
+- Cards com estilo sketch/hand-drawn (sketch-card)
+- Brush-stroke underlines decorativos
+- Inputs com bordas orgânicas
+- Header com estética de papel, borda sutil tipo lápis
 
 ### Animações
 
-- Fundo animado com partículas prismáticas
-- Microinterações com glow
-- Transições rápidas de página
-- Loader baseado no logo (poliedro)
+- Fade-in com translate para revelação de conteúdo
+- Watercolor gradient shift no título
+- Paint splatter decorativos
+- Scroll reveal para seções
+- Transições suaves e orgânicas
 
 ---
 
