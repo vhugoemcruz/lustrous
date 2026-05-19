@@ -13,7 +13,6 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { ScrollIndicator } from "@/components/ui/ScrollIndicator";
 import { PaintSplatters } from "@/components/ui/PaintSplatters";
 
-
 import {
   ShieldIcon,
   BrowserIcon,
@@ -55,8 +54,7 @@ export default function Home() {
 
           {/* Tagline */}
           <p className="animate-fade-in-up-delayed text-ink-charcoal mb-4 text-xl font-light md:text-2xl lg:text-3xl">
-            The{" "}
-            <span className="brush-underline font-medium">all-in-one</span>{" "}
+            The <span className="brush-underline font-medium">all-in-one</span>{" "}
             creative assistant built for artists, just like you.
           </p>
 
@@ -140,8 +138,8 @@ export default function Home() {
               The idea is to provide you, as an artist, with a variety of tools
               to support your creative process.
               <br className="hidden md:block" />
-              And the best part: it&apos;s all free, as it&apos;s my way of supporting the
-              artistic community.
+              And the best part: it&apos;s all free, as it&apos;s my way of
+              supporting the artistic community.
             </SectionSubtitle>
           </ScrollReveal>
 
@@ -209,8 +207,8 @@ export default function Home() {
                     The intention here is to be something useful and totally
                     free to help.
                     <br className="hidden md:block" />
-                    If you&apos;d like to support the project and help it to keep
-                    going, you can do it here:
+                    If you&apos;d like to support the project and help it to
+                    keep going, you can do it here:
                   </p>
                   <a
                     href="https://ko-fi.com/lustrous"

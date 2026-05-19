@@ -77,9 +77,27 @@ export const BrowserIcon: FC<IconProps> = ({ size = 24, className = "" }) => (
       strokeWidth="1.5"
       opacity="0.6"
     />
-    <circle cx="6.5" cy="6.5" r="1" fill="var(--watercolor-coral)" opacity="0.6" />
-    <circle cx="9.5" cy="6.5" r="1" fill="var(--watercolor-amber)" opacity="0.6" />
-    <circle cx="12.5" cy="6.5" r="1" fill="var(--watercolor-sage)" opacity="0.6" />
+    <circle
+      cx="6.5"
+      cy="6.5"
+      r="1"
+      fill="var(--watercolor-coral)"
+      opacity="0.6"
+    />
+    <circle
+      cx="9.5"
+      cy="6.5"
+      r="1"
+      fill="var(--watercolor-amber)"
+      opacity="0.6"
+    />
+    <circle
+      cx="12.5"
+      cy="6.5"
+      r="1"
+      fill="var(--watercolor-sage)"
+      opacity="0.6"
+    />
   </svg>
 );
 
@@ -181,9 +199,24 @@ export const CubeViewerIcon: FC<IconProps> = ({
       fill="var(--watercolor-coral)"
       fillOpacity="0.08"
     />
-    <path d="M12 12L21 7" stroke="var(--watercolor-coral)" strokeWidth="1.2" opacity="0.5" />
-    <path d="M12 12L3 7" stroke="var(--watercolor-coral)" strokeWidth="1.2" opacity="0.5" />
-    <path d="M12 12V22" stroke="var(--watercolor-coral)" strokeWidth="1.2" opacity="0.5" />
+    <path
+      d="M12 12L21 7"
+      stroke="var(--watercolor-coral)"
+      strokeWidth="1.2"
+      opacity="0.5"
+    />
+    <path
+      d="M12 12L3 7"
+      stroke="var(--watercolor-coral)"
+      strokeWidth="1.2"
+      opacity="0.5"
+    />
+    <path
+      d="M12 12V22"
+      stroke="var(--watercolor-coral)"
+      strokeWidth="1.2"
+      opacity="0.5"
+    />
   </svg>
 );
 

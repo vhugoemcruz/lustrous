@@ -8,12 +8,7 @@
 import { FC, ReactNode } from "react";
 import Link from "next/link";
 
-export type FeatureCardVariant =
-  | "blue"
-  | "coral"
-  | "violet"
-  | "sage"
-  | "amber";
+export type FeatureCardVariant = "blue" | "coral" | "violet" | "sage" | "amber";
 
 interface FeatureCardProps {
   /** Optional icon or content to display at the top */
@@ -141,7 +136,10 @@ export const FeatureCard: FC<FeatureCardProps> = ({
   }
 
   return (
-    <div className={containerClasses} style={{ boxShadow: "var(--card-shadow)" }}>
+    <div
+      className={containerClasses}
+      style={{ boxShadow: "var(--card-shadow)" }}
+    >
       {content}
     </div>
   );

@@ -44,9 +44,7 @@ export function Header() {
   useEffect(() => {
     const randomColors = Array(3)
       .fill(null)
-      .map(
-        () => WATERCOLORS[Math.floor(Math.random() * WATERCOLORS.length)]
-      );
+      .map(() => WATERCOLORS[Math.floor(Math.random() * WATERCOLORS.length)]);
     setLineColors(randomColors);
   }, []);
 

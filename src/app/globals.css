@@ -70,11 +70,9 @@
   --card-hover: #e8e2d6;
   --card-border: var(--sketchbook-grey);
   --card-shadow:
-    2px 3px 8px rgba(44, 44, 44, 0.06),
-    4px 6px 20px rgba(44, 44, 44, 0.03);
+    2px 3px 8px rgba(44, 44, 44, 0.06), 4px 6px 20px rgba(44, 44, 44, 0.03);
   --card-shadow-hover:
-    3px 5px 15px rgba(44, 44, 44, 0.1),
-    6px 10px 30px rgba(44, 44, 44, 0.05);
+    3px 5px 15px rgba(44, 44, 44, 0.1), 6px 10px 30px rgba(44, 44, 44, 0.05);
 
   /* ====================================
      TYPOGRAPHY
@@ -307,9 +305,6 @@ body::before {
     background-position: 0% 50%;
   }
 }
-
-
-
 
 /* Gentle float for background elements */
 @keyframes gentle-float {

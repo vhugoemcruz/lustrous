@@ -12,7 +12,7 @@
 | `[ ]`  | P1         | S       | Configurar ESLint e Prettier                          | —     |
 | `[ ]`  | P1         | M       | Configurar estrutura base de pastas                   | —     |
 | `[ ]`  | P2         | M       | Configurar internacionalização (pt-BR, en, ja, zh-CN) | RF-05 |
-| `[x]`  | P2         | M       | Definir tema e tokens de design (Artist's Studio) | RF-08 |
+| `[x]`  | P2         | M       | Definir tema e tokens de design (Artist's Studio)     | RF-08 |
 
 ---
 
@@ -71,13 +71,13 @@
 
 ## UX / UI
 
-| Status | Prioridade | Esforço | Tarefa                                 | Ref          |
-| ------ | ---------- | ------- | -------------------------------------- | ------------ |
-| `[x]`  | P1         | M       | Tema base Artist's Studio (Canvas Cream)  | RF-08        |
-| `[x]`  | P2         | M       | Watercolor gradients nos componentes       | RF-08        |
-| `[x]`  | P3         | M       | Animações orgânicas e fade-in reveals      | RF-08        |
-| `[ ]`  | P2         | S       | Loader animado (pincel)                    | RF-08        |
-| `[ ]`  | P1         | S       | Mensagens de erro centralizadas            | US-17, RF-05 |
+| Status | Prioridade | Esforço | Tarefa                                   | Ref          |
+| ------ | ---------- | ------- | ---------------------------------------- | ------------ |
+| `[x]`  | P1         | M       | Tema base Artist's Studio (Canvas Cream) | RF-08        |
+| `[x]`  | P2         | M       | Watercolor gradients nos componentes     | RF-08        |
+| `[x]`  | P3         | M       | Animações orgânicas e fade-in reveals    | RF-08        |
+| `[ ]`  | P2         | S       | Loader animado (pincel)                  | RF-08        |
+| `[ ]`  | P1         | S       | Mensagens de erro centralizadas          | US-17, RF-05 |
 
 ---
 

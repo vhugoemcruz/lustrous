@@ -17,14 +17,32 @@ interface BurgerMenuProps {
 
 /** SVG icon components for each tool (replaces emoji per skill guidelines) */
 const PerspectiveIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--watercolor-blue)" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="var(--watercolor-blue)"
+    strokeWidth="2"
+    strokeLinecap="round"
+    aria-hidden="true"
+  >
     <path d="M2 3h20M4 3v18l8-4 8 4V3" />
     <path d="M8 8h8M6 13h12" opacity="0.6" />
   </svg>
 );
 
 const ViewerIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--watercolor-coral)" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="var(--watercolor-coral)"
+    strokeWidth="2"
+    strokeLinecap="round"
+    aria-hidden="true"
+  >
     <path d="M12 3L2 9l10 6 10-6-10-6Z" />
     <path d="M2 15l10 6 10-6" opacity="0.6" />
     <path d="M2 9v6" opacity="0.4" />
@@ -33,11 +51,41 @@ const ViewerIcon = () => (
 );
 
 const ColorIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--watercolor-violet)" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="var(--watercolor-violet)"
+    strokeWidth="2"
+    strokeLinecap="round"
+    aria-hidden="true"
+  >
     <circle cx="12" cy="12" r="9" />
-    <circle cx="12" cy="8" r="2.5" fill="var(--watercolor-coral)" opacity="0.4" stroke="none" />
-    <circle cx="8.5" cy="14" r="2.5" fill="var(--watercolor-blue)" opacity="0.4" stroke="none" />
-    <circle cx="15.5" cy="14" r="2.5" fill="var(--watercolor-amber)" opacity="0.4" stroke="none" />
+    <circle
+      cx="12"
+      cy="8"
+      r="2.5"
+      fill="var(--watercolor-coral)"
+      opacity="0.4"
+      stroke="none"
+    />
+    <circle
+      cx="8.5"
+      cy="14"
+      r="2.5"
+      fill="var(--watercolor-blue)"
+      opacity="0.4"
+      stroke="none"
+    />
+    <circle
+      cx="15.5"
+      cy="14"
+      r="2.5"
+      fill="var(--watercolor-amber)"
+      opacity="0.4"
+      stroke="none"
+    />
   </svg>
 );
 
@@ -134,9 +182,7 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
         aria-label="Main navigation"
         role="navigation"
         style={{
-          boxShadow: isOpen
-            ? "-4px 0 20px rgba(44, 44, 44, 0.08)"
-            : "none",
+          boxShadow: isOpen ? "-4px 0 20px rgba(44, 44, 44, 0.08)" : "none",
         }}
       >
         {/* Left pencil-line border */}

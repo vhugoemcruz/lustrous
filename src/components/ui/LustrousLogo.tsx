@@ -91,7 +91,7 @@ export const LustrousLogo: FC<LustrousLogoProps> = ({
 
       {/* Logo Text — handwritten style */}
       {showText && (
-        <span className="gradient-text font-[family-name:var(--font-headline)] text-2xl font-bold tracking-tight inline-block pl-[0.1em] pr-[0.5em] -ml-[0.1em] -mr-[0.5em]">
+        <span className="gradient-text -mr-[0.5em] -ml-[0.1em] inline-block pr-[0.5em] pl-[0.1em] font-[family-name:var(--font-headline)] text-2xl font-bold tracking-tight">
           Lustrous
         </span>
       )}

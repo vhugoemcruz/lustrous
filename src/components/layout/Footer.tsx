@@ -72,20 +72,22 @@ export function Footer() {
                 <h4 className="text-ink-black mb-4 text-sm font-bold tracking-wide uppercase">
                   Community
                 </h4>
-                <ul className="space-y-3 flex flex-col items-start">
+                <ul className="flex flex-col items-start space-y-3">
                   {footerLinks.community.map((link) => {
                     const isDiscord = link.label === "Discord";
                     const isGithub = link.label === "GitHub";
-                    
+
                     return (
                       <li key={link.label}>
                         <a
                           href={link.href}
                           target={link.external ? "_blank" : undefined}
-                          rel={link.external ? "noopener noreferrer" : undefined}
-                          className="group flex items-center gap-2 text-ink-charcoal hover:text-wc-blue text-sm transition-colors py-1"
+                          rel={
+                            link.external ? "noopener noreferrer" : undefined
+                          }
+                          className="group text-ink-charcoal hover:text-wc-blue flex items-center gap-2 py-1 text-sm transition-colors"
                         >
-                          <span className="text-ink-charcoal/50 transition-colors group-hover:text-wc-blue">
+                          <span className="text-ink-charcoal/50 group-hover:text-wc-blue transition-colors">
                             {isDiscord && <DiscordIcon size={18} />}
                             {isGithub && <GithubIcon size={18} />}
                           </span>
