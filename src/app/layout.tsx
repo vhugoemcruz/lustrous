@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 import { Nunito, Caveat } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
-import { ArtisticBackground } from "@/components/ui/ArtisticBackground";
+
 import { MainScrollContainer } from "@/components/layout/MainScrollContainer";
 
 const nunito = Nunito({
@@ -59,7 +59,7 @@ export default function RootLayout({
         className={`${nunito.variable} ${caveat.variable} bg-background text-foreground h-screen w-screen overflow-hidden antialiased`}
         suppressHydrationWarning
       >
-        <ArtisticBackground />
+
         <Header />
         <MainScrollContainer>{children}</MainScrollContainer>
       </body>

@@ -12,6 +12,7 @@ import { useState } from "react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { ScrollIndicator } from "@/components/ui/ScrollIndicator";
 import { PaintSplatters } from "@/components/ui/PaintSplatters";
+import { ArtisticBackground } from "@/components/ui/artistic-background";
 
 import {
   ShieldIcon,
@@ -39,6 +40,7 @@ export default function Home() {
 
   return (
     <>
+      <ArtisticBackground />
       <div className="relative">
         {/* Hero Section */}
         <section className="relative flex min-h-[calc(100vh-var(--header-height))] flex-col items-center justify-start px-4 pt-[calc(15vh+30px)] pb-24 text-center">
