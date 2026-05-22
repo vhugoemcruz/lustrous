@@ -110,6 +110,8 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
   canUndo,
   isEraser,
   onToggleEraser,
+  eraserSize,
+  onEraserSizeChange,
   toolbarBottom,
 }) => {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -146,7 +148,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
             display: "flex",
             flexDirection: "column",
             gap: "16px",
-            minWidth: "220px",
+            minWidth: "280px",
             animation: "panel-in 0.2s ease",
             position: "relative",
           }}
@@ -191,10 +193,10 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
           <div style={{ paddingTop: "4px" }}>
             <p
               style={{
-                fontSize: "10px",
+                fontSize: "13px",
                 fontWeight: 600,
                 letterSpacing: "0.08em",
-                color: "rgba(0,0,0,0.35)",
+                color: "#000",
                 marginBottom: "8px",
               }}
             >
@@ -245,10 +247,10 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
           <div>
             <p
               style={{
-                fontSize: "10px",
+                fontSize: "13px",
                 fontWeight: 600,
                 letterSpacing: "0.08em",
-                color: "rgba(0,0,0,0.35)",
+                color: "#000",
                 marginBottom: "8px",
               }}
             >
@@ -275,8 +277,8 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
               <button
                 onClick={onDeactivateColor}
                 style={{
-                  fontSize: "12px",
-                  color: "rgba(0,0,0,0.45)",
+                  fontSize: "14px",
+                  color: "#000",
                   background: "none",
                   border: "1px solid rgba(0,0,0,0.12)",
                   borderRadius: "10px",
@@ -296,7 +298,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
                   (e.currentTarget as HTMLButtonElement).style.background =
                     "none";
                   (e.currentTarget as HTMLButtonElement).style.color =
-                    "rgba(0,0,0,0.45)";
+                    "#000";
                 }}
                 aria-label="Remove colour"
               >
@@ -306,8 +308,8 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
             <button
               onClick={onClear}
               style={{
-                fontSize: "12px",
-                color: "rgba(0,0,0,0.45)",
+                fontSize: "14px",
+                color: "#000",
                 background: "none",
                 border: "1px solid rgba(0,0,0,0.12)",
                 borderRadius: "10px",
@@ -327,7 +329,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
                 (e.currentTarget as HTMLButtonElement).style.background =
                   "none";
                 (e.currentTarget as HTMLButtonElement).style.color =
-                  "rgba(0,0,0,0.45)";
+                  "#000";
               }}
               aria-label="Clear canvas"
             >
@@ -371,37 +373,85 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
           </button>
         )}
 
-        {/* Eraser button — only when colour is selected */}
+        {/* Eraser button + horizontal size slider */}
         {selectedColor && (
-          <button
-            onClick={onToggleEraser}
-            title={isEraser ? "Switch to pencil" : "Switch to eraser"}
-            style={{
-              width: "44px",
-              height: "44px",
-              borderRadius: "50%",
-              background: isEraser
-                ? "rgba(61, 61, 78, 0.85)"
-                : "rgba(255,255,255,0.92)",
-              backdropFilter: "blur(16px)",
-              WebkitBackdropFilter: "blur(16px)",
-              border: isEraser ? "none" : "1.5px solid rgba(0,0,0,0.10)",
-              boxShadow: isEraser
-                ? "0 6px 24px rgba(61,61,78,0.40)"
-                : "0 4px 16px rgba(0,0,0,0.12)",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition:
-                "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
-              outline: "none",
-            }}
-            aria-label={isEraser ? "Switch to pencil" : "Switch to eraser"}
-            aria-pressed={isEraser}
-          >
-            <EraserIcon stroke={isEraser ? "#fff" : "#888"} />
-          </button>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            {/* Eraser size slider — visible only when eraser is active */}
+            {isEraser && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  background: "rgba(255,255,255,0.92)",
+                  backdropFilter: "blur(16px)",
+                  WebkitBackdropFilter: "blur(16px)",
+                  borderRadius: "22px",
+                  padding: "6px 12px",
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+                  border: "1.5px solid rgba(0,0,0,0.10)",
+                  animation: "panel-in 0.2s ease",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    color: "#000",
+                    letterSpacing: "0.06em",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {eraserSize}px
+                </span>
+                <input
+                  type="range"
+                  min={2}
+                  max={24}
+                  step={1}
+                  value={eraserSize}
+                  onChange={(e) => onEraserSizeChange(Number(e.target.value))}
+                  style={{
+                    width: "80px",
+                    accentColor: "#3D3D4E",
+                    margin: 0,
+                  }}
+                  aria-label="Eraser size"
+                />
+              </div>
+            )}
+
+            <button
+              onClick={onToggleEraser}
+              title={isEraser ? "Switch to pencil" : "Switch to eraser"}
+              style={{
+                width: "44px",
+                height: "44px",
+                borderRadius: "50%",
+                background: isEraser
+                  ? "rgba(61, 61, 78, 0.85)"
+                  : "rgba(255,255,255,0.92)",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                border: isEraser ? "none" : "1.5px solid rgba(0,0,0,0.10)",
+                boxShadow: isEraser
+                  ? "0 6px 24px rgba(61,61,78,0.40)"
+                  : "0 4px 16px rgba(0,0,0,0.12)",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition:
+                  "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                outline: "none",
+                flexShrink: 0,
+              }}
+              aria-label={isEraser ? "Switch to pencil" : "Switch to eraser"}
+              aria-pressed={isEraser}
+            >
+              <EraserIcon stroke={isEraser ? "#fff" : "#888"} />
+            </button>
+          </div>
         )}
 
         {/* ── Pencil toggle button ── */}

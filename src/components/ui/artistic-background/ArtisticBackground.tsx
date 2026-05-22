@@ -98,6 +98,7 @@ export function ArtisticBackground() {
   const [panelOpen, setPanelOpen] = useState(false);
   const [hasActivated, setHasActivated] = useState(false);
   const [isEraser, setIsEraser] = useState(false);
+  const [eraserSize, setEraserSize] = useState(8);
 
   /** Undo history — stores canvas snapshots after each stroke. */
   const [history, setHistory] = useState<ImageData[]>([]);
@@ -235,7 +236,7 @@ export function ArtisticBackground() {
         if (isEraser) {
           ctx.globalCompositeOperation = "destination-out";
           ctx.beginPath();
-          ctx.arc(pos.x, pos.y, brushSize, 0, Math.PI * 2);
+          ctx.arc(pos.x, pos.y, eraserSize, 0, Math.PI * 2);
           ctx.fill();
           ctx.globalCompositeOperation = "source-over";
         } else {
@@ -254,7 +255,7 @@ export function ArtisticBackground() {
           ctx.beginPath();
           ctx.moveTo(lastPosRef.current.x, lastPosRef.current.y);
           ctx.lineTo(pos.x, pos.y);
-          ctx.lineWidth = brushSize * 2;
+          ctx.lineWidth = eraserSize * 2;
           ctx.lineCap = "round";
           ctx.stroke();
           ctx.globalCompositeOperation = "source-over";
@@ -290,7 +291,7 @@ export function ArtisticBackground() {
       isDrawingRef.current = false;
       lastPosRef.current = null;
     };
-  }, [selectedColor, brushSize, getCanvasPoint, isEraser, saveHistory]);
+  }, [selectedColor, brushSize, eraserSize, getCanvasPoint, isEraser, saveHistory]);
 
   // ── Ambient strokes (deterministic layout) ──────────────────────────────────
 
@@ -363,6 +364,8 @@ export function ArtisticBackground() {
         canUndo={historyStep >= 0}
         isEraser={isEraser}
         onToggleEraser={handleToggleEraser}
+        eraserSize={eraserSize}
+        onEraserSizeChange={setEraserSize}
         toolbarBottom={toolbarBottom}
       />
     </>

@@ -68,6 +68,10 @@ export interface DrawingToolbarProps {
   isEraser: boolean;
   /** Callback to toggle eraser mode on/off. */
   onToggleEraser: () => void;
+  /** Current eraser radius in pixels. */
+  eraserSize: number;
+  /** Callback to change the eraser radius. */
+  onEraserSizeChange: (size: number) => void;
   /** CSS `bottom` value for the toolbar (for footer-aware positioning). */
   toolbarBottom: string;
 }
