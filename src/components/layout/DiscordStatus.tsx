@@ -116,7 +116,7 @@ export function DiscordStatus() {
         </a>
 
         {/* Custom Tooltip */}
-        <div className="pointer-events-none absolute top-full left-5 mt-2 -translate-x-1/2 -translate-y-1 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-80">
+        <div className="pointer-events-none absolute top-full left-6 mt-2 -translate-x-1/2 -translate-y-1 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
           <div className="text-ink-charcoal rounded-md border border-[var(--sketchbook-grey)] bg-[var(--paper-warm)] px-3 py-1.5 text-xs whitespace-nowrap">
             View Discord profile
           </div>
