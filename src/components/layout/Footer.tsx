@@ -49,13 +49,13 @@ export function Footer() {
         }}
       />
 
-      <div className="relative mx-auto max-w-5xl px-8 pt-8 pb-8 md:pt-12">
+      <div className="relative mx-auto max-w-5xl px-8 pt-12 pb-12 md:pt-16">
         <div className="flex flex-col gap-10 md:flex-row md:justify-between">
           {/* Brand Column */}
           <div className="max-w-sm">
             <ScrollReveal>
-              <LustrousLogo size={32} showText className="mb-4" />
-              <p className="text-ink-charcoal mb-4 max-w-sm text-sm leading-relaxed">
+              <LustrousLogo size={48} showText className="mb-6" />
+              <p className="text-ink-charcoal mb-6 max-w-sm text-lg leading-relaxed">
                 To help you create, Lustrous was born.
               </p>
               <div className="mt-6">
@@ -69,10 +69,10 @@ export function Footer() {
             {/* Community Links */}
             <div>
               <ScrollReveal delay={100}>
-                <h4 className="text-ink-black mb-4 text-sm font-bold tracking-wide uppercase">
+                <h4 className="text-ink-black mb-5 text-lg font-bold tracking-wide uppercase">
                   Community
                 </h4>
-                <ul className="flex flex-col items-start space-y-3">
+                <ul className="flex flex-col items-start space-y-4">
                   {footerLinks.community.map((link) => {
                     const isDiscord = link.label === "Discord";
                     const isGithub = link.label === "GitHub";
@@ -85,11 +85,11 @@ export function Footer() {
                           rel={
                             link.external ? "noopener noreferrer" : undefined
                           }
-                          className="group text-ink-charcoal hover:text-wc-blue flex items-center gap-2 py-1 text-sm transition-colors"
+                          className="group text-ink-charcoal hover:text-wc-blue flex items-center gap-3 py-2 text-lg transition-colors"
                         >
                           <span className="text-ink-charcoal/50 group-hover:text-wc-blue transition-colors">
-                            {isDiscord && <DiscordIcon size={18} />}
-                            {isGithub && <GithubIcon size={18} />}
+                            {isDiscord && <DiscordIcon size={26} />}
+                            {isGithub && <GithubIcon size={26} />}
                           </span>
                           <span>{link.label}</span>
                         </a>
@@ -103,15 +103,15 @@ export function Footer() {
             {/* Tools Links */}
             <div>
               <ScrollReveal delay={200}>
-                <h4 className="text-ink-black mb-4 text-sm font-bold tracking-wide uppercase">
+                <h4 className="text-ink-black mb-5 text-lg font-bold tracking-wide uppercase">
                   Tools
                 </h4>
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {footerLinks.resources.map((link) => (
                     <li key={link.label}>
                       <Link
                         href={link.href}
-                        className="text-ink-charcoal hover:text-wc-blue text-sm transition-colors"
+                        className="text-ink-charcoal hover:text-wc-blue text-lg transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -126,7 +126,7 @@ export function Footer() {
         {/* Bottom Footer */}
         <ScrollReveal delay={300} rootMargin="0px">
           <div className="mt-10 flex flex-col items-center gap-2 pt-8">
-            <p className="text-ink-charcoal/60 text-xs">
+            <p className="text-ink-charcoal/60 text-base">
               © {new Date().getFullYear()} Lustrous
             </p>
           </div>
