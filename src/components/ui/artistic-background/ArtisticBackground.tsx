@@ -227,6 +227,9 @@ export function ArtisticBackground() {
       const target = (e.target ?? e.currentTarget) as HTMLElement | null;
       if (target?.closest(INTERACTIVE_SELECTOR)) return;
 
+      // Prevent browser drag-to-select behavior while painting
+      e.preventDefault();
+
       isDrawingRef.current = true;
       const pos = getCanvasPoint(e);
       lastPosRef.current = pos;
@@ -277,7 +280,7 @@ export function ArtisticBackground() {
     document.addEventListener("mousedown", onPointerStart);
     document.addEventListener("mousemove", onPointerMove);
     document.addEventListener("mouseup", onPointerEnd);
-    document.addEventListener("touchstart", onPointerStart, { passive: true });
+    document.addEventListener("touchstart", onPointerStart, { passive: false });
     document.addEventListener("touchmove", onPointerMove, { passive: true });
     document.addEventListener("touchend", onPointerEnd);
 
@@ -292,6 +295,18 @@ export function ArtisticBackground() {
       lastPosRef.current = null;
     };
   }, [selectedColor, brushSize, eraserSize, getCanvasPoint, isEraser, saveHistory]);
+
+  // ── Disable text selection while drawing is active ──────────────────────────
+
+  useEffect(() => {
+    if (!selectedColor) return;
+
+    document.body.style.userSelect = "none";
+
+    return () => {
+      document.body.style.userSelect = "";
+    };
+  }, [selectedColor]);
 
   // ── Ambient strokes (deterministic layout) ──────────────────────────────────
 

@@ -94,7 +94,7 @@ export const FeatureCard: FC<FeatureCardProps> = ({
 
   const content = (
     <>
-      <div className="relative z-10 flex h-full flex-col items-center text-center">
+      <div className="relative z-10 flex h-full flex-col items-center justify-center text-center">
         {icon && (
           <div
             className={`${styles.accentBg} mb-4 flex items-center justify-center rounded-2xl transition-transform duration-300 ${
@@ -137,7 +137,7 @@ export const FeatureCard: FC<FeatureCardProps> = ({
 
   return (
     <div
-      className={containerClasses}
+      className={`${containerClasses} h-full`}
       style={{ boxShadow: "var(--card-shadow)" }}
     >
       {content}
