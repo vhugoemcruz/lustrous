@@ -173,7 +173,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
             flexDirection: "column",
             gap: "16px",
             minWidth: "280px",
-            animation: "panel-in 0.2s ease",
+            zIndex: 100, 
             position: "relative",
           }}
           role="toolbar"
@@ -510,7 +510,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
                 fontWeight: 600,
                 color: "rgba(0,0,0,0.50)",
                 lineHeight: 1,
-                animation: "panel-in 0.2s ease",
+                zIndex: 50, 
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLButtonElement).style.background =
