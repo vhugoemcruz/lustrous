@@ -19,14 +19,16 @@ import { useEffect } from "react";
  * useClickOutside(panelRef, () => setOpen(false), isOpen);
  * ```
  *
- * @param ref     - Ref pointing to the "inside" element.
- * @param handler - Callback to execute on outside click.
- * @param enabled - When `false`, no listeners are attached.
+ * @param ref         - Ref pointing to the "inside" element.
+ * @param handler     - Callback to execute on outside click.
+ * @param enabled     - When `false`, no listeners are attached.
+ * @param excludeRefs - Additional refs whose elements should also count as "inside".
  */
 export function useClickOutside(
   ref: React.RefObject<HTMLElement | null>,
   handler: () => void,
   enabled: boolean,
+  excludeRefs?: React.RefObject<HTMLElement | null>[],
 ): void {
   useEffect(() => {
     if (!enabled) return;
@@ -34,6 +36,12 @@ export function useClickOutside(
     const listener = (event: MouseEvent | TouchEvent) => {
       const el = ref.current;
       if (!el || el.contains(event.target as Node)) return;
+
+      // Check if click landed on an excluded element
+      if (excludeRefs?.some((r) => r.current?.contains(event.target as Node))) {
+        return;
+      }
+
       handler();
     };
 
@@ -44,5 +52,5 @@ export function useClickOutside(
       document.removeEventListener("mousedown", listener, { capture: true });
       document.removeEventListener("touchstart", listener, { capture: true });
     };
-  }, [ref, handler, enabled]);
+  }, [ref, handler, enabled, excludeRefs]);
 }

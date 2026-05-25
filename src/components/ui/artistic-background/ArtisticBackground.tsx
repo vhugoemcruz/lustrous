@@ -142,6 +142,17 @@ export function ArtisticBackground() {
     }
   }, []);
 
+  /** Exports the drawing canvas as a PNG file download. */
+  const exportCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const link = document.createElement("a");
+    link.download = `lustrous-drawing-${Date.now()}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  }, []);
+
   /** Saves current canvas state to history for undo. */
   const saveHistory = useCallback(() => {
     const canvas = canvasRef.current;
@@ -375,6 +386,7 @@ export function ArtisticBackground() {
         brushSize={brushSize}
         onBrushSizeChange={setBrushSize}
         onClear={clearCanvas}
+        onExport={exportCanvas}
         onUndo={handleUndo}
         canUndo={historyStep >= 0}
         isEraser={isEraser}

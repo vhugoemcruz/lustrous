@@ -72,6 +72,8 @@ export interface DrawingToolbarProps {
   eraserSize: number;
   /** Callback to change the eraser radius. */
   onEraserSizeChange: (size: number) => void;
+  /** Callback to export the drawing canvas as an image. */
+  onExport: () => void;
   /** CSS `bottom` value for the toolbar (for footer-aware positioning). */
   toolbarBottom: string;
 }

@@ -88,11 +88,32 @@ const UndoIcon: FC = () => (
   </svg>
 );
 
+/**
+ * Export icon — download arrow pointing into a tray.
+ */
+const ExportIcon: FC = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.75"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="7 10 12 15 17 10" />
+    <line x1="12" y1="15" x2="12" y2="3" />
+  </svg>
+);
+
 // ─── Drawing Toolbar ──────────────────────────────────────────────────────────
 
 /**
  * Floating drawing toolbar that provides colour selection, brush-size control,
- * eraser mode, undo, and canvas clear functionality.
+ * eraser mode, undo, export, and canvas clear functionality.
  *
  * Positioned `fixed` at the bottom-right of the viewport. The `toolbarBottom`
  * prop allows the parent to push the toolbar up when the page footer is visible.
@@ -106,6 +127,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
   brushSize,
   onBrushSizeChange,
   onClear,
+  onExport,
   onUndo,
   canUndo,
   isEraser,
@@ -115,6 +137,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
   toolbarBottom,
 }) => {
   const panelRef = useRef<HTMLDivElement>(null);
+  const pencilBtnRef = useRef<HTMLButtonElement>(null);
 
   useClickOutside(
     panelRef,
@@ -122,6 +145,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
       if (panelOpen) onTogglePanel();
     },
     panelOpen,
+    [pencilBtnRef],
   );
 
   return (
@@ -271,40 +295,42 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
             />
           </div>
 
-          {/* Action buttons */}
+          {/* Action buttons — Export + Clear */}
           <div style={{ display: "flex", gap: "8px" }}>
-            {selectedColor && (
-              <button
-                onClick={onDeactivateColor}
-                style={{
-                  fontSize: "14px",
-                  color: "#000",
-                  background: "none",
-                  border: "1px solid rgba(0,0,0,0.12)",
-                  borderRadius: "10px",
-                  padding: "6px 12px",
-                  cursor: "pointer",
-                  transition: "background 0.15s ease, color 0.15s ease",
-                  letterSpacing: "0.02em",
-                  flex: 1,
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.background =
-                    "rgba(0,0,0,0.06)";
-                  (e.currentTarget as HTMLButtonElement).style.color =
-                    "rgba(0,0,0,0.70)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.background =
-                    "none";
-                  (e.currentTarget as HTMLButtonElement).style.color =
-                    "#000";
-                }}
-                aria-label="Remove colour"
-              >
-                ✕ Remove colour
-              </button>
-            )}
+            <button
+              onClick={onExport}
+              style={{
+                fontSize: "14px",
+                color: "#000",
+                background: "none",
+                border: "1px solid rgba(0,0,0,0.12)",
+                borderRadius: "10px",
+                padding: "6px 12px",
+                cursor: "pointer",
+                transition: "background 0.15s ease, color 0.15s ease",
+                letterSpacing: "0.02em",
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "6px",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background =
+                  "rgba(0,0,0,0.06)";
+                (e.currentTarget as HTMLButtonElement).style.color =
+                  "rgba(0,0,0,0.70)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background =
+                  "none";
+                (e.currentTarget as HTMLButtonElement).style.color =
+                  "#000";
+              }}
+              aria-label="Export drawing"
+            >
+              <ExportIcon /> Export
+            </button>
             <button
               onClick={onClear}
               style={{
@@ -339,7 +365,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
         </div>
       )}
 
-      {/* ── Action buttons row (undo + eraser + pencil) ── */}
+      {/* ── Action buttons row (undo + eraser + deactivate/pencil) ── */}
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         {/* Undo button — only when colour is selected */}
         {selectedColor && (
@@ -454,39 +480,91 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
           </div>
         )}
 
-        {/* ── Pencil toggle button ── */}
-        <button
-          onClick={onTogglePanel}
-          title={selectedColor ? "Drawing options" : "Start painting"}
-          style={{
-            width: "52px",
-            height: "52px",
-            borderRadius: "50%",
-            background: selectedColor
-              ? selectedColor.hex
-              : "rgba(255,255,255,0.92)",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
-            border: selectedColor ? "none" : "1.5px solid rgba(0,0,0,0.10)",
-            boxShadow: selectedColor
-              ? `0 6px 24px ${selectedColor.hex}66`
-              : "0 4px 16px rgba(0,0,0,0.12)",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            transition:
-              "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
-            transform: panelOpen
-              ? "scale(1.1) rotate(-15deg)"
-              : "scale(1) rotate(0deg)",
-            outline: "none",
-          }}
-          aria-label={selectedColor ? "Drawing options" : "Start painting"}
-          aria-expanded={panelOpen}
-        >
-          <PencilIcon stroke={selectedColor ? "#fff" : "#888"} />
-        </button>
+        {/* ── Pencil toggle button with deactivate X above ── */}
+        <div style={{ position: "relative" }}>
+          {/* Deactivate button — small X above pencil, only when colour is active */}
+          {selectedColor && (
+            <button
+              onClick={onDeactivateColor}
+              title="Stop painting"
+              style={{
+                position: "absolute",
+                bottom: "calc(100% + 10px)",
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: "28px",
+                height: "28px",
+                borderRadius: "50%",
+                background: "rgba(255,255,255,0.92)",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                border: "1.5px solid rgba(0,0,0,0.10)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                outline: "none",
+                fontSize: "13px",
+                fontWeight: 600,
+                color: "rgba(0,0,0,0.50)",
+                lineHeight: 1,
+                animation: "panel-in 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background =
+                  "rgba(0,0,0,0.08)";
+                (e.currentTarget as HTMLButtonElement).style.color =
+                  "rgba(0,0,0,0.70)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background =
+                  "rgba(255,255,255,0.92)";
+                (e.currentTarget as HTMLButtonElement).style.color =
+                  "rgba(0,0,0,0.50)";
+              }}
+              aria-label="Stop painting"
+            >
+              ✕
+            </button>
+          )}
+
+          {/* ── Pencil toggle button ── */}
+          <button
+            ref={pencilBtnRef}
+            onClick={onTogglePanel}
+            title={selectedColor ? "Drawing options" : "Start painting"}
+            style={{
+              width: "52px",
+              height: "52px",
+              borderRadius: "50%",
+              background: selectedColor
+                ? selectedColor.hex
+                : "rgba(255,255,255,0.92)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
+              border: selectedColor ? "none" : "1.5px solid rgba(0,0,0,0.10)",
+              boxShadow: selectedColor
+                ? `0 6px 24px ${selectedColor.hex}66`
+                : "0 4px 16px rgba(0,0,0,0.12)",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition:
+                "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+              transform: panelOpen
+                ? "scale(1.1) rotate(-15deg)"
+                : "scale(1) rotate(0deg)",
+              outline: "none",
+            }}
+            aria-label={selectedColor ? "Drawing options" : "Start painting"}
+            aria-expanded={panelOpen}
+          >
+            <PencilIcon stroke={selectedColor ? "#fff" : "#888"} />
+          </button>
+        </div>
       </div>
     </div>
   );
