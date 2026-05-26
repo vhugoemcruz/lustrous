@@ -11,7 +11,7 @@
  */
 "use client";
 
-import { FC, useRef } from "react";
+import { FC, useRef, useState, useEffect } from "react";
 
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { WATERCOLOR_PALETTE } from "./constants";
@@ -23,13 +23,13 @@ import type { BuiltinColor, DrawingToolbarProps } from "./types";
  * Pencil icon — clean, recognisable pencil silhouette.
  * Used as the main toggle button icon.
  */
-const PencilIcon: FC<{ stroke: string }> = ({ stroke }) => (
+const PencilIcon: FC = () => (
   <svg
     width="22"
     height="22"
     viewBox="0 0 24 24"
     fill="none"
-    stroke={stroke}
+    stroke="currentColor"
     strokeWidth="1.6"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -117,6 +117,20 @@ const ExportIcon: FC = () => (
  *
  * Positioned `fixed` at the bottom-right of the viewport. The `toolbarBottom`
  * prop allows the parent to push the toolbar up when the page footer is visible.
+ *
+ * Animation sequence on EXPAND (selectedColor set):
+ *   Phase 1 (t=0ms):    eraser container + X button animate to their positions simultaneously.
+ *   Phase 2 (t=350ms):  undo button animates to its position.
+ *
+ * Animation sequence on RETRACT (selectedColor cleared):
+ *   Phase 1 (t=0ms):    undo button + X button retract simultaneously.
+ *   Phase 2 (t=350ms):  eraser container retracts.
+ *
+ * The "emerge from behind" effect is achieved via z-index hierarchy:
+ *   pencil: 30 > X: 20 > eraser: 10 > undo: 5
+ *
+ * All buttons are always mounted in the DOM (no conditional rendering) so that
+ * CSS transitions can animate both entry and exit correctly.
  */
 export const DrawingToolbar: FC<DrawingToolbarProps> = ({
   selectedColor,
@@ -138,6 +152,59 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
 }) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const pencilBtnRef = useRef<HTMLButtonElement>(null);
+  const timeoutRef       = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const colorTimeout1Ref = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const colorTimeout2Ref = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // ─── Animation states ───────────────────────────────────────────────────────
+  const [eraserVisible, setEraserVisible] = useState<boolean>(!!selectedColor);
+  const [undoVisible, setUndoVisible]     = useState<boolean>(!!selectedColor);
+  const [xVisible, setXVisible]           = useState<boolean>(!!selectedColor);
+
+  // lastColor: keeps the most recent non-null colour so the pencil button
+  // retains its colour throughout the full retract sequence before fading.
+  const [lastColor, setLastColor] = useState(selectedColor);
+
+  // colorOverlayVisible: drives the circular colour overlay on the pencil
+  // button. Stays true during the entire retract animation; only becomes
+  // false after all buttons have finished retracting, triggering the
+  // "suck-into-centre" scale-down animation.
+  const [colorOverlayVisible, setColorOverlayVisible] = useState<boolean>(!!selectedColor);
+
+  useEffect(() => {
+    if (timeoutRef.current)       clearTimeout(timeoutRef.current);
+    if (colorTimeout1Ref.current) clearTimeout(colorTimeout1Ref.current);
+    if (colorTimeout2Ref.current) clearTimeout(colorTimeout2Ref.current);
+
+    if (selectedColor) {
+      // ── Expand sequence ──────────────────────────────────────────────────
+      setLastColor(selectedColor);
+      setColorOverlayVisible(true);
+      setEraserVisible(true);
+      setXVisible(true);
+      timeoutRef.current = setTimeout(() => setUndoVisible(true), 350);
+    } else {
+      // ── Retract sequence ─────────────────────────────────────────────────
+      // Phase 1 (t=0): undo + X retract; colour stays visible on pencil.
+      setUndoVisible(false);
+      setXVisible(false);
+      // Phase 2 (t=350ms): eraser retracts.
+      colorTimeout1Ref.current = setTimeout(() => {
+        setEraserVisible(false);
+        // After the eraser CSS transition completes (~350ms), fire the
+        // colour suck-in animation on the pencil button.
+        colorTimeout2Ref.current = setTimeout(() => {
+          setColorOverlayVisible(false);
+        }, 350);
+      }, 350);
+    }
+
+    return () => {
+      if (timeoutRef.current)       clearTimeout(timeoutRef.current);
+      if (colorTimeout1Ref.current) clearTimeout(colorTimeout1Ref.current);
+      if (colorTimeout2Ref.current) clearTimeout(colorTimeout2Ref.current);
+    };
+  }, [selectedColor]);
 
   useClickOutside(
     panelRef,
@@ -147,6 +214,11 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
     panelOpen,
     [pencilBtnRef],
   );
+
+  // ─── Shared transition string ────────────────────────────────────────────────
+  // Applied to every animated button / container.
+  const animTransition =
+    "transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease";
 
   return (
     <div
@@ -173,7 +245,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
             flexDirection: "column",
             gap: "16px",
             minWidth: "280px",
-            zIndex: 100, 
+            zIndex: 100,
             position: "relative",
           }}
           role="toolbar"
@@ -282,8 +354,8 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
             </p>
             <input
               type="range"
-              min={2}
-              max={24}
+              min={1}
+              max={48}
               step={1}
               value={brushSize}
               onChange={(e) => onBrushSizeChange(Number(e.target.value))}
@@ -366,203 +438,337 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
       )}
 
       {/* ── Action buttons row (undo + eraser + deactivate/pencil) ── */}
+      {/*
+       * All three secondary button groups (undo, eraser container, X) are
+       * always mounted in the DOM.  Visibility is driven by the three state
+       * booleans (undoVisible / eraserVisible / xVisible) via opacity +
+       * translateX / translateY + pointerEvents.
+       *
+       * z-index hierarchy creates the "emerge from behind" depth effect:
+       *   pencil 30 > X 20 > eraser 10 > undo 5
+       *
+       * The outer container is `fixed right-6 flex-col items-end`, so it is
+       * anchored to the RIGHT edge of the viewport.  Hidden buttons that still
+       * occupy space in the flex row simply add invisible width to the LEFT of
+       * the pencil button — the pencil itself never moves.
+       *
+       * translateX offsets (hidden → pencil area, positive = rightward):
+       *   eraser container: +62px  (gap 10 + pencil 52 = 62 from eraser right edge)
+       *   undo button:     +116px  (gap 10 + eraser 44 + gap 10 + pencil 52 = 116)
+       *   X button:        translateY(+44px)  (moves down toward pencil top)
+       *)
+      */}
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        {/* Undo button — only when colour is selected */}
-        {selectedColor && (
+
+        {/* ── Undo button ── */}
+        <button
+          onClick={onUndo}
+          disabled={!canUndo || !undoVisible}
+          title="Undo last stroke"
+          style={{
+            width: "44px",
+            height: "44px",
+            borderRadius: "50%",
+            background: canUndo
+              ? "rgba(255,255,255,0.92)"
+              : "rgba(255,255,255,0.60)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            border: "1.5px solid rgba(0,0,0,0.10)",
+            boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+            cursor: canUndo ? "pointer" : "not-allowed",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            outline: "none",
+            // ── Animation ──
+            position: "relative",
+            zIndex: 5,
+            transform: undoVisible ? "translateX(0)" : "translateX(116px)",
+            opacity: undoVisible ? (canUndo ? 1 : 0.5) : 0,
+            pointerEvents: undoVisible ? "auto" : "none",
+            transition: animTransition,
+          }}
+          aria-label="Undo last stroke"
+        >
+          <UndoIcon />
+        </button>
+
+        {/* ── Eraser container (slider + eraser button) ── */}
+        {/*
+         * The ENTIRE container receives the expand/collapse translateX so that
+         * the eraser button (right end of the container) visually slides out
+         * from behind the pencil button.
+         *
+         * The slider inside the container has its own independent scaleX
+         * animation driven by isEraser, which is unrelated to the
+         * expand/collapse sequence.
+         *)
+        */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            // No gap here — spacing between slider and eraser button is
+            // handled by the slider wrapper's marginRight so that it
+            // collapses to zero (along with the wrapper width) when hidden,
+            // leaving no phantom space in the layout.
+            gap: "0px",
+            // ── Animation ──
+            position: "relative",
+            zIndex: 10,
+            transform: eraserVisible ? "translateX(0)" : "translateX(62px)",
+            opacity: eraserVisible ? 1 : 0,
+            pointerEvents: eraserVisible ? "auto" : "none",
+            transition: animTransition,
+          }}
+        >
+          {/*
+           * Collapsing wrapper — collapses max-width to 0 when the slider is
+           * not active so it takes up zero space in the flex layout.
+           * The margin-right collapses at the same time, ensuring no phantom
+           * gap is left between the eraser button and the undo button.
+           * Both the margin and max-width use the same easing as the other
+           * button animations to keep motion consistent.
+           * The inner pill div keeps its own scaleX + opacity animation for
+           * a crisp "emerge from the right" visual effect.
+           *)
+          */}
+          <div
+            style={{
+              overflow: "hidden",
+              // borderRadius matches the pill so the overflow clip is rounded —
+              // without this the rectangular clip leaves gray corners visible
+              // against the pill's white background.
+              borderRadius: "22px",
+              maxWidth: isEraser ? "180px" : "0px",
+              marginRight: isEraser ? "10px" : "0px",
+              transition: `max-width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                           margin-right 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)`,
+            }}
+          >
+            {/*
+             * The wrapper's maxWidth already provides the slide-in-from-right
+             * motion, so the inner pill only needs an opacity fade — no
+             * translateX/scaleX that would push it outside the clip area and
+             * produce a visible jump or mid-animation crop.
+             */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                background: "rgba(255,255,255,0.92)",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                borderRadius: "22px",
+                padding: "6px 12px",
+                boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+                border: "1.5px solid rgba(0,0,0,0.10)",
+                whiteSpace: "nowrap",
+                opacity: isEraser ? 1 : 0,
+                pointerEvents: isEraser ? "auto" : "none",
+                transition: "opacity 0.25s ease",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  color: "#000",
+                  letterSpacing: "0.06em",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {eraserSize}px
+              </span>
+              <input
+                type="range"
+                min={1}
+                max={48}
+                step={1}
+                value={eraserSize}
+                onChange={(e) => onEraserSizeChange(Number(e.target.value))}
+                style={{
+                  width: "80px",
+                  accentColor: "#3D3D4E",
+                  margin: 0,
+                }}
+                aria-label="Eraser size"
+              />
+            </div>
+          </div>
+
+          {/* Eraser toggle button */}
           <button
-            onClick={onUndo}
-            disabled={!canUndo}
-            title="Undo last stroke"
+            onClick={onToggleEraser}
+            title={isEraser ? "Switch to pencil" : "Switch to eraser"}
             style={{
               width: "44px",
               height: "44px",
               borderRadius: "50%",
-              background: canUndo
-                ? "rgba(255,255,255,0.92)"
-                : "rgba(255,255,255,0.60)",
+              background: isEraser
+                ? "rgba(61, 61, 78, 0.85)"
+                : "rgba(255,255,255,0.92)",
               backdropFilter: "blur(16px)",
               WebkitBackdropFilter: "blur(16px)",
-              border: "1.5px solid rgba(0,0,0,0.10)",
-              boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
-              cursor: canUndo ? "pointer" : "not-allowed",
+              border: isEraser ? "none" : "1.5px solid rgba(0,0,0,0.10)",
+              boxShadow: isEraser
+                ? "0 6px 24px rgba(61,61,78,0.40)"
+                : "0 4px 16px rgba(0,0,0,0.12)",
+              cursor: "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              transition:
-                "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+              // Visual-state transition only (background/shadow/border).
+              // The expand/collapse translate is handled by the parent container.
+              transition: "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
               outline: "none",
-              opacity: canUndo ? 1 : 0.5,
+              flexShrink: 0,
             }}
-            aria-label="Undo last stroke"
+            aria-label={isEraser ? "Switch to pencil" : "Switch to eraser"}
+            aria-pressed={isEraser}
           >
-            <UndoIcon />
+            <EraserIcon stroke={isEraser ? "#fff" : "#888"} />
           </button>
-        )}
+        </div>
 
-        {/* Eraser button + horizontal size slider */}
-        {selectedColor && (
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            {/* Eraser size slider — visible only when eraser is active */}
-            {isEraser && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  background: "rgba(255,255,255,0.92)",
-                  backdropFilter: "blur(16px)",
-                  WebkitBackdropFilter: "blur(16px)",
-                  borderRadius: "22px",
-                  padding: "6px 12px",
-                  boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
-                  border: "1.5px solid rgba(0,0,0,0.10)",
-                  animation: "panel-in 0.2s ease",
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: "12px",
-                    fontWeight: 600,
-                    color: "#000",
-                    letterSpacing: "0.06em",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {eraserSize}px
-                </span>
-                <input
-                  type="range"
-                  min={2}
-                  max={24}
-                  step={1}
-                  value={eraserSize}
-                  onChange={(e) => onEraserSizeChange(Number(e.target.value))}
-                  style={{
-                    width: "80px",
-                    accentColor: "#3D3D4E",
-                    margin: 0,
-                  }}
-                  aria-label="Eraser size"
-                />
-              </div>
-            )}
-
-            <button
-              onClick={onToggleEraser}
-              title={isEraser ? "Switch to pencil" : "Switch to eraser"}
-              style={{
-                width: "44px",
-                height: "44px",
-                borderRadius: "50%",
-                background: isEraser
-                  ? "rgba(61, 61, 78, 0.85)"
-                  : "rgba(255,255,255,0.92)",
-                backdropFilter: "blur(16px)",
-                WebkitBackdropFilter: "blur(16px)",
-                border: isEraser ? "none" : "1.5px solid rgba(0,0,0,0.10)",
-                boxShadow: isEraser
-                  ? "0 6px 24px rgba(61,61,78,0.40)"
-                  : "0 4px 16px rgba(0,0,0,0.12)",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition:
-                  "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                outline: "none",
-                flexShrink: 0,
-              }}
-              aria-label={isEraser ? "Switch to pencil" : "Switch to eraser"}
-              aria-pressed={isEraser}
-            >
-              <EraserIcon stroke={isEraser ? "#fff" : "#888"} />
-            </button>
-          </div>
-        )}
-
-        {/* ── Pencil toggle button with deactivate X above ── */}
+        {/* ── Pencil toggle button with X deactivate button above ── */}
         <div style={{ position: "relative" }}>
-          {/* Deactivate button — small X above pencil, only when colour is active */}
-          {selectedColor && (
-            <button
-              onClick={onDeactivateColor}
-              title="Stop painting"
-              style={{
-                position: "absolute",
-                bottom: "calc(100% + 10px)",
-                left: "50%",
-                transform: "translateX(-50%)",
-                width: "28px",
-                height: "28px",
-                borderRadius: "50%",
-                background: "rgba(255,255,255,0.92)",
-                backdropFilter: "blur(16px)",
-                WebkitBackdropFilter: "blur(16px)",
-                border: "1.5px solid rgba(0,0,0,0.10)",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                outline: "none",
-                fontSize: "13px",
-                fontWeight: 600,
-                color: "rgba(0,0,0,0.50)",
-                lineHeight: 1,
-                zIndex: 50, 
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background =
-                  "rgba(0,0,0,0.08)";
-                (e.currentTarget as HTMLButtonElement).style.color =
-                  "rgba(0,0,0,0.70)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background =
-                  "rgba(255,255,255,0.92)";
-                (e.currentTarget as HTMLButtonElement).style.color =
-                  "rgba(0,0,0,0.50)";
-              }}
-              aria-label="Stop painting"
-            >
-              ✕
-            </button>
-          )}
+
+          {/* Deactivate button — X above pencil */}
+          {/*
+           * position: absolute keeps it out of the flex flow.
+           * When hidden: translateY(+44px) pushes it DOWN into the pencil
+           * button area (emerging-from-behind effect on the Y axis).
+           * When visible: translateX(-50%) re-centres it horizontally as before.
+           *)
+          */}
+          <button
+            onClick={onDeactivateColor}
+            title="Stop painting"
+            style={{
+              position: "absolute",
+              bottom: "calc(100% + 10px)",
+              left: "50%",
+              width: "28px",
+              height: "28px",
+              borderRadius: "50%",
+              background: "rgba(255,255,255,0.92)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
+              border: "1.5px solid rgba(0,0,0,0.10)",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              outline: "none",
+              fontSize: "13px",
+              fontWeight: 600,
+              color: "rgba(0,0,0,0.50)",
+              lineHeight: 1,
+              // ── Animation ──
+              zIndex: 20,
+              transform: xVisible
+                ? "translateX(-50%)"
+                : "translateX(-50%) translateY(44px)",
+              opacity: xVisible ? 1 : 0,
+              pointerEvents: xVisible ? "auto" : "none",
+              transition: animTransition,
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background =
+                "rgba(0,0,0,0.08)";
+              (e.currentTarget as HTMLButtonElement).style.color =
+                "rgba(0,0,0,0.70)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background =
+                "rgba(255,255,255,0.92)";
+              (e.currentTarget as HTMLButtonElement).style.color =
+                "rgba(0,0,0,0.50)";
+            }}
+            aria-label="Stop painting"
+          >
+            ✕
+          </button>
 
           {/* ── Pencil toggle button ── */}
           <button
             ref={pencilBtnRef}
             onClick={onTogglePanel}
-            title={selectedColor ? "Drawing options" : "Start painting"}
+            title={colorOverlayVisible ? "Drawing options" : "Start painting"}
             style={{
               width: "52px",
               height: "52px",
               borderRadius: "50%",
-              background: selectedColor
-                ? selectedColor.hex
-                : "rgba(255,255,255,0.92)",
+              background: "rgba(255,255,255,0.92)",
               backdropFilter: "blur(16px)",
               WebkitBackdropFilter: "blur(16px)",
-              border: selectedColor ? "none" : "1.5px solid rgba(0,0,0,0.10)",
-              boxShadow: selectedColor
-                ? `0 6px 24px ${selectedColor.hex}66`
+              border: "none",
+              boxShadow: colorOverlayVisible && lastColor
+                ? `0 6px 24px ${lastColor.hex}66`
                 : "0 4px 16px rgba(0,0,0,0.12)",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               transition:
-                "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                "border 0.3s ease, box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
               transform: panelOpen
-                ? "scale(1.1) rotate(-15deg)"
-                : "scale(1) rotate(0deg)",
+                ? "scale(1.1) rotate(-15deg) translateZ(0)"
+                : "scale(1) rotate(0deg) translateZ(0)",
+              // translateZ(0) forces GPU compositing, preventing the subpixel
+              // blur that browsers produce when rotating at non-90° angles.
+              willChange: "transform",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
               outline: "none",
+              position: "relative",
+              zIndex: 30,
+              overflow: "hidden",
             }}
-            aria-label={selectedColor ? "Drawing options" : "Start painting"}
+            aria-label={colorOverlayVisible ? "Drawing options" : "Start painting"}
             aria-expanded={panelOpen}
           >
-            <PencilIcon stroke={selectedColor ? "#fff" : "#888"} />
+            {/* Colour overlay — stays at scale(1) while buttons are visible,
+                then shrinks to scale(0) once all buttons finish retracting,
+                giving the "colour sucked into the centre" effect. */}
+            {lastColor && (
+              <span
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  borderRadius: "50%",
+                  background: lastColor.hex,
+                  transform: colorOverlayVisible ? "scale(1)" : "scale(0)",
+                  opacity: colorOverlayVisible ? 1 : 0,
+                  transition:
+                    "transform 0.45s cubic-bezier(0.55, 0, 1, 0.45), opacity 0.35s ease",
+                  pointerEvents: "none",
+                }}
+              />
+            )}
+            {/* Icon colour transitions from white → grey only AFTER the overlay
+                finishes scaling down (0.45s), so the icon stays visible
+                throughout the "suck-in" animation instead of vanishing. */}
+            <span
+              style={{
+                color: colorOverlayVisible ? "#fff" : "#888",
+                transition: colorOverlayVisible
+                  ? "color 0s"                          // instant when activating
+                  : "color 0.2s ease 0.35s",            // delayed when deactivating
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+                zIndex: 1,
+              }}
+            >
+              <PencilIcon />
+            </span>
           </button>
         </div>
       </div>
