@@ -229,214 +229,6 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
         transition: "bottom 0.3s ease",
       }}
     >
-      {/* ── Expanded control panel ── */}
-      {panelOpen && (
-        <div
-          ref={panelRef}
-          style={{
-            background: "rgba(255, 255, 255, 0.92)",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
-            borderRadius: "18px",
-            padding: "20px",
-            boxShadow:
-              "0 8px 32px rgba(0,0,0,0.10), 0 1px 0 rgba(255,255,255,0.8) inset",
-            display: "flex",
-            flexDirection: "column",
-            gap: "16px",
-            minWidth: "280px",
-            zIndex: 100,
-            position: "relative",
-          }}
-          role="toolbar"
-          aria-label="Drawing controls"
-        >
-          {/* Close button ✕ */}
-          <button
-            onClick={onTogglePanel}
-            style={{
-              position: "absolute",
-              top: "10px",
-              right: "10px",
-              width: "24px",
-              height: "24px",
-              borderRadius: "50%",
-              background: "rgba(0,0,0,0.06)",
-              border: "none",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "14px",
-              color: "rgba(0,0,0,0.5)",
-              transition: "background 0.15s ease",
-              outline: "none",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background =
-                "rgba(0,0,0,0.12)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background =
-                "rgba(0,0,0,0.06)";
-            }}
-            aria-label="Close panel"
-          >
-            ✕
-          </button>
-
-          {/* Colour swatches */}
-          <div style={{ paddingTop: "4px" }}>
-            <p
-              style={{
-                fontSize: "13px",
-                fontWeight: 600,
-                letterSpacing: "0.08em",
-                color: "#000",
-                marginBottom: "8px",
-              }}
-            >
-              COLOUR
-            </p>
-
-            <div
-              style={{
-                display: "flex",
-                gap: "6px",
-                flexWrap: "wrap",
-                alignItems: "center",
-              }}
-            >
-              {WATERCOLOR_PALETTE.map((color: BuiltinColor) => {
-                const isActive = selectedColor?.hex === color.hex;
-                return (
-                  <button
-                    key={color.name}
-                    title={color.name}
-                    onClick={() => onSelectColor(color)}
-                    style={{
-                      width: "26px",
-                      height: "26px",
-                      borderRadius: "50%",
-                      background: color.hex,
-                      border: isActive
-                        ? "3px solid rgba(0,0,0,0.45)"
-                        : "2.5px solid rgba(255,255,255,0.7)",
-                      cursor: "pointer",
-                      transition:
-                        "transform 0.15s ease, box-shadow 0.15s ease",
-                      transform: isActive ? "scale(1.22)" : "scale(1)",
-                      boxShadow: isActive
-                        ? `0 2px 8px ${color.hex}88`
-                        : "none",
-                      outline: "none",
-                    }}
-                    aria-label={`Colour ${color.name}`}
-                    aria-pressed={isActive}
-                  />
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Brush size slider */}
-          <div>
-            <p
-              style={{
-                fontSize: "13px",
-                fontWeight: 600,
-                letterSpacing: "0.08em",
-                color: "#000",
-                marginBottom: "8px",
-              }}
-            >
-              SIZE — {brushSize}px
-            </p>
-            <input
-              type="range"
-              min={1}
-              max={48}
-              step={1}
-              value={brushSize}
-              onChange={(e) => onBrushSizeChange(Number(e.target.value))}
-              style={{
-                width: "100%",
-                accentColor: selectedColor?.hex ?? "#E07A5F",
-              }}
-              aria-label="Brush size"
-            />
-          </div>
-
-          {/* Action buttons — Export + Clear */}
-          <div style={{ display: "flex", gap: "8px" }}>
-            <button
-              onClick={onExport}
-              style={{
-                fontSize: "14px",
-                color: "#000",
-                background: "none",
-                border: "1px solid rgba(0,0,0,0.12)",
-                borderRadius: "10px",
-                padding: "6px 12px",
-                cursor: "pointer",
-                transition: "background 0.15s ease, color 0.15s ease",
-                letterSpacing: "0.02em",
-                flex: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "6px",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background =
-                  "rgba(0,0,0,0.06)";
-                (e.currentTarget as HTMLButtonElement).style.color =
-                  "rgba(0,0,0,0.70)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background =
-                  "none";
-                (e.currentTarget as HTMLButtonElement).style.color =
-                  "#000";
-              }}
-              aria-label="Export drawing"
-            >
-              <ExportIcon /> Export
-            </button>
-            <button
-              onClick={onClear}
-              style={{
-                fontSize: "14px",
-                color: "#000",
-                background: "none",
-                border: "1px solid rgba(0,0,0,0.12)",
-                borderRadius: "10px",
-                padding: "6px 12px",
-                cursor: "pointer",
-                transition: "background 0.15s ease, color 0.15s ease",
-                letterSpacing: "0.02em",
-                flex: 1,
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background =
-                  "rgba(0,0,0,0.06)";
-                (e.currentTarget as HTMLButtonElement).style.color =
-                  "rgba(0,0,0,0.70)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background =
-                  "none";
-                (e.currentTarget as HTMLButtonElement).style.color =
-                  "#000";
-              }}
-              aria-label="Clear canvas"
-            >
-              🗑 Clear canvas
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* ── Action buttons row (undo + eraser + deactivate/pencil) ── */}
       {/*
        * All three secondary button groups (undo, eraser container, X) are
@@ -635,6 +427,216 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
 
         {/* ── Pencil toggle button with X deactivate button above ── */}
         <div style={{ position: "relative" }}>
+          {/* ── Expanded control panel ── */}
+          {panelOpen && (
+            <div
+              ref={panelRef}
+              style={{
+                background: "rgba(255, 255, 255, 0.92)",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                borderRadius: "18px",
+                padding: "20px",
+                boxShadow:
+                  "0 8px 32px rgba(0,0,0,0.10), 0 1px 0 rgba(255,255,255,0.8) inset",
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+                minWidth: "280px",
+                zIndex: 100,
+                position: "absolute",
+                bottom: "calc(100% + 6px)",
+                right: "calc(100% - 2px)",
+                transformOrigin: "bottom right",
+              }}
+              role="toolbar"
+              aria-label="Drawing controls"
+            >
+              {/* Close button ✕ */}
+              <button
+                onClick={onTogglePanel}
+                style={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  width: "24px",
+                  height: "24px",
+                  borderRadius: "50%",
+                  background: "rgba(0,0,0,0.06)",
+                  border: "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "rgba(0,0,0,0.5)",
+                  transition: "background 0.15s ease",
+                  outline: "none",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background =
+                    "rgba(0,0,0,0.12)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background =
+                    "rgba(0,0,0,0.06)";
+                }}
+                aria-label="Close panel"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+
+              {/* Colour swatches */}
+              <div style={{ paddingTop: "4px" }}>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
+                    color: "#000",
+                    marginBottom: "8px",
+                  }}
+                >
+                  COLOUR
+                </p>
+
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "6px",
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                  }}
+                >
+                  {WATERCOLOR_PALETTE.map((color: BuiltinColor) => {
+                    const isActive = selectedColor?.hex === color.hex;
+                    return (
+                      <button
+                        key={color.name}
+                        title={color.name}
+                        onClick={() => onSelectColor(color)}
+                        style={{
+                          width: "26px",
+                          height: "26px",
+                          borderRadius: "50%",
+                          background: color.hex,
+                          border: isActive
+                            ? "3px solid rgba(0,0,0,0.45)"
+                            : "2.5px solid rgba(255,255,255,0.7)",
+                          cursor: "pointer",
+                          transition:
+                            "transform 0.15s ease, box-shadow 0.15s ease",
+                          transform: isActive ? "scale(1.22)" : "scale(1)",
+                          boxShadow: isActive
+                            ? `0 2px 8px ${color.hex}88`
+                            : "none",
+                          outline: "none",
+                        }}
+                        aria-label={`Colour ${color.name}`}
+                        aria-pressed={isActive}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Brush size slider */}
+              <div>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
+                    color: "#000",
+                    marginBottom: "8px",
+                  }}
+                >
+                  SIZE — {brushSize}px
+                </p>
+                <input
+                  type="range"
+                  min={1}
+                  max={48}
+                  step={1}
+                  value={brushSize}
+                  onChange={(e) => onBrushSizeChange(Number(e.target.value))}
+                  style={{
+                    width: "100%",
+                    accentColor: selectedColor?.hex ?? "#E07A5F",
+                  }}
+                  aria-label="Brush size"
+                />
+              </div>
+
+              {/* Action buttons — Export + Clear */}
+              <div style={{ display: "flex", gap: "8px" }}>
+                <button
+                  onClick={onExport}
+                  style={{
+                    fontSize: "14px",
+                    color: "#000",
+                    background: "none",
+                    border: "1px solid rgba(0,0,0,0.12)",
+                    borderRadius: "10px",
+                    padding: "6px 12px",
+                    cursor: "pointer",
+                    transition: "background 0.15s ease, color 0.15s ease",
+                    letterSpacing: "0.02em",
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "6px",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLButtonElement).style.background =
+                      "rgba(0,0,0,0.06)";
+                    (e.currentTarget as HTMLButtonElement).style.color =
+                      "rgba(0,0,0,0.70)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLButtonElement).style.background =
+                      "none";
+                    (e.currentTarget as HTMLButtonElement).style.color =
+                      "#000";
+                  }}
+                  aria-label="Export drawing"
+                >
+                  <ExportIcon /> Export
+                </button>
+                <button
+                  onClick={onClear}
+                  style={{
+                    fontSize: "14px",
+                    color: "#000",
+                    background: "none",
+                    border: "1px solid rgba(0,0,0,0.12)",
+                    borderRadius: "10px",
+                    padding: "6px 12px",
+                    cursor: "pointer",
+                    transition: "background 0.15s ease, color 0.15s ease",
+                    letterSpacing: "0.02em",
+                    flex: 1,
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLButtonElement).style.background =
+                      "rgba(0,0,0,0.06)";
+                    (e.currentTarget as HTMLButtonElement).style.color =
+                      "rgba(0,0,0,0.70)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLButtonElement).style.background =
+                      "none";
+                    (e.currentTarget as HTMLButtonElement).style.color =
+                      "#000";
+                  }}
+                  aria-label="Clear canvas"
+                >
+                  🗑 Clear canvas
+                </button>
+              </div>
+            </div>
+          )}
+
 
           {/* Deactivate button — X above pencil */}
           {/*
