@@ -380,7 +380,10 @@ export function ArtisticBackground() {
       <DrawingToolbar
         selectedColor={selectedColor}
         panelOpen={panelOpen}
-        onTogglePanel={() => setPanelOpen((prev) => !prev)}
+        onTogglePanel={() => {
+          setHasActivated(true);
+          setPanelOpen((prev) => !prev);
+        }}
         onSelectColor={handleSelectColor}
         onDeactivateColor={handleDeactivateColor}
         brushSize={brushSize}
