@@ -17,6 +17,14 @@ import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { WATERCOLOR_PALETTE } from "./constants";
 import type { BuiltinColor, DrawingToolbarProps } from "./types";
 
+// ─── Layout Constants ────────────────────────────────────────────────────────
+const BTN_SIZE_SECONDARY = 44; // px
+const BTN_SIZE_PRIMARY = 52; // px
+const GAP_SIZE = 10; // px
+
+const TRANSLATE_UNDO = BTN_SIZE_SECONDARY + GAP_SIZE; // 54px
+const TRANSLATE_ERASER = BTN_SIZE_PRIMARY + GAP_SIZE; // 62px
+
 // ─── SVG Icon Sub-components ──────────────────────────────────────────────────
 
 /**
@@ -245,12 +253,12 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
        * the pencil button — the pencil itself never moves.
        *
        * translateX offsets (hidden → pencil area, positive = rightward):
-       *   eraser container: +62px  (gap 10 + pencil 52 = 62 from eraser right edge)
-       *   undo button:      +54px  (gap 10 + eraser toggle 44 = 54 from undo right edge)
+       *   eraser container: TRANSLATE_ERASER (GAP_SIZE + BTN_SIZE_PRIMARY)
+       *   undo button:      TRANSLATE_UNDO   (GAP_SIZE + BTN_SIZE_SECONDARY)
        *   X button:        translateY(+44px)  (moves down toward pencil top)
        *)
       */}
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: `${GAP_SIZE}px` }}>
 
         {/* ── Undo button ── */}
         <button
@@ -258,8 +266,8 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
           disabled={!canUndo || !undoVisible}
           title="Undo last stroke"
           style={{
-            width: "44px",
-            height: "44px",
+            width: `${BTN_SIZE_SECONDARY}px`,
+            height: `${BTN_SIZE_SECONDARY}px`,
             borderRadius: "50%",
             background: canUndo
               ? "rgba(255,255,255,0.92)"
@@ -276,7 +284,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
             // ── Animation ──
             position: "relative",
             zIndex: 5,
-            transform: undoVisible ? "translateX(0)" : "translateX(54px)",
+            transform: undoVisible ? "translateX(0)" : `translateX(${TRANSLATE_UNDO}px)`,
             opacity: undoVisible ? (canUndo ? 1 : 0.5) : 0,
             pointerEvents: undoVisible ? "auto" : "none",
             transition: animTransition,
@@ -309,7 +317,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
             // ── Animation ──
             position: "relative",
             zIndex: 10,
-            transform: eraserVisible ? "translateX(0)" : "translateX(62px)",
+            transform: eraserVisible ? "translateX(0)" : `translateX(${TRANSLATE_ERASER}px)`,
             opacity: eraserVisible ? 1 : 0,
             pointerEvents: eraserVisible ? "auto" : "none",
             transition: animTransition,
@@ -334,7 +342,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
               // against the pill's white background.
               borderRadius: "22px",
               maxWidth: isEraser ? "180px" : "0px",
-              marginRight: isEraser ? "10px" : "0px",
+              marginRight: isEraser ? `${GAP_SIZE}px` : "0px",
               transition: `max-width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
                            margin-right 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)`,
             }}
@@ -396,8 +404,8 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
             onClick={onToggleEraser}
             title={isEraser ? "Switch to pencil" : "Switch to eraser"}
             style={{
-              width: "44px",
-              height: "44px",
+              width: `${BTN_SIZE_SECONDARY}px`,
+              height: `${BTN_SIZE_SECONDARY}px`,
               borderRadius: "50%",
               background: isEraser
                 ? "rgba(61, 61, 78, 0.85)"
@@ -702,8 +710,8 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
             onClick={onTogglePanel}
             title={colorOverlayVisible ? "Drawing options" : "Start painting"}
             style={{
-              width: "52px",
-              height: "52px",
+              width: `${BTN_SIZE_PRIMARY}px`,
+              height: `${BTN_SIZE_PRIMARY}px`,
               borderRadius: "50%",
               background: "rgba(255,255,255,0.92)",
               backdropFilter: "blur(16px)",
