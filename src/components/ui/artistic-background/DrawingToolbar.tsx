@@ -246,7 +246,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
        *
        * translateX offsets (hidden → pencil area, positive = rightward):
        *   eraser container: +62px  (gap 10 + pencil 52 = 62 from eraser right edge)
-       *   undo button:     +116px  (gap 10 + eraser 44 + gap 10 + pencil 52 = 116)
+       *   undo button:      +54px  (gap 10 + eraser toggle 44 = 54 from undo right edge)
        *   X button:        translateY(+44px)  (moves down toward pencil top)
        *)
       */}
@@ -276,7 +276,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
             // ── Animation ──
             position: "relative",
             zIndex: 5,
-            transform: undoVisible ? "translateX(0)" : "translateX(116px)",
+            transform: undoVisible ? "translateX(0)" : "translateX(54px)",
             opacity: undoVisible ? (canUndo ? 1 : 0.5) : 0,
             pointerEvents: undoVisible ? "auto" : "none",
             transition: animTransition,
