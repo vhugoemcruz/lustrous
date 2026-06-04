@@ -450,7 +450,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
                 display: "flex",
                 flexDirection: "column",
                 gap: "16px",
-                minWidth: "280px",
+                minWidth: "300px",
                 zIndex: 100,
                 position: "absolute",
                 bottom: "calc(100% + 6px)",
@@ -516,7 +516,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
                   }}
                 >
                   {WATERCOLOR_PALETTE.map((color: BuiltinColor) => {
-                    const isActive = selectedColor?.hex === color.hex;
+                    const isActive = selectedColor?.hex === color.hex && selectedColor?.name !== "Custom";
                     return (
                       <button
                         key={color.name}
@@ -544,6 +544,69 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
                       />
                     );
                   })}
+                  {(() => {
+                    const isCustomActive = selectedColor?.name === "Custom";
+                    const bgImage = isCustomActive
+                      ? "none"
+                      : "conic-gradient(from 0deg at 50% 50%, #E07A5F 0%, #F2CC8F 20%, #81B29A 40%, #5B8FB9 60%, #8B6BB5 80%, #D4899A 90%, #E07A5F 100%)";
+                    const bgColor = isCustomActive ? selectedColor.hex : "transparent";
+                    return (
+                      <label
+                        title="Custom Color"
+                        style={{
+                          display: "inline-block",
+                          position: "relative",
+                          width: "26px",
+                          height: "26px",
+                          borderRadius: "50%",
+                          backgroundImage: bgImage,
+                          backgroundColor: bgColor,
+                          backgroundClip: isCustomActive ? "border-box" : "padding-box",
+                          border: isCustomActive
+                            ? "3px solid rgba(0,0,0,0.45)"
+                            : "2.5px solid #e2e2e2",
+                          cursor: "pointer",
+                          transition: "transform 0.15s ease, box-shadow 0.15s ease",
+                          transform: isCustomActive ? "scale(1.22)" : "scale(1)",
+                          boxShadow: isCustomActive
+                            ? `0 2px 8px ${selectedColor.hex}88`
+                            : "none",
+                          outline: "none",
+                          overflow: "hidden",
+                        }}
+                      >
+                        <input
+                          type="color"
+                          value={isCustomActive ? selectedColor.hex : "#000000"}
+                          onChange={(e) => {
+                            const hex = e.target.value;
+                            const r = parseInt(hex.slice(1, 3), 16);
+                            const g = parseInt(hex.slice(3, 5), 16);
+                            const b = parseInt(hex.slice(5, 7), 16);
+                            onSelectColor({
+                              name: "Custom",
+                              hex,
+                              rgb: `${r}, ${g}, ${b}`,
+                            });
+                          }}
+                          style={{
+                            position: "absolute",
+                            opacity: 0,
+                            width: "100%",
+                            height: "100%",
+                            cursor: "pointer",
+                            left: 0,
+                            top: 0,
+                            margin: 0,
+                            padding: 0,
+                            border: "none",
+                            borderRadius: "50%",
+                          }}
+                          aria-label="Custom Color Picker"
+                        />
+                      </label>
+                    );
+                  })()}
                 </div>
               </div>
 
