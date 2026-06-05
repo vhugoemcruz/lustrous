@@ -50,7 +50,7 @@ export function drawWatercolorSplat(
   x: number,
   y: number,
   radius: number,
-  rgb: string,
+  rgb: string
 ): void {
   for (let i = 0; i < 9; i++) {
     const jx = (Math.random() - 0.5) * radius * 0.95;
@@ -80,7 +80,7 @@ export function drawWatercolorStroke(
   from: CanvasPoint,
   to: CanvasPoint,
   radius: number,
-  rgb: string,
+  rgb: string
 ): void {
   const dx = to.x - from.x;
   const dy = to.y - from.y;

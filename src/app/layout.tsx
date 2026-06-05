@@ -59,7 +59,6 @@ export default function RootLayout({
         className={`${nunito.variable} ${caveat.variable} bg-background text-foreground h-screen w-screen overflow-hidden antialiased`}
         suppressHydrationWarning
       >
-
         <Header />
         <MainScrollContainer>{children}</MainScrollContainer>
       </body>

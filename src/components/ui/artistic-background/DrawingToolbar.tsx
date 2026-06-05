@@ -160,14 +160,14 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
 }) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const pencilBtnRef = useRef<HTMLButtonElement>(null);
-  const timeoutRef       = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const colorTimeout1Ref = useRef<ReturnType<typeof setTimeout> | null>(null);
   const colorTimeout2Ref = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ─── Animation states ───────────────────────────────────────────────────────
   const [eraserVisible, setEraserVisible] = useState<boolean>(!!selectedColor);
-  const [undoVisible, setUndoVisible]     = useState<boolean>(!!selectedColor);
-  const [xVisible, setXVisible]           = useState<boolean>(!!selectedColor);
+  const [undoVisible, setUndoVisible] = useState<boolean>(!!selectedColor);
+  const [xVisible, setXVisible] = useState<boolean>(!!selectedColor);
 
   // lastColor: keeps the most recent non-null colour so the pencil button
   // retains its colour throughout the full retract sequence before fading.
@@ -177,10 +177,11 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
   // button. Stays true during the entire retract animation; only becomes
   // false after all buttons have finished retracting, triggering the
   // "suck-into-centre" scale-down animation.
-  const [colorOverlayVisible, setColorOverlayVisible] = useState<boolean>(!!selectedColor);
+  const [colorOverlayVisible, setColorOverlayVisible] =
+    useState<boolean>(!!selectedColor);
 
   useEffect(() => {
-    if (timeoutRef.current)       clearTimeout(timeoutRef.current);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (colorTimeout1Ref.current) clearTimeout(colorTimeout1Ref.current);
     if (colorTimeout2Ref.current) clearTimeout(colorTimeout2Ref.current);
 
@@ -208,7 +209,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
     }
 
     return () => {
-      if (timeoutRef.current)       clearTimeout(timeoutRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (colorTimeout1Ref.current) clearTimeout(colorTimeout1Ref.current);
       if (colorTimeout2Ref.current) clearTimeout(colorTimeout2Ref.current);
     };
@@ -220,7 +221,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
       if (panelOpen) onTogglePanel();
     },
     panelOpen,
-    [pencilBtnRef],
+    [pencilBtnRef]
   );
 
   // ─── Shared transition string ────────────────────────────────────────────────
@@ -257,9 +258,10 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
        *   undo button:      TRANSLATE_UNDO   (GAP_SIZE + BTN_SIZE_SECONDARY)
        *   X button:        translateY(+44px)  (moves down toward pencil top)
        *)
-      */}
-      <div style={{ display: "flex", alignItems: "center", gap: `${GAP_SIZE}px` }}>
-
+       */}
+      <div
+        style={{ display: "flex", alignItems: "center", gap: `${GAP_SIZE}px` }}
+      >
         {/* ── Undo button ── */}
         <button
           onClick={onUndo}
@@ -284,7 +286,9 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
             // ── Animation ──
             position: "relative",
             zIndex: 5,
-            transform: undoVisible ? "translateX(0)" : `translateX(${TRANSLATE_UNDO}px)`,
+            transform: undoVisible
+              ? "translateX(0)"
+              : `translateX(${TRANSLATE_UNDO}px)`,
             opacity: undoVisible ? (canUndo ? 1 : 0.5) : 0,
             pointerEvents: undoVisible ? "auto" : "none",
             transition: animTransition,
@@ -304,7 +308,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
          * animation driven by isEraser, which is unrelated to the
          * expand/collapse sequence.
          *)
-        */}
+         */}
         <div
           style={{
             display: "flex",
@@ -317,7 +321,9 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
             // ── Animation ──
             position: "relative",
             zIndex: 10,
-            transform: eraserVisible ? "translateX(0)" : `translateX(${TRANSLATE_ERASER}px)`,
+            transform: eraserVisible
+              ? "translateX(0)"
+              : `translateX(${TRANSLATE_ERASER}px)`,
             opacity: eraserVisible ? 1 : 0,
             pointerEvents: eraserVisible ? "auto" : "none",
             transition: animTransition,
@@ -333,7 +339,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
            * The inner pill div keeps its own scaleX + opacity animation for
            * a crisp "emerge from the right" visual effect.
            *)
-          */}
+           */}
           <div
             style={{
               overflow: "hidden",
@@ -490,7 +496,19 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
                 }}
                 aria-label="Close panel"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
               </button>
 
               {/* Colour swatches */}
@@ -516,7 +534,9 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
                   }}
                 >
                   {WATERCOLOR_PALETTE.map((color: BuiltinColor) => {
-                    const isActive = selectedColor?.hex === color.hex && selectedColor?.name !== "Custom";
+                    const isActive =
+                      selectedColor?.hex === color.hex &&
+                      selectedColor?.name !== "Custom";
                     return (
                       <button
                         key={color.name}
@@ -549,7 +569,9 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
                     const bgImage = isCustomActive
                       ? "none"
                       : "conic-gradient(from 0deg at 50% 50%, #E07A5F 0%, #F2CC8F 20%, #81B29A 40%, #5B8FB9 60%, #8B6BB5 80%, #D4899A 90%, #E07A5F 100%)";
-                    const bgColor = isCustomActive ? selectedColor.hex : "transparent";
+                    const bgColor = isCustomActive
+                      ? selectedColor.hex
+                      : "transparent";
                     return (
                       <label
                         title="Custom Color"
@@ -561,13 +583,18 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
                           borderRadius: "50%",
                           backgroundImage: bgImage,
                           backgroundColor: bgColor,
-                          backgroundClip: isCustomActive ? "border-box" : "padding-box",
+                          backgroundClip: isCustomActive
+                            ? "border-box"
+                            : "padding-box",
                           border: isCustomActive
                             ? "3px solid rgba(0,0,0,0.45)"
                             : "2.5px solid #e2e2e2",
                           cursor: "pointer",
-                          transition: "transform 0.15s ease, box-shadow 0.15s ease",
-                          transform: isCustomActive ? "scale(1.22)" : "scale(1)",
+                          transition:
+                            "transform 0.15s ease, box-shadow 0.15s ease",
+                          transform: isCustomActive
+                            ? "scale(1.22)"
+                            : "scale(1)",
                           boxShadow: isCustomActive
                             ? `0 2px 8px ${selectedColor.hex}88`
                             : "none",
@@ -667,8 +694,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLButtonElement).style.background =
                       "none";
-                    (e.currentTarget as HTMLButtonElement).style.color =
-                      "#000";
+                    (e.currentTarget as HTMLButtonElement).style.color = "#000";
                   }}
                   aria-label="Export drawing"
                 >
@@ -697,8 +723,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLButtonElement).style.background =
                       "none";
-                    (e.currentTarget as HTMLButtonElement).style.color =
-                      "#000";
+                    (e.currentTarget as HTMLButtonElement).style.color = "#000";
                   }}
                   aria-label="Clear canvas"
                 >
@@ -708,7 +733,6 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
             </div>
           )}
 
-
           {/* Deactivate button — X above pencil */}
           {/*
            * position: absolute keeps it out of the flex flow.
@@ -716,7 +740,7 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
            * button area (emerging-from-behind effect on the Y axis).
            * When visible: translateX(-50%) re-centres it horizontally as before.
            *)
-          */}
+           */}
           <button
             onClick={onDeactivateColor}
             title="Stop painting"
@@ -780,9 +804,10 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
               backdropFilter: "blur(16px)",
               WebkitBackdropFilter: "blur(16px)",
               border: "none",
-              boxShadow: colorOverlayVisible && lastColor
-                ? `0 6px 24px ${lastColor.hex}66`
-                : "0 4px 16px rgba(0,0,0,0.12)",
+              boxShadow:
+                colorOverlayVisible && lastColor
+                  ? `0 6px 24px ${lastColor.hex}66`
+                  : "0 4px 16px rgba(0,0,0,0.12)",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
@@ -802,7 +827,9 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
               zIndex: 30,
               overflow: "hidden",
             }}
-            aria-label={colorOverlayVisible ? "Drawing options" : "Start painting"}
+            aria-label={
+              colorOverlayVisible ? "Drawing options" : "Start painting"
+            }
             aria-expanded={panelOpen}
           >
             {/* Colour overlay — stays at scale(1) while buttons are visible,
@@ -831,8 +858,8 @@ export const DrawingToolbar: FC<DrawingToolbarProps> = ({
               style={{
                 color: colorOverlayVisible ? "#fff" : "#888",
                 transition: colorOverlayVisible
-                  ? "color 0s"                          // instant when activating
-                  : "color 0.2s ease 0.35s",            // delayed when deactivating
+                  ? "color 0s" // instant when activating
+                  : "color 0.2s ease 0.35s", // delayed when deactivating
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",

@@ -28,7 +28,7 @@ export function useClickOutside(
   ref: React.RefObject<HTMLElement | null>,
   handler: () => void,
   enabled: boolean,
-  excludeRefs?: React.RefObject<HTMLElement | null>[],
+  excludeRefs?: React.RefObject<HTMLElement | null>[]
 ): void {
   useEffect(() => {
     if (!enabled) return;

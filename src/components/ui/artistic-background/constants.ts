@@ -8,13 +8,13 @@
 
 /** Built-in watercolour swatches shown in the drawing toolbar. */
 export const WATERCOLOR_PALETTE = [
-  { name: "Ocean",  hex: "#5B8FB9", rgb: "91, 143, 185"  },
-  { name: "Coral",  hex: "#E07A5F", rgb: "224, 122, 95"  },
+  { name: "Ocean", hex: "#5B8FB9", rgb: "91, 143, 185" },
+  { name: "Coral", hex: "#E07A5F", rgb: "224, 122, 95" },
   { name: "Violet", hex: "#8B6BB5", rgb: "139, 107, 181" },
-  { name: "Sage",   hex: "#81B29A", rgb: "129, 178, 154" },
-  { name: "Amber",  hex: "#F2CC8F", rgb: "242, 204, 143" },
-  { name: "Rose",   hex: "#D4899A", rgb: "212, 137, 154" },
-  { name: "Ink",    hex: "#3D3D4E", rgb: "61, 61, 78"    },
+  { name: "Sage", hex: "#81B29A", rgb: "129, 178, 154" },
+  { name: "Amber", hex: "#F2CC8F", rgb: "242, 204, 143" },
+  { name: "Rose", hex: "#D4899A", rgb: "212, 137, 154" },
+  { name: "Ink", hex: "#3D3D4E", rgb: "61, 61, 78" },
 ] as const;
 
 // ─── Ambient SVG Brush Strokes ────────────────────────────────────────────────

@@ -93,7 +93,9 @@ export function ArtisticBackground() {
   const isDrawingRef = useRef(false);
   const lastPosRef = useRef<CanvasPoint | null>(null);
 
-  const [selectedColor, setSelectedColor] = useState<DrawableColor | null>(null);
+  const [selectedColor, setSelectedColor] = useState<DrawableColor | null>(
+    null
+  );
   const [brushSize, setBrushSize] = useState(8);
   const [panelOpen, setPanelOpen] = useState(false);
   const [hasActivated, setHasActivated] = useState(false);
@@ -223,7 +225,7 @@ export function ArtisticBackground() {
       }
       return { x: (e as MouseEvent).clientX, y: (e as MouseEvent).clientY };
     },
-    [],
+    []
   );
 
   // ── Document-level drawing events ───────────────────────────────────────────
@@ -305,7 +307,14 @@ export function ArtisticBackground() {
       isDrawingRef.current = false;
       lastPosRef.current = null;
     };
-  }, [selectedColor, brushSize, eraserSize, getCanvasPoint, isEraser, saveHistory]);
+  }, [
+    selectedColor,
+    brushSize,
+    eraserSize,
+    getCanvasPoint,
+    isEraser,
+    saveHistory,
+  ]);
 
   // ── Disable text selection while drawing is active ──────────────────────────
 
@@ -334,7 +343,7 @@ export function ArtisticBackground() {
         delay: i * 0.8,
         duration: 12 + (i % 4) * 3,
       })),
-    [],
+    []
   );
 
   // ── Hint bottom — offset from toolbar ───────────────────────────────────────
