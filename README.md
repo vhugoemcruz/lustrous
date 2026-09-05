@@ -142,7 +142,7 @@ lustrous/
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 Complete technical documentation is available in the `/documentos` folder:
 
