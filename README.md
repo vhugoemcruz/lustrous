@@ -30,7 +30,7 @@ A common problem is addressed: artists, especially beginners, often find technic
 
 ---
 
-## 🛠 Tools
+## Tools
 
 ### Perspective Grid Tool
 
