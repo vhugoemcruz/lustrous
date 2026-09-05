@@ -1,6 +1,6 @@
 <div align="center">
 
-# ✨ Lustrous
+# Lustrous
 
 **Visual Tools Platform for Artists**
 
@@ -15,18 +15,18 @@
 
 ---
 
-## 📋 About
+## About
 
 **Lustrous** is a free web platform of utility tools for artists, designed to facilitate the study of illustration through interactive visual resources.
 
 A common problem is addressed: artists, especially beginners, often find technical tools fragmented across different websites or locked behind paid software. These tools are centralized in a single environment accessible directly through the browser.
 
-### ✨ Highlights
+### Highlights
 
-- 🎨 **Artist-focused** — Tools designed for the study of visual fundamentals
-- ⚡ **Client-side processing** — Optimized performance with no server dependency
-- 📱 **Responsive** — Compatible with desktop and mobile devices
-- 🌍 **Free and accessible** — No financial or technical barriers
+- **Artist-focused** — Tools designed for the study of visual fundamentals
+- **Client-side processing** — Optimized performance with no server dependency
+- **Responsive** — Compatible with desktop and mobile devices
+- **Free and accessible** — No financial or technical barriers
 
 ---
 
@@ -75,7 +75,7 @@ A tool for studying color theory through automated image analysis. The analyzer 
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ### Prerequisites
 
@@ -111,7 +111,7 @@ The application can be accessed at [http://localhost:3000](http://localhost:3000
 
 ---
 
-## 🏗 Architecture
+## Architecture
 
 ```
 lustrous/
@@ -156,7 +156,7 @@ Complete technical documentation is available in the `/documentos` folder:
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome. To contribute:
 
@@ -170,7 +170,7 @@ Contributions are welcome. To contribute:
 
 <div align="center">
 
-**Made with ✨ for artists**
+**Made with Love for artists**
 
 [⬆ Back to top](#-lustrous)
 
